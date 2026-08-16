@@ -276,7 +276,7 @@ TutorSphere/
 ├── database/
 ├── public/
 └── README.md
-
+```
 ---
 
 # 🛠️ Technology Stack
