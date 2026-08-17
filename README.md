@@ -220,7 +220,7 @@ The frontend and backend are maintained in separate folders within the same GitH
 TutorSphere/
 │
 ├── frontend/          
-├── backend/          
+├── backend/           
 ├── README.md
 └── .gitignore
 ```
