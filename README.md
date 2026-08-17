@@ -12,142 +12,86 @@ TutorSphere is a **database-driven tutor hiring and management platform** design
 
 The platform supports a **two-way interaction system** between students and tutors.
 
-### Students can:
+### 👨‍🎓 Students can:
 
-* Search for tutors
-* Filter tutors by subject and location
-* View tutor profiles and qualifications
-* Hire suitable tutors
-* Create posts describing the type of tutor they are looking for
-* Receive responses from suitable tutors
-* Manage hire requests
-* Rate and review tutors
+- Register and login
+- Create and manage their profile
+- Search for tutors
+- Filter tutors by subject, location, qualification, and experience
+- View tutor profiles and qualifications
+- View tutor service posts
+- Post tutoring requirements
+- Send hire requests to tutors
+- Hire suitable tutors
+- Manage hiring requests
+- Give ratings and reviews
 
-### Tutors can:
+### 👨‍🏫 Tutors can:
 
-* Create professional tutor profiles
-* Add their qualifications and teaching experience
-* Select subjects they can teach
-* Specify their preferred location
-* Create posts about their tutoring services
-* Browse student requirement posts
-* Respond to suitable student requirements
-* Receive and manage hire requests
-* Receive ratings and reviews
+- Register and login
+- Create and manage their tutor profile
+- Add educational qualifications
+- Add subjects they can teach
+- Add teaching experience
+- Add preferred teaching locations
+- Create tutor service posts
+- Browse student requirement posts
+- Respond to suitable student requirements
+- Accept or reject hire requests
+- Manage tutoring activities
+- Receive ratings and reviews
 
-The system relies heavily on **relational database management** to efficiently manage user authentication, student and tutor profiles, subjects, locations, tutor posts, student requirements, hire requests, and ratings.
+### 👨‍💼 Admin can:
 
----
-
-# 🎯 Project Objectives
-
-* Connect students directly with qualified tutors.
-* Eliminate unnecessary middleman agencies.
-* Make the tutor hiring process easier and more transparent.
-* Allow students to search for suitable tutors.
-* Allow students to post their tutoring requirements.
-* Allow tutors to showcase their qualifications and tutoring services.
-* Allow tutors to browse student requirements.
-* Provide subject and location-based filtering.
-* Manage the tutor hiring process efficiently.
-* Maintain ratings and reviews.
-* Provide better earning opportunities for tutors.
-* Maintain organized and reliable relational database records.
+- Manage student accounts
+- Manage tutor accounts
+- Manage subjects
+- Manage locations
+- Monitor tutor posts
+- Monitor student requirement posts
+- Monitor hire requests
+- Manage ratings and reviews
+- Handle inappropriate or reported content
+- Maintain overall system security and data integrity
 
 ---
 
 # 🚀 Application Flow
 
-The following diagram represents the main system flow and interaction between students and tutors.
+The following flow represents the main system interaction between students, tutors, and the platform.
 
 ```text
-                         TutorSphere
-                              │
-                ┌─────────────┴─────────────┐
-                │                           │
-             Student                      Tutor
-                │                           │
-         Register / Login           Register / Login
-                │                           │
-        ┌───────┴────────┐          ┌───────┴────────┐
-        │                │          │                │
-   Search Tutor     Post Requirement   Create Tutor   Browse Student
-        │                │             Profile        Requirements
-        │                │                │                │
-   Filter by          Required          Create           View &
-Subject & Location    Tutor Details    Tutor Post       Respond
-        │                │                │                │
-        └────────┬───────┘                └───────┬────────┘
-                 │                                │
-                 └────────── Matching ────────────┘
-                              │
-                         Hire Request
-                              │
-                     Accept / Reject
-                              │
-                       Tutoring Service
-                              │
-                        Rating & Review
+                              TutorSphere
+                                   │
+                 ┌─────────────────┴─────────────────┐
+                 │                                   │
+              Student                              Tutor
+                 │                                   │
+          Register / Login                   Register / Login
+                 │                                   │
+        ┌────────┴────────┐                 ┌────────┴────────┐
+        │                 │                 │                 │
+   Search Tutors    Post Requirement   Create Tutor Post   Browse Student
+        │                 │                 │              Requirements
+        │                 │                 │                 │
+   Filter by         Required Tutor     Qualifications    View & Respond
+ Subject, Location      Details         Subjects, etc.     to Requirements
+        │                 │                 │                 │
+        └────────┬────────┘                 └────────┬────────┘
+                 │                                   │
+                 └───────────────┬───────────────────┘
+                                 │
+                         Hire Request / Response
+                                 │
+                                 ▼
+                         Accept / Reject
+                                 │
+                                 ▼
+                               Hire
+                                 │
+                                 ▼
+                          Rating & Review
 ```
-
----
-
-# 👥 User Roles
-
-## 👨‍🎓 Student
-
-Students can:
-
-* Register and login.
-* Create and manage their profile.
-* Search for tutors.
-* Filter tutors by subject.
-* Filter tutors by location.
-* View tutor profiles.
-* View tutor qualifications and experience.
-* Send hire requests.
-* Create tutor requirement posts.
-* Specify required subject, location, qualification, experience, and other preferences.
-* View responses from tutors.
-* Manage their hire requests.
-* Rate and review tutors.
-
----
-
-## 👨‍🏫 Tutor
-
-Tutors can:
-
-* Register and login.
-* Create and manage their tutor profile.
-* Add educational qualifications.
-* Add teaching experience.
-* Select subjects they teach.
-* Specify their preferred teaching location.
-* Create tutor service posts.
-* Browse student requirement posts.
-* Respond to suitable student requirements.
-* Receive hire requests.
-* Accept or reject hire requests.
-* Manage their tutoring services.
-* Receive ratings and reviews from students.
-
----
-
-## 👨‍💼 Admin
-
-Admin can:
-
-* Manage student accounts.
-* Manage tutor accounts.
-* Manage subjects.
-* Manage locations.
-* Monitor tutor posts.
-* Monitor student requirement posts.
-* Monitor hire requests.
-* Manage ratings and reviews.
-* Handle inappropriate or reported content.
-* Maintain overall system security and data integrity.
 
 ---
 
@@ -157,12 +101,12 @@ Admin can:
 
 Students can search for tutors based on:
 
-* Subject
-* Location
-* Qualification
-* Experience
-* Teaching level
-* Other relevant preferences
+- Subject
+- Location
+- Qualification
+- Experience
+- Teaching level
+- Other relevant preferences
 
 ---
 
@@ -172,36 +116,36 @@ Students can create posts when they are looking for a tutor.
 
 A student can provide information such as:
 
-* Required subject
-* Educational level
-* Preferred location
-* Required qualification
-* Preferred experience
-* Other requirements
+- Required subject
+- Educational level
+- Preferred location
+- Required qualification
+- Preferred experience
+- Other requirements
 
 Tutors can browse these posts and respond if they are suitable.
 
 ---
 
-## 👨‍🏫 Tutor Posts
+## 👨‍🏫 Tutor Service Posts
 
 Tutors can create posts to showcase their tutoring services and qualifications.
 
 A tutor can provide:
 
-* Educational qualification
-* Subjects they teach
-* Teaching experience
-* Teaching level
-* Preferred location
-* Tutoring services
-* Other relevant information
+- Educational qualification
+- Subjects they teach
+- Teaching experience
+- Teaching level
+- Preferred location
+- Tutoring services
+- Other relevant information
 
 Students can browse tutor posts and hire suitable tutors.
 
 ---
 
-## 📩 Hire Request Management
+# 📩 Hire Request Management
 
 The system supports direct hiring between students and tutors.
 
@@ -210,13 +154,17 @@ The system supports direct hiring between students and tutors.
 ```text
 Student
    ↓
-View Tutor
+Search / View Tutor
+   ↓
+View Tutor Profile
    ↓
 Send Hire Request
    ↓
 Tutor
    ↓
 Accept / Reject
+   ↓
+Hire
 ```
 
 ### Student Requirement → Tutor
@@ -237,26 +185,26 @@ Hire Tutor
 
 ---
 
-## ⭐ Ratings & Reviews
+# ⭐ Ratings & Reviews
 
 After receiving tutoring services, students can provide ratings and reviews for tutors.
 
-Ratings and reviews help:
+Ratings and reviews help to:
 
-* Build tutor reputation.
-* Increase transparency.
-* Help students make better decisions.
-* Maintain tutoring service quality.
+- Build tutor reputation
+- Increase transparency
+- Help students make better decisions
+- Maintain tutoring service quality
 
 ---
 
-## 🔐 User Authentication
+# 🔐 User Authentication
 
 The system provides registration and login functionality for:
 
-* Students
-* Tutors
-* Administrators
+- Students
+- Tutors
+- Administrators
 
 Authentication helps protect user accounts and system data.
 
@@ -264,101 +212,150 @@ Authentication helps protect user accounts and system data.
 
 # 📂 Project Structure
 
-TutorSphere is developed as a **single Laravel application**. The backend and frontend are organized within the Laravel project rather than being separated into different frontend and backend projects.
+TutorSphere uses a **separate frontend and backend architecture**.
+
+The frontend and backend are maintained in separate folders within the same GitHub repository.
 
 ```text
 TutorSphere/
 │
-├── app/                  ← Laravel Backend
-├── resources/
-│   └── views/            ← Blade Frontend
-├── routes/
-├── database/
-├── public/
-└── README.md
+├── frontend/          
+├── backend/          
+├── README.md
+└── .gitignore
 ```
+
+### Frontend
+
+The frontend is developed separately using **React.js with Vite**.
+
+It is responsible for:
+
+- User interface
+- Pages
+- Components
+- Forms
+- Navigation
+- Search and filtering
+- Student dashboard
+- Tutor dashboard
+- API communication
+
+### Backend
+
+The backend is developed separately using **PHP Laravel Framework**.
+
+It is responsible for:
+
+- REST APIs
+- Authentication
+- Database operations
+- Business logic
+- Validation
+- User management
+- Tutor management
+- Requirement management
+- Hire request management
+- Ratings and reviews
+
 ---
 
 # 🛠️ Technology Stack
 
-## Database
+## Frontend
 
-* Microsoft SQL Server
-* SQL Server Management Studio (SSMS)
+- React.js
+- Vite
+- JavaScript
+- HTML
+- CSS
+- Bootstrap
+- Axios
 
 ## Backend
 
-* PHP
-* Laravel Framework
-* MVC Architecture
+- PHP
+- Laravel Framework
+- Laravel REST API
+- MVC Architecture
 
-## Frontend
+## Database
 
-* Laravel Blade
-* Bootstrap
-* HTML
-* CSS
-* JavaScript
+- MySQL
+- MySQL Workbench
 
 ## Development Tools
 
-* Visual Studio Code
-* Git
-* GitHub
+- Visual Studio Code
+- Git
+- GitHub
+- Postman
 
-## Local Development
+## Local Development Environment
 
-* XAMPP or WAMP
-* Apache
-* PHP
-
-## Optional Development Environment
-
-* Laravel Sail
-* Docker
+- XAMPP
+- Apache
+- PHP
+- MySQL
 
 ---
 
-# ⚙️ Backend & Application Setup
+# 🔌 System Architecture
 
-The application is developed using the **Laravel Framework**.
+TutorSphere follows a separate frontend-backend architecture.
+
+```text
+┌──────────────────────┐
+│   React Frontend     │
+│      + Vite          │
+└──────────┬───────────┘
+           │
+           │ HTTP / REST API
+           │
+           ▼
+┌──────────────────────┐
+│   Laravel Backend    │
+│      REST API        │
+└──────────┬───────────┘
+           │
+           │ Database Queries
+           │
+           ▼
+┌──────────────────────┐
+│    MySQL Database    │
+└──────────────────────┘
+```
+
+The React frontend communicates with the Laravel backend through REST APIs.
+
+Axios will be used in the React frontend to send HTTP requests to the Laravel API.
+
+---
+
+# ⚙️ Backend Setup
+
+The backend is developed using Laravel and is located inside the `backend` folder.
 
 ## Requirements
 
-* PHP 8.2+
-* Composer
-* Laravel
-* Microsoft SQL Server
-* SQL Server Management Studio (SSMS)
-* XAMPP or WAMP
-* Visual Studio Code
+- PHP 8.2+
+- Composer
+- Laravel
+- MySQL
+- XAMPP
 
----
+## Create Laravel Backend
 
-## Installation
-
-Clone the repository:
+From the project root directory:
 
 ```bash
-git clone https://github.com/your-username/TutorSphere.git
+composer create-project laravel/laravel backend
 ```
 
-Navigate to the project directory:
+Navigate to the backend folder:
 
 ```bash
-cd TutorSphere
-```
-
-Install Laravel dependencies:
-
-```bash
-composer install
-```
-
-Create the environment file:
-
-```bash
-cp .env.example .env
+cd backend
 ```
 
 Generate the Laravel application key:
@@ -367,23 +364,86 @@ Generate the Laravel application key:
 php artisan key:generate
 ```
 
+Configure the MySQL database information in the `.env` file.
+
+Start the Laravel development server:
+
+```bash
+php artisan serve
+```
+
+---
+
+# 💻 Frontend Setup
+
+The frontend is developed using React.js with Vite and is located inside the `frontend` folder.
+
+## Requirements
+
+- Node.js
+- npm
+
+## Create React Frontend
+
+From the project root directory:
+
+```bash
+npm create vite@latest frontend -- --template react
+```
+
+Navigate to the frontend folder:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Install Axios:
+
+```bash
+npm install axios
+```
+
+Install Bootstrap:
+
+```bash
+npm install bootstrap
+```
+
+Start the React development server:
+
+```bash
+npm run dev
+```
+
 ---
 
 # 🗄️ Database Configuration
 
-TutorSphere uses **Microsoft SQL Server** as the relational database management system.
+TutorSphere uses **MySQL** as the relational database management system.
 
-Configure the database information inside the `.env` file.
+Start MySQL from XAMPP and create a database named:
+
+```text
+tutorsphere
+```
+
+Configure the database information inside the Laravel `.env` file.
 
 Example:
 
 ```env
-DB_CONNECTION=sqlsrv
+DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
-DB_PORT=1433
+DB_PORT=3306
 DB_DATABASE=tutorsphere
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
 > Database credentials should never be committed to GitHub.
@@ -394,45 +454,42 @@ After configuring the database, run:
 php artisan migrate
 ```
 
-Start the Laravel development server:
-
-```bash
-php artisan serve
-```
-
 ---
 
 # 🗃️ Database Structure
 
-TutorSphere uses a **relational database model** to organize and manage system data.
+TutorSphere uses a relational database model to organize and manage system data.
 
 ## User Management
 
-* Users
-* Student Profiles
-* Tutor Profiles
-* Admin
+- Users
+- Roles
+- Student Profiles
+- Tutor Profiles
 
 ## Tutor Management
 
-* Subjects
-* Locations
-* Qualifications
-* Tutor Posts
+- Subjects
+- Locations
+- Qualifications
+- Tutor Experience
+- Tutor Posts
 
 ## Student Requirement Management
 
-* Student Requirements
+- Student Requirements
+- Requirement Subjects
+- Preferred Locations
 
 ## Hiring Management
 
-* Hire Requests
-* Request Status
+- Hire Requests
+- Request Status
 
 ## Engagement
 
-* Ratings
-* Reviews
+- Ratings
+- Reviews
 
 ---
 
@@ -440,86 +497,89 @@ TutorSphere uses a **relational database model** to organize and manage system d
 
 The planned database relationships include:
 
-* One user can have one student profile.
-* One user can have one tutor profile.
-* One tutor can teach many subjects.
-* One subject can be taught by many tutors.
-* One tutor can create many tutor posts.
-* One student can create many requirement posts.
-* One student can send many hire requests.
-* One tutor can receive many hire requests.
-* One tutor can receive many ratings and reviews.
-* One student can create many ratings and reviews.
-* One subject can be associated with many student requirements.
-* One location can be associated with many tutors.
-* One location can be associated with many student requirements.
+- One Role can have many Users
+- One User belongs to one Role
+- One Student has one Student Profile
+- One Tutor has one Tutor Profile
+- One Tutor can have many Qualifications
+- One Tutor can have many Subjects
+- One Subject can be associated with many Tutors
+- One Tutor can create many Tutor Posts
+- One Student can create many Student Requirement Posts
+- One Student Requirement belongs to one Student
+- One Tutor can receive many Hire Requests
+- One Student can send many Hire Requests
+- One Hire Request belongs to one Student
+- One Hire Request belongs to one Tutor
+- One Tutor can receive many Reviews
+- One Student can write many Reviews
+
+Many-to-many relationships will be handled using appropriate intermediate or pivot tables.
 
 ---
 
-# 🌐 System Route Plan
+# 🌐 API Route Plan
+
+The Laravel backend will provide REST API endpoints for communication with the React frontend.
 
 ## Authentication
 
-| Method | Route       |
-| ------ | ----------- |
-| GET    | `/register` |
-| POST   | `/register` |
-| GET    | `/login`    |
-| POST   | `/login`    |
-| POST   | `/logout`   |
+| Method | Route |
+|--------|-------|
+| POST | `/api/register` |
+| POST | `/api/login` |
+| POST | `/api/logout` |
+| GET | `/api/profile` |
 
 ## Tutors
 
-| Method | Route               |
-| ------ | ------------------- |
-| GET    | `/tutors`           |
-| GET    | `/tutors/{id}`      |
-| GET    | `/tutors/create`    |
-| POST   | `/tutors`           |
-| GET    | `/tutors/{id}/edit` |
-| PUT    | `/tutors/{id}`      |
+| Method | Route |
+|--------|-------|
+| GET | `/api/tutors` |
+| POST | `/api/tutors` |
+| GET | `/api/tutors/{id}` |
+| PUT | `/api/tutors/{id}` |
+| DELETE | `/api/tutors/{id}` |
 
 ## Tutor Posts
 
-| Method | Route                 |
-| ------ | --------------------- |
-| GET    | `/tutor-posts`        |
-| GET    | `/tutor-posts/create` |
-| POST   | `/tutor-posts`        |
-| GET    | `/tutor-posts/{id}`   |
-| PUT    | `/tutor-posts/{id}`   |
-| DELETE | `/tutor-posts/{id}`   |
+| Method | Route |
+|--------|-------|
+| GET | `/api/tutor-posts` |
+| POST | `/api/tutor-posts` |
+| GET | `/api/tutor-posts/{id}` |
+| PUT | `/api/tutor-posts/{id}` |
+| DELETE | `/api/tutor-posts/{id}` |
 
 ## Student Requirements
 
-| Method | Route                  |
-| ------ | ---------------------- |
-| GET    | `/requirements`        |
-| GET    | `/requirements/create` |
-| POST   | `/requirements`        |
-| GET    | `/requirements/{id}`   |
-| PUT    | `/requirements/{id}`   |
-| DELETE | `/requirements/{id}`   |
+| Method | Route |
+|--------|-------|
+| GET | `/api/requirements` |
+| POST | `/api/requirements` |
+| GET | `/api/requirements/{id}` |
+| PUT | `/api/requirements/{id}` |
+| DELETE | `/api/requirements/{id}` |
 
 ## Hire Requests
 
-| Method | Route                 |
-| ------ | --------------------- |
-| GET    | `/hire-requests`      |
-| POST   | `/hire-requests`      |
-| GET    | `/hire-requests/{id}` |
-| PUT    | `/hire-requests/{id}` |
+| Method | Route |
+|--------|-------|
+| GET | `/api/hire-requests` |
+| POST | `/api/hire-requests` |
+| GET | `/api/hire-requests/{id}` |
+| PUT | `/api/hire-requests/{id}` |
 
 ## Ratings & Reviews
 
-| Method | Route           |
-| ------ | --------------- |
-| GET    | `/reviews`      |
-| POST   | `/reviews`      |
-| PUT    | `/reviews/{id}` |
-| DELETE | `/reviews/{id}` |
+| Method | Route |
+|--------|-------|
+| GET | `/api/reviews` |
+| POST | `/api/reviews` |
+| PUT | `/api/reviews/{id}` |
+| DELETE | `/api/reviews/{id}` |
 
-> Routes are planned and may be updated during development.
+> API routes are planned and may be updated during development.
 
 ---
 
@@ -527,30 +587,30 @@ The planned database relationships include:
 
 TutorSphere supports two main types of posts.
 
-## Tutor Service Post
+## 👨‍🏫 Tutor Service Post
 
 Tutors can create posts containing:
 
-* Qualifications
-* Subjects
-* Teaching experience
-* Teaching level
-* Preferred location
-* Tutoring services
-* Other relevant information
+- Qualifications
+- Subjects
+- Teaching experience
+- Teaching level
+- Preferred location
+- Tutoring services
+- Other relevant information
 
 Students can browse these posts and hire suitable tutors.
 
-## Student Requirement Post
+## 👨‍🎓 Student Requirement Post
 
 Students can create posts containing:
 
-* Required subject
-* Educational level
-* Preferred location
-* Required qualification
-* Preferred experience
-* Other requirements
+- Required subject
+- Educational level
+- Preferred location
+- Required qualification
+- Preferred experience
+- Other requirements
 
 Tutors can browse these posts and respond to suitable requirements.
 
@@ -560,12 +620,12 @@ Tutors can browse these posts and respond to suitable requirements.
 
 TutorSphere will provide search and filtering functionality based on:
 
-* Subject
-* Location
-* Qualification
-* Experience
-* Teaching level
-* Other relevant preferences
+- Subject
+- Location
+- Qualification
+- Experience
+- Teaching level
+- Other relevant preferences
 
 Students can use these filters to find suitable tutors.
 
@@ -577,19 +637,57 @@ Tutors can also browse student requirement posts and identify opportunities that
 
 Planned database components include:
 
-* Users table
-* Student Profiles table
-* Tutor Profiles table
-* Subjects table
-* Locations table
-* Qualifications table
-* Tutor Posts table
-* Student Requirements table
-* Hire Requests table
-* Ratings table
-* Reviews table
+- Users table
+- Roles table
+- Student Profiles table
+- Tutor Profiles table
+- Subjects table
+- Locations table
+- Qualifications table
+- Tutor Experience table
+- Tutor Posts table
+- Student Requirements table
+- Hire Requests table
+- Ratings table
+- Reviews table
 
 The database schema, tables, relationships, constraints, and sample data will be implemented gradually as the project progresses.
+
+---
+
+# 📁 Development Structure
+
+The project is divided into two main development areas.
+
+## Frontend Development
+
+Frontend development will focus on:
+
+- React components
+- User interface
+- Pages
+- Navigation
+- Forms
+- Search and filtering UI
+- Student dashboard
+- Tutor dashboard
+- Admin dashboard
+- API integration
+
+## Backend Development
+
+Backend development will focus on:
+
+- Laravel setup
+- Database design
+- Migrations
+- Models
+- Controllers
+- API routes
+- Authentication
+- Business logic
+- Validation
+- API integration
 
 ---
 
@@ -599,16 +697,18 @@ The database schema, tables, relationships, constraints, and sample data will be
 
 Current development areas include:
 
-* Database design
-* User authentication
-* Student management
-* Tutor management
-* Tutor posts
-* Student requirement posts
-* Search and filtering
-* Hire request management
-* Rating and review system
-* Admin management
+- Database design
+- User authentication
+- Student management
+- Tutor management
+- Tutor service posts
+- Student requirement posts
+- Search and filtering
+- Hire request management
+- Rating and review system
+- Admin management
+- React frontend
+- Laravel REST API
 
 Features will be implemented and integrated gradually.
 
@@ -618,49 +718,55 @@ Features will be implemented and integrated gradually.
 
 Possible future improvements include:
 
-* Online payment system
-* Real-time chat between students and tutors
-* Notification system
-* Tutor availability scheduling
-* Advanced tutor recommendation
-* Location-based tutor matching
-* Improved admin dashboard
-* Mobile application support
+- Online payment system
+- Real-time chat between students and tutors
+- Notification system
+- Tutor availability scheduling
+- Advanced tutor recommendation
+- Location-based tutor matching
+- Improved admin dashboard
+- Mobile application support
 
 ---
 
 # 🤝 Contribution
 
-1. Clone the repository.
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/TutorSphere.git
+git clone https://github.com/afra012/TutorSphere.git
 ```
 
-2. Create a feature branch.
+2. Navigate to the project directory:
+
+```bash
+cd TutorSphere
+```
+
+3. Create a feature branch:
 
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
-3. Make your changes.
+4. Make your changes.
 
-4. Add and commit your changes.
+5. Add and commit your changes:
 
 ```bash
 git add .
 git commit -m "Add feature"
 ```
 
-5. Push the branch.
+6. Push the branch:
 
 ```bash
 git push origin feature/your-feature-name
 ```
 
-6. Create a Pull Request.
+7. Create a Pull Request on GitHub.
 
-7. After review and approval, merge the Pull Request into the `main` branch.
+8. After review and approval, merge the Pull Request into the `main` branch.
 
 ---
 
