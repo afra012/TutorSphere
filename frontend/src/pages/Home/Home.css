@@ -1,0 +1,14 @@
+.home {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+section {
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .home {
+    overflow-x: hidden;
+  }
+}
