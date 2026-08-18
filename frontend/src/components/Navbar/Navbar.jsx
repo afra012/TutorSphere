@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import "./Navbar.css";
 import Login from "../../pages/Auth/Login/login";
 import Register from "../../pages/Auth/Register/register";
 
-function Navbar() {
+function Navbar({ hideLinks = false, dashboardMode = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
@@ -15,12 +14,19 @@ function Navbar() {
 
   return (
     <>
-      <header className="navbar-container">
+      <header
+        className={`navbar-container ${
+          dashboardMode ? "dashboard-navbar-container" : ""
+        }`}
+      >
         <nav className="navbar">
           {/* Logo */}
           <a href="/" className="navbar-logo">
             <div className="logo-icon">
-              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                viewBox="0 0 64 64"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M32 16C25 9 16 8 8 10V45C17 43 25 45 32 51V16Z"
                   fill="none"
@@ -55,57 +61,105 @@ function Navbar() {
           </button>
 
           {/* Navbar Content */}
-          <div className={`navbar-content ${menuOpen ? "show" : ""}`}>
-            <div className="navbar-links">
-              <a href="/" className="nav-link active">
-                Home
-              </a>
+          <div
+            className={`navbar-content ${
+              menuOpen ? "show" : ""
+            }`}
+          >
+            {/* Normal Navbar Links */}
+            {!hideLinks && !dashboardMode && (
+              <div className="navbar-links">
+                <a href="/" className="nav-link active">
+                  Home
+                </a>
 
-              <a href="/about" className="nav-link">
-                About Us
-              </a>
+                <a href="/about" className="nav-link">
+                  About Us
+                </a>
 
-              <a href="/job-dashboard" className="nav-link">
-                Job Dashboard
-              </a>
+                <a href="/job-dashboard" className="nav-link">
+                  Job Dashboard
+                </a>
 
-              <Link to="/reviews" className="nav-link">
-                Reviews
-              </Link>
+                {/* Reviews */}
+                <Link to="/reviews" className="nav-link">
+                  Reviews
+                </Link>
 
-              <a href="/help" className="nav-link">
-                Help
-              </a>
-            </div>
+                <a href="/help" className="nav-link">
+                  Help
+                </a>
+              </div>
+            )}
 
-            {/* Buttons */}
-            <div className="navbar-buttons">
-              {/* Login */}
-              <button
-                type="button"
-                className="login-button"
-                onClick={() => {
-                  setLoginOpen(true);
-                  setRegisterOpen(false);
-                  setMenuOpen(false);
-                }}
-              >
-                Login
-              </button>
+            {/* Dashboard Account Actions */}
+            {dashboardMode ? (
+              <div className="dashboard-account-actions">
+                {/* Notification */}
+                <button
+                  type="button"
+                  className="notification-button"
+                  aria-label="Notifications"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  >
+                    <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4" />
+                  </svg>
 
-              {/* Register */}
-              <button
-                type="button"
-                className="register-button"
-                onClick={() => {
-                  setRegisterOpen(true);
-                  setLoginOpen(false);
-                  setMenuOpen(false);
-                }}
-              >
-                Register
-              </button>
-            </div>
+                  <i />
+                </button>
+
+                {/* Profile */}
+                <button
+                  type="button"
+                  className="profile-button"
+                  onClick={() => navigate("/profile")}
+                >
+                  <span className="profile-avatar">
+                    A
+                  </span>
+
+                  <span className="profile-name">
+                    <strong>Hi</strong>
+                    <small>Student</small>
+                  </span>
+                </button>
+              </div>
+            ) : (
+              /* Login / Register Buttons */
+              <div className="navbar-buttons">
+                {/* Login */}
+                <button
+                  type="button"
+                  className="login-button"
+                  onClick={() => {
+                    setLoginOpen(true);
+                    setRegisterOpen(false);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Login
+                </button>
+
+                {/* Register */}
+                <button
+                  type="button"
+                  className="register-button"
+                  onClick={() => {
+                    setRegisterOpen(true);
+                    setLoginOpen(false);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Register
+                </button>
+              </div>
+            )}
           </div>
         </nav>
       </header>
