@@ -9,6 +9,7 @@ import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
 import Help from "./pages/Help/Help";
+import Profile from "./pages/Profile/Profile";
 import Review from "./pages/Reviews/Review";
 
 /* =========================
@@ -139,6 +140,19 @@ function App() {
             <>
               <Navbar dashboardMode />
               <JobDashboard />
+            </>
+          }
+        />
+
+        {/* =========================
+            PROFILE
+        ========================= */}
+        <Route
+          path="/profile"
+          element={
+            <>
+              <Navbar dashboardMode />
+              <Profile />
             </>
           }
         />
