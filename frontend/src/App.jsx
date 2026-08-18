@@ -1,7 +1,22 @@
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+
 
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
+import About from "./pages/About/About";
+
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
 
 import Login from "./pages/auth/Login/Login";
 import Register from "./pages/auth/Register/Register";
@@ -88,6 +103,7 @@ function App() {
             </>
           }
         />
+
 
       </Routes>
     </BrowserRouter>
