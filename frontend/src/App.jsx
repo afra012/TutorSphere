@@ -11,6 +11,7 @@ import Register from "./pages/Auth/Register/register";
 import Help from "./pages/Help/Help";
 
 import TeacherProfile from "./pages/TeacherProfile/TeacherProfile";
+import Profile from "./pages/Profile/Profile";
 
 import Profile from "./pages/Profile/Profile";
 import Review from "./pages/Reviews/Review";
@@ -174,6 +175,17 @@ function App() {
           path="/reviews"
           element={<ReviewsPage />}
 
+        />
+
+        {/* PROFILE */}
+        <Route
+          path="/profile"
+          element={
+            <>
+              <Navbar dashboardMode />
+              <Profile />
+            </>
+          }
         />
 
       </Routes>
