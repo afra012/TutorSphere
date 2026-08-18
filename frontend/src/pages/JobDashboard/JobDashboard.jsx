@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 import studentJobImage from "../../assets/student-job.png";
 import teacherProfileImage from "../../assets/teacher-profile.png";
@@ -40,6 +41,7 @@ function FeatureCard({
   items,
   button,
   image,
+  onClick,
 }) {
   return (
     <article className={`dashboard-card feature-card ${type}`}>
@@ -62,7 +64,11 @@ function FeatureCard({
         ))}
       </ul>
 
-      <button className="primary-dashboard-button" type="button">
+      <button
+        className="primary-dashboard-button"
+        type="button"
+        onClick={onClick}
+      >
         {button} <span>→</span>
       </button>
 
@@ -74,6 +80,8 @@ function FeatureCard({
 }
 
 export default function JobDashboard() {
+  const navigate = useNavigate();
+
   return (
     <main className="job-dashboard-page">
       <DashboardSidebar />
@@ -111,6 +119,7 @@ export default function JobDashboard() {
             ]}
             button="View Teachers Profiles"
             image={teacherProfileImage}
+            onClick={() => navigate("/teacher-profile")}
           />
         </div>
 

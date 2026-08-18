@@ -9,6 +9,7 @@ import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
 import Help from "./pages/Help/Help";
+import TeacherProfile from "./pages/TeacherProfile/TeacherProfile";
 
 /* =========================
    LOGIN PAGE
@@ -115,6 +116,12 @@ function App() {
               <JobDashboard />
             </>
           }
+        />
+
+        {/* TEACHER PROFILE */}
+        <Route
+          path="/teacher-profile"
+          element={<TeacherProfile />}
         />
 
       </Routes>
