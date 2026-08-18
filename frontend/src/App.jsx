@@ -9,8 +9,12 @@ import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
 import Help from "./pages/Help/Help";
+
+import TeacherProfile from "./pages/TeacherProfile/TeacherProfile";
+
 import Profile from "./pages/Profile/Profile";
 import Review from "./pages/Reviews/Review";
+
 
 /* =========================
    LOGIN PAGE
@@ -144,6 +148,12 @@ function App() {
           }
         />
 
+
+        {/* TEACHER PROFILE */}
+        <Route
+          path="/teacher-profile"
+          element={<TeacherProfile />}
+
         {/* =========================
             PROFILE
         ========================= */}
@@ -163,6 +173,7 @@ function App() {
         <Route
           path="/reviews"
           element={<ReviewsPage />}
+
         />
 
       </Routes>
