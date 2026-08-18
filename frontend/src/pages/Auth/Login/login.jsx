@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import "./Login.css";
 
 function Login({ onClose, onRegister, onLoginSuccess }) {
@@ -10,7 +11,7 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
@@ -29,39 +30,61 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
       return;
     }
 
-    // Get registered users
-    const users =
-      JSON.parse(localStorage.getItem("tutorsphereUsers")) || [];
+    try {
+      // Convert frontend role to backend role
+      const backendRole =
+        role === "Tutor"
+          ? "teacher"
+          : role === "Student"
+            ? "student"
+            : "admin";
 
-    // Normalize email
-    const emailValue = email.trim().toLowerCase();
+      // Send login request to Laravel
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/login",
+        {
+          email: email.trim().toLowerCase(),
+          password: password,
+          role: backendRole,
+        }
+      );
 
-    // Find matching user
-    const user = users.find(
-      (item) =>
-        item.email &&
-        item.email.toLowerCase() === emailValue &&
-        item.password === password &&
-        item.role === role
-    );
+      // Save Sanctum token
+      localStorage.setItem(
+        "authToken",
+        response.data.token
+      );
 
-    // Invalid login
-    if (!user) {
-      setError("Invalid email, password, or role.");
-      return;
-    }
+      // Save current user
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(response.data.user)
+      );
 
-    // Save login information
-    localStorage.setItem("isLoggedIn", "true");
+      // Save login status
+      localStorage.setItem(
+        "isLoggedIn",
+        "true"
+      );
 
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(user)
-    );
+      // Login successful
+      if (onLoginSuccess) {
+        onLoginSuccess(response.data.user);
+      }
 
-    // Login successful
-    if (onLoginSuccess) {
-      onLoginSuccess();
+    } catch (error) {
+      if (error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+
+        setError(
+          Object.values(errors)[0][0]
+        );
+      } else {
+        setError(
+          error.response?.data?.message ||
+          "Login failed. Please try again."
+        );
+      }
     }
   };
 
@@ -178,7 +201,11 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
             <span className="input-icon">🔒</span>
 
             <input
-              type={showPassword ? "text" : "password"}
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
               placeholder="••••••••"
               value={password}
               onChange={(e) => {
@@ -225,6 +252,7 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
         {/* Register */}
         <p className="bottom-text">
           Don't have an account?{" "}
+
           <button
             type="button"
             onClick={onRegister}

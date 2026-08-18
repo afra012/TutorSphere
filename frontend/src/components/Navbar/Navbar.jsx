@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import "./Navbar.css";
 import Login from "../../pages/Auth/Login/login";
@@ -14,9 +14,12 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
 
   return (
     <>
-      <header className={`navbar-container ${dashboardMode ? "dashboard-navbar-container" : ""}`}>
+      <header
+        className={`navbar-container ${
+          dashboardMode ? "dashboard-navbar-container" : ""
+        }`}
+      >
         <nav className="navbar">
-
           {/* Logo */}
           <a href="/" className="navbar-logo">
             <div className="logo-icon">
@@ -63,71 +66,100 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
               menuOpen ? "show" : ""
             }`}
           >
-            {!hideLinks && !dashboardMode && <div className="navbar-links">
+            {/* Normal Navbar Links */}
+            {!hideLinks && !dashboardMode && (
+              <div className="navbar-links">
+                <a href="/" className="nav-link active">
+                  Home
+                </a>
 
-              <a href="/" className="nav-link active">
-                Home
-              </a>
+                <a href="/about" className="nav-link">
+                  About Us
+                </a>
 
-              <a href="/about" className="nav-link">
-                About Us
-              </a>
+                <a href="/job-dashboard" className="nav-link">
+                  Job Dashboard
+                </a>
 
-              <a
-                href="/job-dashboard"
-                className="nav-link"
-              >
-                Job Dashboard
-              </a>
+                {/* Reviews */}
+                <Link to="/reviews" className="nav-link">
+                  Reviews
+                </Link>
 
-              <a href="/reviews" className="nav-link">
-                Reviews
-              </a>
+                <a href="/help" className="nav-link">
+                  Help
+                </a>
+              </div>
+            )}
 
-              <a href="/help" className="nav-link">
-                Help
-              </a>
-
-            </div>}
-
+            {/* Dashboard Account Actions */}
             {dashboardMode ? (
               <div className="dashboard-account-actions">
-                <button type="button" className="notification-button" aria-label="Notifications">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4" /></svg><i />
+                {/* Notification */}
+                <button
+                  type="button"
+                  className="notification-button"
+                  aria-label="Notifications"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  >
+                    <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4" />
+                  </svg>
+
+                  <i />
                 </button>
-                <button type="button" className="profile-button" onClick={() => navigate("/profile")}>
-                  <span className="profile-avatar">A</span><span className="profile-name"><strong>Hi</strong><small>Student</small></span>
+
+                {/* Profile */}
+                <button
+                  type="button"
+                  className="profile-button"
+                  onClick={() => navigate("/profile")}
+                >
+                  <span className="profile-avatar">
+                    A
+                  </span>
+
+                  <span className="profile-name">
+                    <strong>Hi</strong>
+                    <small>Student</small>
+                  </span>
                 </button>
               </div>
-            ) : <div className="navbar-buttons">
+            ) : (
+              /* Login / Register Buttons */
+              <div className="navbar-buttons">
+                {/* Login */}
+                <button
+                  type="button"
+                  className="login-button"
+                  onClick={() => {
+                    setLoginOpen(true);
+                    setRegisterOpen(false);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Login
+                </button>
 
-              {/* Login */}
-              <button
-                type="button"
-                className="login-button"
-                onClick={() => {
-                  setLoginOpen(true);
-                  setRegisterOpen(false);
-                  setMenuOpen(false);
-                }}
-              >
-                Login
-              </button>
-
-              {/* Register */}
-              <button
-                type="button"
-                className="register-button"
-                onClick={() => {
-                  setRegisterOpen(true);
-                  setLoginOpen(false);
-                  setMenuOpen(false);
-                }}
-              >
-                Register
-              </button>
-
-            </div>}
+                {/* Register */}
+                <button
+                  type="button"
+                  className="register-button"
+                  onClick={() => {
+                    setRegisterOpen(true);
+                    setLoginOpen(false);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Register
+                </button>
+              </div>
+            )}
           </div>
         </nav>
       </header>
@@ -136,12 +168,10 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
       {loginOpen && (
         <Login
           onClose={() => setLoginOpen(false)}
-
           onRegister={() => {
             setLoginOpen(false);
             setRegisterOpen(true);
           }}
-
           onLoginSuccess={() => {
             setLoginOpen(false);
             navigate("/job-dashboard");
@@ -153,12 +183,10 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
       {registerOpen && (
         <Register
           onClose={() => setRegisterOpen(false)}
-
           onLogin={() => {
             setRegisterOpen(false);
             setLoginOpen(true);
           }}
-
           onRegisterSuccess={() => {
             setRegisterOpen(false);
             setLoginOpen(true);

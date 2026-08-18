@@ -9,7 +9,12 @@ import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
 import Help from "./pages/Help/Help";
+
 import TeacherProfile from "./pages/TeacherProfile/TeacherProfile";
+
+import Profile from "./pages/Profile/Profile";
+import Review from "./pages/Reviews/Review";
+
 
 /* =========================
    LOGIN PAGE
@@ -54,6 +59,19 @@ function HomeWithRegister() {
 }
 
 /* =========================
+   REVIEWS PAGE
+========================= */
+
+function ReviewsPage() {
+  return (
+    <>
+      <Navbar />
+      <Review />
+    </>
+  );
+}
+
+/* =========================
    APP
 ========================= */
 
@@ -62,7 +80,9 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* HOME */}
+        {/* =========================
+            HOME
+        ========================= */}
         <Route
           path="/"
           element={
@@ -73,7 +93,9 @@ function App() {
           }
         />
 
-        {/* ABOUT */}
+        {/* =========================
+            ABOUT
+        ========================= */}
         <Route
           path="/about"
           element={
@@ -84,19 +106,25 @@ function App() {
           }
         />
 
-        {/* LOGIN */}
+        {/* =========================
+            LOGIN
+        ========================= */}
         <Route
           path="/login"
           element={<HomeWithLogin />}
         />
 
-        {/* REGISTER */}
+        {/* =========================
+            REGISTER
+        ========================= */}
         <Route
           path="/register"
           element={<HomeWithRegister />}
         />
 
-        {/* HELP */}
+        {/* =========================
+            HELP
+        ========================= */}
         <Route
           path="/help"
           element={
@@ -107,7 +135,9 @@ function App() {
           }
         />
 
-        {/* JOB DASHBOARD */}
+        {/* =========================
+            JOB DASHBOARD
+        ========================= */}
         <Route
           path="/job-dashboard"
           element={
@@ -118,10 +148,32 @@ function App() {
           }
         />
 
+
         {/* TEACHER PROFILE */}
         <Route
           path="/teacher-profile"
           element={<TeacherProfile />}
+
+        {/* =========================
+            PROFILE
+        ========================= */}
+        <Route
+          path="/profile"
+          element={
+            <>
+              <Navbar dashboardMode />
+              <Profile />
+            </>
+          }
+        />
+
+        {/* =========================
+            REVIEWS
+        ========================= */}
+        <Route
+          path="/reviews"
+          element={<ReviewsPage />}
+
         />
 
       </Routes>
