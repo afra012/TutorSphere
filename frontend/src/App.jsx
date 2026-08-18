@@ -1,25 +1,15 @@
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-
 
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 
+import Login from "./pages/Auth/Login/login";
+import Register from "./pages/Auth/Register/register";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-
-import Login from "./pages/auth/Login/Login";
-import Register from "./pages/auth/Register/Register";
+/* =========================
+   LOGIN PAGE
+========================= */
 
 function HomeWithLogin() {
   const navigate = useNavigate();
@@ -38,6 +28,10 @@ function HomeWithLogin() {
   );
 }
 
+/* =========================
+   REGISTER PAGE
+========================= */
+
 function HomeWithRegister() {
   const navigate = useNavigate();
 
@@ -55,12 +49,16 @@ function HomeWithRegister() {
   );
 }
 
+/* =========================
+   APP
+========================= */
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Home */}
+        {/* HOME */}
         <Route
           path="/"
           element={
@@ -71,19 +69,30 @@ function App() {
           }
         />
 
-        {/* Login */}
+        {/* ABOUT */}
+        <Route
+          path="/about"
+          element={
+            <>
+              <Navbar />
+              <About />
+            </>
+          }
+        />
+
+        {/* LOGIN */}
         <Route
           path="/login"
           element={<HomeWithLogin />}
         />
 
-        {/* Register */}
+        {/* REGISTER */}
         <Route
           path="/register"
           element={<HomeWithRegister />}
         />
 
-        {/* Job Dashboard */}
+        {/* JOB DASHBOARD */}
         <Route
           path="/job-dashboard"
           element={
@@ -103,7 +112,6 @@ function App() {
             </>
           }
         />
-
 
       </Routes>
     </BrowserRouter>
