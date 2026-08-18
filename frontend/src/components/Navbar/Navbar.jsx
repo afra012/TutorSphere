@@ -5,7 +5,7 @@ import "./Navbar.css";
 import Login from "../../pages/Auth/Login/login";
 import Register from "../../pages/Auth/Register/register";
 
-function Navbar() {
+function Navbar({ hideLinks = false, dashboardMode = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
@@ -14,7 +14,7 @@ function Navbar() {
 
   return (
     <>
-      <header className="navbar-container">
+      <header className={`navbar-container ${dashboardMode ? "dashboard-navbar-container" : ""}`}>
         <nav className="navbar">
 
           {/* Logo */}
@@ -63,7 +63,7 @@ function Navbar() {
               menuOpen ? "show" : ""
             }`}
           >
-            <div className="navbar-links">
+            {!hideLinks && !dashboardMode && <div className="navbar-links">
 
               <a href="/" className="nav-link active">
                 Home
@@ -88,10 +88,18 @@ function Navbar() {
                 Help
               </a>
 
-            </div>
+            </div>}
 
-            {/* Buttons */}
-            <div className="navbar-buttons">
+            {dashboardMode ? (
+              <div className="dashboard-account-actions">
+                <button type="button" className="notification-button" aria-label="Notifications">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4" /></svg><i />
+                </button>
+                <button type="button" className="profile-button" onClick={() => navigate("/profile")}>
+                  <span className="profile-avatar">A</span><span className="profile-name"><strong>Hi</strong><small>Student</small></span>
+                </button>
+              </div>
+            ) : <div className="navbar-buttons">
 
               {/* Login */}
               <button
@@ -119,7 +127,7 @@ function Navbar() {
                 Register
               </button>
 
-            </div>
+            </div>}
           </div>
         </nav>
       </header>

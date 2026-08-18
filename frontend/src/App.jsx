@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
+import JobDashboard from "./pages/JobDashboard/JobDashboard";
 import About from "./pages/About/About";
 
 import Login from "./pages/Auth/Login/login";
@@ -110,18 +111,8 @@ function App() {
           path="/job-dashboard"
           element={
             <>
-              <Navbar />
-
-              <div
-                style={{
-                  minHeight: "80vh",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <h1>Job Dashboard</h1>
-              </div>
+              <Navbar dashboardMode />
+              <JobDashboard />
             </>
           }
         />
