@@ -1,0 +1,148 @@
+.help-page {
+  width: 100%;
+}
+
+/* =========================
+   HERO / BACKGROUND
+========================= */
+
+.help-hero {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 170px 24px 90px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: linear-gradient(180deg, #f4effd 0%, #ece2fb 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================
+   HEADING
+========================= */
+
+.help-heading {
+  margin: 0 0 16px;
+
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-align: center;
+  color: #221a33;
+}
+
+.help-subtext {
+  max-width: 620px;
+  margin: 0 0 40px;
+
+  font-size: 16px;
+  line-height: 165%;
+  text-align: center;
+  color: #625b70;
+}
+
+/* =========================
+   CONTACT SUPPORT CARD
+========================= */
+
+.help-contact-card {
+  width: 100%;
+  max-width: 780px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+
+  margin-top: 40px;
+  padding: 32px 40px;
+
+  background: linear-gradient(135deg, #7b3fe4, #5a1fd0);
+  border-radius: 20px;
+
+  box-shadow: 0 14px 30px rgba(100, 37, 232, 0.25);
+}
+
+.help-contact-text h2 {
+  margin: 0 0 6px;
+
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.help-contact-text p {
+  margin: 0;
+  max-width: 420px;
+
+  font-size: 14px;
+  line-height: 155%;
+  color: #e9ddfb;
+}
+
+.help-contact-button {
+  flex-shrink: 0;
+
+  padding: 14px 28px;
+
+  background: #ffffff;
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 700;
+  color: #6425e8;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: 0.25s;
+}
+
+.help-contact-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .help-hero {
+    padding: 150px 20px 70px;
+  }
+
+  .help-heading {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .help-hero {
+    padding: 130px 16px 60px;
+  }
+
+  .help-heading {
+    font-size: 28px;
+  }
+
+  .help-subtext {
+    font-size: 14px;
+  }
+
+  .help-contact-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 26px 24px;
+  }
+
+  .help-contact-button {
+    width: 100%;
+    text-align: center;
+  }
+}

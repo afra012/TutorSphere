@@ -7,6 +7,8 @@ import About from "./pages/About/About";
 import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
+import Help from "./pages/Help/Help";
+
 /* =========================
    LOGIN PAGE
 ========================= */
@@ -90,6 +92,17 @@ function App() {
         <Route
           path="/register"
           element={<HomeWithRegister />}
+        />
+
+        {/* HELP */}
+        <Route
+          path="/help"
+          element={
+            <>
+              <Navbar />
+              <Help />
+            </>
+          }
         />
 
         {/* JOB DASHBOARD */}
