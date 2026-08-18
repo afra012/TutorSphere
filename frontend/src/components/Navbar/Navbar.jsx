@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./Navbar.css";
 import Login from "../../pages/Auth/Login/login";
@@ -16,14 +17,10 @@ function Navbar() {
     <>
       <header className="navbar-container">
         <nav className="navbar">
-
           {/* Logo */}
           <a href="/" className="navbar-logo">
             <div className="logo-icon">
-              <svg
-                viewBox="0 0 64 64"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M32 16C25 9 16 8 8 10V45C17 43 25 45 32 51V16Z"
                   fill="none"
@@ -58,13 +55,8 @@ function Navbar() {
           </button>
 
           {/* Navbar Content */}
-          <div
-            className={`navbar-content ${
-              menuOpen ? "show" : ""
-            }`}
-          >
+          <div className={`navbar-content ${menuOpen ? "show" : ""}`}>
             <div className="navbar-links">
-
               <a href="/" className="nav-link active">
                 Home
               </a>
@@ -73,26 +65,21 @@ function Navbar() {
                 About Us
               </a>
 
-              <a
-                href="/job-dashboard"
-                className="nav-link"
-              >
+              <a href="/job-dashboard" className="nav-link">
                 Job Dashboard
               </a>
 
-              <a href="/reviews" className="nav-link">
+              <Link to="/reviews" className="nav-link">
                 Reviews
-              </a>
+              </Link>
 
               <a href="/help" className="nav-link">
                 Help
               </a>
-
             </div>
 
             {/* Buttons */}
             <div className="navbar-buttons">
-
               {/* Login */}
               <button
                 type="button"
@@ -118,7 +105,6 @@ function Navbar() {
               >
                 Register
               </button>
-
             </div>
           </div>
         </nav>
@@ -128,12 +114,10 @@ function Navbar() {
       {loginOpen && (
         <Login
           onClose={() => setLoginOpen(false)}
-
           onRegister={() => {
             setLoginOpen(false);
             setRegisterOpen(true);
           }}
-
           onLoginSuccess={() => {
             setLoginOpen(false);
             navigate("/job-dashboard");
@@ -145,12 +129,10 @@ function Navbar() {
       {registerOpen && (
         <Register
           onClose={() => setRegisterOpen(false)}
-
           onLogin={() => {
             setRegisterOpen(false);
             setLoginOpen(true);
           }}
-
           onRegisterSuccess={() => {
             setRegisterOpen(false);
             setLoginOpen(true);
