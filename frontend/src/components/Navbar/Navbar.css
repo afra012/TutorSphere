@@ -9,6 +9,7 @@
 
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: Arial, sans-serif;
 }
 
@@ -19,38 +20,28 @@ body {
 .navbar-container {
   width: 100%;
   padding: 22px 40px;
-
   position: absolute;
   top: 0;
   left: 0;
-
   z-index: 1000;
 }
 
 .navbar {
   width: 100%;
   padding: 18px 30px;
-
   display: flex;
   align-items: center;
-
   background: white;
   border-radius: 20px;
-
-  box-shadow: 0 5px 20px rgba(90, 40, 180, 0.1);
+  box-shadow: 0 6px 22px rgba(95, 40, 180, 0.1);
 }
 
-/* =========================
-   LOGO
-========================= */
 
 .navbar-logo {
   width: 280px;
-
   display: flex;
   align-items: center;
   gap: 12px;
-
   text-decoration: none;
 }
 
@@ -65,43 +56,33 @@ body {
 
 .logo-text h2 {
   margin: 0;
-
   color: #6425e8;
   font-size: 26px;
 }
 
 .logo-text p {
   margin: 2px 0;
-
-  color: #555;
+  color: #625b70;
   font-size: 13px;
 }
 
-/* =========================
-   NAVBAR LINKS
-========================= */
 
 .navbar-content {
   flex: 1;
-
   display: flex;
   align-items: center;
 }
 
 .navbar-links {
   margin: 0 auto;
-
   display: flex;
-  align-items: center;
   gap: 30px;
 }
 
 .nav-link {
   padding: 10px 0;
-
   color: #171126;
   text-decoration: none;
-
   font-weight: 600;
 }
 
@@ -111,9 +92,6 @@ body {
   border-bottom: 2px solid #6425e8;
 }
 
-/* =========================
-   BUTTONS
-========================= */
 
 .navbar-buttons {
   display: flex;
@@ -123,14 +101,19 @@ body {
 .login-button,
 .register-button {
   padding: 12px 24px;
-
   border-radius: 10px;
+
 
   font-family: Arial, sans-serif;
   font-size: 15px;
   font-weight: 600;
 
   cursor: pointer;
+
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+
 }
 
 /* Login */
@@ -153,9 +136,17 @@ body {
   border: 2px solid #6425e8;
 }
 
+
 /* =========================
    MOBILE
 ========================= */
+
+.login-button:hover,
+.register-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(100, 37, 232, 0.2);
+}
+
 
 .menu-button {
   display: none;
@@ -163,22 +154,31 @@ body {
 
 @media (max-width: 900px) {
 
+
+@media (max-wid>>>>>>> main
   .navbar-container {
-    padding: 15px;
+    padding: 18px;
   }
 
   .navbar-logo {
     width: auto;
   }
 
+  .navbar-links {
+    gap: 18px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 800px) {
   .menu-button {
     display: block;
-
     margin-left: auto;
-
     border: none;
     background: none;
-
     color: #6425e8;
     font-size: 28px;
 
@@ -191,21 +191,48 @@ body {
 
   .navbar-content.show {
     display: flex;
-
     position: absolute;
     top: 100px;
-    left: 20px;
-    right: 20px;
-
+    left: 18px;
+    right: 18px;
     padding: 20px;
-
     background: white;
-
+    border-radius: 15px;
     flex-direction: column;
     gap: 20px;
+    box-shadow: 0 8px 25px rgba(95, 40, 180, 0.15);
   }
 
   .navbar-links {
     flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .navbar-container {
+    padding: 10px;
+  }
+
+  .navbar {
+    padding: 14px 18px;
+  }
+
+  .logo-text h2 {
+    font-size: 21px;
+  }
+
+  .logo-text p {
+    display: none;
+  }
+
+  .navbar-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .login-button,
+  .register-button {
+    text-align: center;
   }
 }

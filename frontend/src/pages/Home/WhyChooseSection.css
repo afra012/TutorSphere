@@ -1,57 +1,84 @@
 .why-choose {
-  padding: 60px 5%;
+  width: 100%;
+  padding: 70px 5%;
   text-align: center;
   background: #f8f3ff;
 }
 
 .why-choose h2 {
-  margin-bottom: 35px;
+  margin: 0 0 40px;
   font-size: 36px;
   color: #211536;
 }
 
 .feature-cards {
   display: flex;
-  gap: 25px;
   justify-content: center;
+  gap: 25px;
 }
 
 .feature-card {
   flex: 1;
   max-width: 380px;
-  padding: 30px;
+  padding: 32px 25px;
+
   background: white;
   border-radius: 18px;
+
   box-shadow: 0 6px 20px rgba(100, 37, 232, 0.1);
   transition: 0.3s;
 }
 
 .feature-card:hover {
   transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(100, 37, 232, 0.18);
 }
 
 .feature-icon {
   width: 70px;
   height: 70px;
+
   margin: 0 auto 18px;
+
   display: grid;
   place-items: center;
-  border-radius: 50%;
+
   background: #eee5ff;
+  border-radius: 50%;
+
   font-size: 32px;
 }
 
 .feature-card h3 {
+  margin: 0 0 10px;
   color: #211536;
-  margin-bottom: 10px;
 }
 
 .feature-card p {
+  margin: 0;
   color: #655d70;
   line-height: 1.6;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
+  .feature-cards {
+    gap: 18px;
+  }
+
+  .feature-card {
+    padding: 25px 18px;
+  }
+}
+
+@media (max-width: 700px) {
+  .why-choose {
+    padding: 50px 20px;
+  }
+
+  .why-choose h2 {
+    font-size: 30px;
+  }
+
   .feature-cards {
     flex-direction: column;
     align-items: center;
@@ -59,5 +86,6 @@
 
   .feature-card {
     width: 100%;
+    max-width: 420px;
   }
 }
