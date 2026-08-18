@@ -1,0 +1,333 @@
+/* =========================
+   OVERLAY
+========================= */
+
+.register-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(235, 221, 252, 0.55);
+
+  backdrop-filter: blur(1.5px);
+}
+
+/* =========================
+   CARD
+========================= */
+
+.register-card {
+  position: relative;
+
+  width: 380px;
+
+  padding: 25px 28px 22px;
+
+  border-radius: 17px;
+
+  background: linear-gradient(
+    145deg,
+    #fffaff,
+    #f8f0ff
+  );
+
+  box-shadow:
+    0 15px 35px rgba(75, 42, 120, 0.18),
+    0 3px 10px rgba(75, 42, 120, 0.08);
+
+  border: 1px solid rgba(116, 70, 180, 0.1);
+}
+
+/* Close */
+
+.register-close {
+  position: absolute;
+
+  top: 13px;
+  right: 14px;
+
+  width: 25px;
+  height: 25px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #eee2ff;
+
+  color: #7041b7;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+/* Heading */
+
+.register-card h2 {
+  margin: 0 0 5px;
+
+  color: #55318f;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 23px;
+}
+
+.register-subtitle {
+  margin: 0 0 16px;
+
+  color: #766b82;
+
+  font-size: 10px;
+}
+
+/* Groups */
+
+.register-group {
+  margin-bottom: 10px;
+}
+
+.register-group label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #5f526d;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+/* Input */
+
+.register-input {
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  border: 1px solid #ded1ec;
+
+  border-radius: 7px;
+
+  background: #faf7fd;
+}
+
+.register-input:focus-within {
+  border-color: #8051bd;
+}
+
+.register-input span {
+  width: 34px;
+
+  display: flex;
+  justify-content: center;
+
+  color: #7442b6;
+
+  font-size: 11px;
+}
+
+.register-input input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #4c4357;
+
+  font-size: 10px;
+}
+
+.register-input input::placeholder {
+  color: #aaa1b1;
+}
+
+/* =========================
+   ROLES
+========================= */
+
+.register-roles {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 8px;
+}
+
+.register-role {
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border: 1px solid #ded1ec;
+
+  border-radius: 7px;
+
+  background: #fffaff;
+
+  color: #604f76;
+
+  font-size: 10px;
+
+  cursor: pointer;
+}
+
+.register-role.active {
+  border-color: #9871c9;
+
+  background: #f1e7ff;
+
+  color: #6236a1;
+}
+
+/* =========================
+   TERMS
+========================= */
+
+.terms {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  margin: 10px 0 12px;
+
+  color: #756b82;
+
+  font-size: 9px;
+
+  cursor: pointer;
+}
+
+.terms input {
+  width: 12px;
+  height: 12px;
+
+  accent-color: #7040c4;
+}
+
+.terms a {
+  color: #6337a5;
+
+  font-weight: 600;
+
+  text-decoration: underline;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.register-error {
+  margin-bottom: 9px;
+
+  padding: 7px;
+
+  border-radius: 6px;
+
+  background: #fff0f2;
+
+  color: #c84c66;
+
+  font-size: 9px;
+
+  text-align: center;
+}
+
+/* =========================
+   REGISTER BUTTON
+========================= */
+
+.register-submit {
+  width: 100%;
+
+  height: 37px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: linear-gradient(
+    90deg,
+    #6531d0,
+    #7b3dde
+  );
+
+  color: white;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 12px
+    rgba(101, 49, 208, 0.25);
+}
+
+.register-submit:hover {
+  background: linear-gradient(
+    90deg,
+    #5b2ac4,
+    #7135d2
+  );
+}
+
+/* =========================
+   BOTTOM
+========================= */
+
+.register-bottom {
+  margin: 12px 0 0;
+
+  color: #776d82;
+
+  font-size: 9px;
+
+  text-align: center;
+}
+
+.register-bottom button {
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #6136a0;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+/* Responsive */
+
+@media (max-width: 480px) {
+  .register-card {
+    width: calc(100% - 35px);
+
+    padding: 23px 22px 20px;
+  }
+}
