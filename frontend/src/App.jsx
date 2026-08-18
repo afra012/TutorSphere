@@ -3,9 +3,16 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import JobDashboard from "./pages/JobDashboard/JobDashboard";
+import About from "./pages/About/About";
 
-import Login from "./pages/auth/Login/Login";
-import Register from "./pages/auth/Register/Register";
+import Login from "./pages/Auth/Login/login";
+import Register from "./pages/Auth/Register/register";
+
+import Help from "./pages/Help/Help";
+
+/* =========================
+   LOGIN PAGE
+========================= */
 
 function HomeWithLogin() {
   const navigate = useNavigate();
@@ -24,6 +31,10 @@ function HomeWithLogin() {
   );
 }
 
+/* =========================
+   REGISTER PAGE
+========================= */
+
 function HomeWithRegister() {
   const navigate = useNavigate();
 
@@ -41,12 +52,16 @@ function HomeWithRegister() {
   );
 }
 
+/* =========================
+   APP
+========================= */
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Home */}
+        {/* HOME */}
         <Route
           path="/"
           element={
@@ -57,19 +72,41 @@ function App() {
           }
         />
 
-        {/* Login */}
+        {/* ABOUT */}
+        <Route
+          path="/about"
+          element={
+            <>
+              <Navbar />
+              <About />
+            </>
+          }
+        />
+
+        {/* LOGIN */}
         <Route
           path="/login"
           element={<HomeWithLogin />}
         />
 
-        {/* Register */}
+        {/* REGISTER */}
         <Route
           path="/register"
           element={<HomeWithRegister />}
         />
 
-        {/* Job Dashboard */}
+        {/* HELP */}
+        <Route
+          path="/help"
+          element={
+            <>
+              <Navbar />
+              <Help />
+            </>
+          }
+        />
+
+        {/* JOB DASHBOARD */}
         <Route
           path="/job-dashboard"
           element={

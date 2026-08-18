@@ -20,33 +20,45 @@ body {
 .navbar-container {
   width: 100%;
   padding: 22px 40px;
+
   position: absolute;
   top: 0;
   left: 0;
+
   z-index: 1000;
 }
 
 .navbar {
   width: 100%;
   padding: 18px 30px;
+
   display: flex;
   align-items: center;
+
   background: white;
   border-radius: 20px;
+
   box-shadow: 0 6px 22px rgba(95, 40, 180, 0.1);
 }
 
+/* =========================
+   LOGO
+========================= */
 
 .navbar-logo {
   width: 280px;
+
   display: flex;
   align-items: center;
+
   gap: 12px;
+
   text-decoration: none;
 }
 
 .logo-icon {
   width: 50px;
+
   color: #6425e8;
 }
 
@@ -56,101 +68,139 @@ body {
 
 .logo-text h2 {
   margin: 0;
+
   color: #6425e8;
+
   font-size: 26px;
 }
 
 .logo-text p {
   margin: 2px 0;
+
   color: #625b70;
+
   font-size: 13px;
 }
 
+/* =========================
+
+========================= */
 
 .navbar-content {
   flex: 1;
+
   display: flex;
   align-items: center;
 }
 
 .navbar-links {
   margin: 0 auto;
+
   display: flex;
+
   gap: 30px;
 }
 
 .nav-link {
   padding: 10px 0;
+
   color: #171126;
+
   text-decoration: none;
+
   font-weight: 600;
 }
 
 .nav-link:hover,
 .nav-link.active {
   color: #6425e8;
+
   border-bottom: 2px solid #6425e8;
 }
 
+/* =========================
+   BUTTONS
+========================= */
 
 .navbar-buttons {
   display: flex;
+
   gap: 15px;
 }
 
 .login-button,
 .register-button {
   padding: 12px 24px;
+
   border-radius: 10px;
 
-
   font-family: Arial, sans-serif;
+
   font-size: 15px;
+
   font-weight: 600;
 
   cursor: pointer;
-
   text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
 
+  transition: 0.3s;
 }
 
-/* Login */
+/* =========================
+   LOGIN BUTTON
+========================= */
 
 .login-button {
   color: #6425e8;
-
   background: white;
-
   border: 2px solid #6425e8;
 }
 
-/* Register */
+/* =========================
+   REGISTER BUTTON
+========================= */
 
 .register-button {
   color: white;
-
   background: #6425e8;
-
   border: 2px solid #6425e8;
 }
 
 
+/* Hover */
+
 /* =========================
-   MOBILE
+   BUTTON HOVER
 ========================= */
+
 
 .login-button:hover,
 .register-button:hover {
   transform: translateY(-2px);
+
+
+  box-shadow:
+    0 5px 14px rgba(100, 37, 232, 0.2);
+}
+
+/* =========================
+   MOBILE MENU
+
   box-shadow: 0 5px 14px rgba(100, 37, 232, 0.2);
 }
 
+/* =========================
+   MENU BUTTON
+
+========================= */
 
 .menu-button {
   display: none;
 }
+
+/* =========================
+   TABLET
+========================= */
 
 @media (max-width: 900px) {
   .navbar-container {
@@ -182,14 +232,22 @@ body {
 .profile-button { display: flex; align-items: center; gap: 10px; border: 0; padding: 0; background: transparent; color: #18122f; text-align: left; cursor: pointer; }
 .profile-avatar { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(135deg, #2a145b, #a874ff); color: #fff; font-size: 18px; font-weight: bold; box-shadow: 0 3px 8px rgba(73, 25, 177, .25); }
 .profile-name { display: grid; gap: 2px; }.profile-name strong { font-size: 14px; }.profile-name small { color: #625c75; font-size: 12px; }.profile-chevron { color: #4d4570; font-size: 20px; margin-left: 4px; }
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 800px) {
   .menu-button {
     display: block;
+
     margin-left: auto;
+
     border: none;
+
     background: none;
+
     color: #6425e8;
+
     font-size: 28px;
 
     cursor: pointer;
@@ -201,23 +259,43 @@ body {
 
   .navbar-content.show {
     display: flex;
+
     position: absolute;
+
     top: 100px;
+
     left: 18px;
+
     right: 18px;
+
     padding: 20px;
+
     background: white;
+
     border-radius: 15px;
+
     flex-direction: column;
+
     gap: 20px;
+
+
+    box-shadow:
+      0 8px 25px rgba(95, 40, 180, 0.15);
+
     box-shadow: 0 8px 25px rgba(95, 40, 180, 0.15);
+
   }
 
   .navbar-links {
     flex-direction: column;
+
     align-items: center;
   }
 }
+
+/* =========================
+   SMALL MOBILE
+========================= */
 
 @media (max-width: 500px) {
   .navbar-container {
@@ -238,6 +316,7 @@ body {
 
   .navbar-buttons {
     flex-direction: column;
+
     width: 100%;
   }
 
