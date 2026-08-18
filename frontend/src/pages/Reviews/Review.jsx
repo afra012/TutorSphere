@@ -1,0 +1,493 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "./Review.css";
+
+function Review() {
+  const [users, setUsers] = useState([]);
+  const [reviews, setReviews] = useState([]);
+
+  const [teacherId, setTeacherId] = useState("");
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // =========================
+  // CURRENT USER
+  // =========================
+
+  const currentUser = JSON.parse(
+    localStorage.getItem("currentUser")
+  );
+
+  // =========================
+  // FETCH TEACHERS
+  // =========================
+
+  const fetchTeachers = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/users",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const teachers = response.data.filter(
+        (user) => user.role === "teacher"
+      );
+
+      setUsers(teachers);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load teachers.");
+    }
+  };
+
+  // =========================
+  // FETCH REVIEWS
+  // =========================
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/reviews"
+      );
+
+      setReviews(response.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load reviews.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =========================
+  // LOAD DATA
+  // =========================
+
+  useEffect(() => {
+    fetchTeachers();
+    fetchReviews();
+  }, []);
+
+  // =========================
+  // SUBMIT REVIEW
+  // =========================
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (!currentUser) {
+      setError("Please login before submitting a review.");
+      return;
+    }
+
+    if (currentUser.role !== "student") {
+      setError("Only students can submit reviews.");
+      return;
+    }
+
+    if (!teacherId) {
+      setError("Please select a teacher.");
+      return;
+    }
+
+    if (!rating) {
+      setError("Please select a rating.");
+      return;
+    }
+
+    if (!reviewText.trim()) {
+      setError("Please write your review.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const token = localStorage.getItem("authToken");
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/reviews",
+        {
+          teacher_id: teacherId,
+          rating: rating,
+          review_text: reviewText.trim(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
+
+      setSuccess("Review submitted successfully!");
+
+      setTeacherId("");
+      setRating(0);
+      setReviewText("");
+
+      // Refresh reviews
+      await fetchReviews();
+
+    } catch (err) {
+      console.error(err);
+
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+
+        setError(Object.values(errors)[0][0]);
+      } else {
+        setError(
+          err.response?.data?.message ||
+            "Failed to submit review."
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // =========================
+  // RENDER
+  // =========================
+
+  return (
+    <div className="review-page">
+
+      <div className="review-container">
+
+        {/* =========================
+            HEADER
+        ========================= */}
+
+        <div className="review-header">
+          <span className="review-badge">
+            ⭐ Student Feedback
+          </span>
+
+          <h1>Reviews & Ratings</h1>
+
+          <p>
+            See what students are saying about their
+            learning experience.
+          </p>
+        </div>
+
+        {/* =========================
+            CREATE REVIEW
+        ========================= */}
+
+        {currentUser?.role === "student" && (
+          <div className="create-review-card">
+
+            <div className="create-review-heading">
+              <div>
+                <h2>Leave a Review</h2>
+
+                <p>
+                  Share your experience with a teacher.
+                </p>
+              </div>
+
+              <div className="review-icon">
+                ⭐
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+
+              {/* Teacher */}
+
+              <div className="review-form-group">
+
+                <label htmlFor="teacher">
+                  Select Teacher
+                </label>
+
+                <select
+                  id="teacher"
+                  value={teacherId}
+                  onChange={(e) => {
+                    setTeacherId(e.target.value);
+                    setError("");
+                    setSuccess("");
+                  }}
+                >
+                  <option value="">
+                    Select a teacher
+                  </option>
+
+                  {users.map((user) => (
+                    <option
+                      key={user.id}
+                      value={user.id}
+                    >
+                      {user.name} — Teacher
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+
+              {/* Rating */}
+
+              <div className="review-form-group">
+
+                <label>Rating</label>
+
+                <div className="rating-buttons">
+
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={
+                        star <= rating
+                          ? "star active"
+                          : "star"
+                      }
+                      onClick={() => {
+                        setRating(star);
+                        setError("");
+                        setSuccess("");
+                      }}
+                    >
+                      ★
+                    </button>
+                  ))}
+
+                </div>
+
+                {rating > 0 && (
+                  <span className="rating-label">
+                    {rating === 1 && "Poor"}
+                    {rating === 2 && "Fair"}
+                    {rating === 3 && "Good"}
+                    {rating === 4 && "Very Good"}
+                    {rating === 5 && "Excellent"}
+                  </span>
+                )}
+
+              </div>
+
+              {/* Review */}
+
+              <div className="review-form-group">
+
+                <label htmlFor="review">
+                  Your Review
+                </label>
+
+                <textarea
+                  id="review"
+                  rows="5"
+                  placeholder="Write your experience with this teacher..."
+                  value={reviewText}
+                  onChange={(e) => {
+                    setReviewText(e.target.value);
+                    setError("");
+                    setSuccess("");
+                  }}
+                />
+
+              </div>
+
+              {/* Error */}
+
+              {error && (
+                <div className="review-error">
+                  {error}
+                </div>
+              )}
+
+              {/* Success */}
+
+              {success && (
+                <div className="review-success">
+                  {success}
+                </div>
+              )}
+
+              {/* Submit */}
+
+              <button
+                type="submit"
+                className="review-submit"
+                disabled={submitting}
+              >
+                {submitting
+                  ? "Submitting..."
+                  : "Submit Review"}
+              </button>
+
+            </form>
+
+          </div>
+        )}
+
+        {/* =========================
+            LOGIN MESSAGE
+        ========================= */}
+
+        {!currentUser && (
+          <div className="login-review-message">
+            <span>🔐</span>
+
+            <div>
+              <h3>Login to leave a review</h3>
+
+              <p>
+                Please login as a student to share your
+                experience with a teacher.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* =========================
+            EXISTING REVIEWS
+        ========================= */}
+
+        <div className="existing-reviews">
+
+          <div className="section-heading">
+            <div>
+              <h2>Student Reviews</h2>
+
+              <p>
+                Real experiences from our students.
+              </p>
+            </div>
+
+            <span className="review-count">
+              {reviews.length}{" "}
+              {reviews.length === 1
+                ? "Review"
+                : "Reviews"}
+            </span>
+          </div>
+
+          {/* Loading */}
+
+          {loading && (
+            <div className="review-message">
+              Loading reviews...
+            </div>
+          )}
+
+          {/* No Reviews */}
+
+          {!loading && reviews.length === 0 && (
+            <div className="no-reviews">
+
+              <div className="empty-icon">
+                ⭐
+              </div>
+
+              <h3>No reviews yet</h3>
+
+              <p>
+                Be the first student to leave a review.
+              </p>
+
+            </div>
+          )}
+
+          {/* Reviews */}
+
+          {!loading && reviews.length > 0 && (
+            <div className="reviews-list">
+
+              {reviews.map((review) => (
+                <div
+                  className="review-card"
+                  key={review.id}
+                >
+
+                  <div className="review-card-top">
+
+                    <div className="teacher-info">
+
+                      <div className="teacher-avatar">
+                        {review.teacher?.name
+                          ?.charAt(0)
+                          ?.toUpperCase() || "T"}
+                      </div>
+
+                      <div>
+
+                        <h3>
+                          {review.teacher?.name ||
+                            "Teacher"}
+                        </h3>
+
+                        <span className="role-badge">
+                          Teacher
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    <div className="rating-display">
+                      {"★".repeat(review.rating)}
+                      {"☆".repeat(5 - review.rating)}
+                    </div>
+
+                  </div>
+
+                  <div className="review-divider"></div>
+
+                  <p className="review-text">
+                    "{review.review_text}"
+                  </p>
+
+                  <div className="review-footer">
+
+                    <span>
+                      Reviewed by{" "}
+                      <strong>
+                        {review.student?.name ||
+                          "Student"}
+                      </strong>
+                    </span>
+
+                    <span>
+                      {new Date(
+                        review.created_at
+                      ).toLocaleDateString()}
+                    </span>
+
+                  </div>
+
+                </div>
+              ))}
+
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+export default Review;
