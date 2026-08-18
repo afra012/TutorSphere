@@ -5,6 +5,4 @@
 .sidebar-link.is-active { background:#eadfff; color:#5720dc; }
 .sidebar-icon { width:25px; height:25px; flex:none; }
 .sidebar-logout { margin-top:10px; }
-.sidebar-books { margin:auto auto 5px; width:104px; display:grid; gap:4px; transform:rotate(-8deg); }
-.sidebar-books span { height:12px; border:2px solid #6830e5; border-radius:3px; background:linear-gradient(180deg,#e4d4ff,#fff); box-shadow:0 4px 5px rgba(81,35,193,.16); }
-@media (max-width: 820px) { .dashboard-sidebar { min-height:auto; padding:14px 12px; border-right:0; border-bottom:1px solid #eee8ff; } .sidebar-nav { display:flex; overflow-x:auto; } .sidebar-link { width:auto; white-space:nowrap; padding:11px 13px; } .sidebar-books { display:none; } .sidebar-logout { margin-top:0; } }
+@media (max-width: 820px) { .dashboard-sidebar { min-height:auto; padding:14px 12px; border-right:0; border-bottom:1px solid #eee8ff; } .sidebar-nav { display:flex; overflow-x:auto; } .sidebar-link { width:auto; white-space:nowrap; padding:11px 13px; } }

@@ -23,6 +23,5 @@ export default function DashboardSidebar() {
       {items.map(([label, icon], index) => <button className={`sidebar-link ${index === 0 ? "is-active" : ""}`} type="button" key={label}><Icon name={icon} />{label}</button>)}
       <button className="sidebar-link sidebar-logout" type="button"><Icon name="logout" />Logout</button>
     </nav>
-    <div className="sidebar-books" aria-hidden="true"><span /><span /><span /></div>
   </aside>;
 }
