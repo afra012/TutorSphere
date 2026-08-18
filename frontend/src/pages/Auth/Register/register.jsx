@@ -1,11 +1,8 @@
 import { useState } from "react";
+import axios from "axios";
 import "./Register.css";
 
-function Register({
-  onClose,
-  onLogin,
-  onRegisterSuccess,
-}) {
+function Register({ onClose, onLogin, onRegisterSuccess }) {
   const [role, setRole] = useState("Tutor");
 
   const [formData, setFormData] = useState({
@@ -28,7 +25,7 @@ function Register({
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
@@ -63,56 +60,61 @@ function Register({
       return;
     }
 
-    // Get existing users
-    const users =
-      JSON.parse(
-        localStorage.getItem("tutorsphereUsers")
-      ) || [];
+    try {
+      // Send registration data to Laravel
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/register",
+        {
+          name: name,
+          email: email,
+          password: password,
 
-    // Check duplicate email
-    const exists = users.some(
-      (user) =>
-        user.email &&
-        user.email.toLowerCase() === email
-    );
-
-    if (exists) {
-      setError(
-        "An account with this email already exists."
+          // Convert frontend role to backend role
+          role: role === "Tutor" ? "teacher" : "student",
+        }
       );
-      return;
-    }
 
-    // Create new user
-    const newUser = {
-      id: Date.now(),
-      name: name,
-      email: email,
-      password: password,
-      role: role,
-    };
+      // Save Sanctum token
+      localStorage.setItem(
+        "authToken",
+        response.data.token
+      );
 
-    // Add user
-    users.push(newUser);
+      // Save logged-in user information
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify(response.data.user)
+      );
 
-    // Save users
-    localStorage.setItem(
-      "tutorsphereUsers",
-      JSON.stringify(users)
-    );
+      // Clear form after successful registration
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
 
-    // Clear form
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-    });
+      setAgree(false);
 
-    setAgree(false);
+      // Registration successful
+      if (onRegisterSuccess) {
+        onRegisterSuccess();
+      }
 
-    // Registration successful
-    if (onRegisterSuccess) {
-      onRegisterSuccess();
+    } catch (error) {
+      // Laravel validation errors
+      if (error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+
+        setError(
+          Object.values(errors)[0][0]
+        );
+      } else {
+        // Other Laravel/API errors
+        setError(
+          error.response?.data?.message ||
+          "Registration failed. Please try again."
+        );
+      }
     }
   };
 
@@ -248,7 +250,7 @@ function Register({
           />
 
           <span>
-            I agree to the{" "}
+            I agree to{" "}
             <a href="/terms">
               Terms & Conditions
             </a>
@@ -274,6 +276,7 @@ function Register({
         {/* Login */}
         <p className="register-bottom">
           Already have an account?{" "}
+
           <button
             type="button"
             onClick={onLogin}
