@@ -13,6 +13,7 @@ import Help from "./pages/Help/Help";
 import TeacherProfile from "./pages/TeacherProfile/TeacherProfile";
 import Profile from "./pages/Profile/Profile";
 import Review from "./pages/Reviews/Review";
+import Messages from "./pages/Messages/Messages";
 
 /* =========================
    LOGIN PAGE
@@ -142,6 +143,16 @@ function App() {
             <>
               <Navbar dashboardMode />
               <JobDashboard />
+            </>
+          }
+        />
+
+        <Route
+          path="/messages"
+          element={
+            <>
+              <Navbar dashboardMode />
+              <Messages />
             </>
           }
         />

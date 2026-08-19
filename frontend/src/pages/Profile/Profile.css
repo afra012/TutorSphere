@@ -6,6 +6,7 @@
 .student-profile-shell {
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);
+  padding-top: 76px;
   min-height: calc(100vh - 88px);
   background: #f6f0ff;
 }
@@ -299,6 +300,7 @@
 @media (max-width: 700px) {
   .student-profile-shell {
     display: block;
+    padding-top: 64px;
   }
 
   .sp-profile-header {

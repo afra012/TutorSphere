@@ -88,7 +88,7 @@ function Icon({ name }) {
 
 const items = [
   ["Dashboard", "dashboard", "/job-dashboard"],
-  ["Messages", "messages", "/job-dashboard"],
+  ["Messages", "messages", "/messages"],
   ["Browse Tutors", "browse", "/teacher-profile"],
   ["My Requests", "requests", "/job-dashboard"],
   ["My Bookings", "bookings", "/job-dashboard"],

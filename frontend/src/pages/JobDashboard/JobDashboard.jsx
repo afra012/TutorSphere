@@ -84,7 +84,7 @@ export default function JobDashboard() {
 
   return (
     <main className="job-dashboard-page">
-      <DashboardSidebar />
+      <DashboardSidebar active="Dashboard" />
 
       <section className="dashboard-content">
         <header className="dashboard-heading">
