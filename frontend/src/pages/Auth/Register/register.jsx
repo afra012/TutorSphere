@@ -214,7 +214,7 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
             <input
               type="email"
               name="email"
-              placeholder="afraran11@gmail.com"
+              //placeholder="afraran11@gmail.com"
               value={formData.email}
               onChange={handleChange}
             />
@@ -231,7 +231,7 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
             <input
               type="password"
               name="password"
-              placeholder="••••••••"
+              //placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
             />
