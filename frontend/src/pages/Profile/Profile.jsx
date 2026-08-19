@@ -4,7 +4,7 @@ import "./Profile.css";
 function Profile() {
   return (
     <div className="student-profile-shell">
-      <DashboardSidebar />
+      <DashboardSidebar active="Profile" />
 
       <main className="student-profile-main">
 
