@@ -92,7 +92,7 @@ const items = [
   ["Browse Tutors", "browse", "/teacher-profile"],
   ["My Requests", "requests", "/job-dashboard"],
   ["My Bookings", "bookings", "/job-dashboard"],
-  ["My Reviews", "reviews", "/job-dashboard"],
+  ["My Reviews", "reviews", "/reviews"],
   ["Profile", "profile", "/profile"],
   ["Settings", "settings", "/job-dashboard"],
   ["Help & Support", "help", "/help"],
