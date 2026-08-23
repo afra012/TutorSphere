@@ -1,0 +1,191 @@
+.teacher-page {
+  min-height: 100vh;
+
+  padding: 45px 60px;
+
+  background: linear-gradient(
+    135deg,
+    #fbf9ff 0%,
+    #f7f2ff 50%,
+    #eee5ff 100%
+  );
+
+  font-family: Arial, sans-serif;
+
+  color: #201b31;
+}
+
+.teacher-page-header {
+  max-width: 1050px;
+
+  margin: 0 auto 30px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 17px;
+}
+
+.teacher-back-button {
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid #e7def5;
+
+  border-radius: 11px;
+
+  background: #fff;
+
+  color: #5722d5;
+
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+.teacher-page-header h1 {
+  margin: 0 0 6px;
+
+  font-size: 30px;
+
+  color: #17152b;
+}
+
+.teacher-page-header p {
+  margin: 0;
+
+  color: #6b6577;
+
+  font-size: 14px;
+}
+
+.teacher-request-content {
+  max-width: 1050px;
+
+  margin: 0 auto;
+}
+
+.teacher-empty-state {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  border: 1px solid #ebe4f5;
+
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.teacher-empty-icon {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eee5ff;
+
+  color: #5b27d6;
+
+  font-size: 27px;
+
+  margin-bottom: 16px;
+}
+
+.teacher-empty-state h2 {
+  margin: 0 0 8px;
+
+  color: #272239;
+
+  font-size: 21px;
+}
+
+.teacher-empty-state p {
+  margin: 0;
+
+  color: #706a7c;
+
+  font-size: 14px;
+}
+
+.teacher-request-list {
+  display: grid;
+
+  gap: 16px;
+}
+
+.teacher-request-card {
+  padding: 22px;
+
+  border: 1px solid #ebe4f5;
+
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 8px 25px rgba(77, 42, 135, 0.06);
+}
+
+.teacher-request-card h2 {
+  margin: 0 0 8px;
+
+  color: #29243a;
+
+  font-size: 18px;
+}
+
+.teacher-request-card p {
+  margin: 0;
+
+  color: #6d6778;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+.teacher-request-meta {
+  margin-top: 18px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid #eee8f5;
+
+  display: flex;
+  gap: 25px;
+
+  color: #716a7d;
+
+  font-size: 13px;
+}
+
+.teacher-request-meta strong {
+  color: #5a24d1;
+}
+
+@media (max-width: 700px) {
+  .teacher-page {
+    padding: 30px 17px;
+  }
+
+  .teacher-page-header h1 {
+    font-size: 25px;
+  }
+
+  .teacher-request-meta {
+    flex-direction: column;
+
+    gap: 7px;
+  }
+}
