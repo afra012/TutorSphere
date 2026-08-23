@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 import studentJobImage from "../../assets/student-job.png";
-import teacherProfileImage from "../../assets/teacher-profile.png";
 import "./JobDashboard.css";
+
 
 const posts = [
   ["📚", "Need Math Tutor for Class 10", "Class 10 · Mathematics", "Dhanmondi, Dhaka", "৳ 800/hour", "2 hours ago"],
@@ -79,12 +79,21 @@ function FeatureCard({
   );
 }
 
+
 export default function JobDashboard() {
   const navigate = useNavigate();
 
   return (
-    <main className="job-dashboard-page">
+    <main className="student-dashboard-page">
       <DashboardSidebar />
+
+
+      <section className="student-dashboard-content">
+        <div className="student-empty-state">
+          <img
+            src={studentJobImage}
+            alt="Student dashboard"
+            className="student-empty-image"
 
       <section className="dashboard-content">
         <header className="dashboard-heading">
@@ -120,93 +129,14 @@ export default function JobDashboard() {
             button="View Teachers Profiles"
             image={teacherProfileImage}
             onClick={() => navigate("/teacher-profile")}
+
           />
-        </div>
 
-        <div className="dashboard-lower">
-          <section className="dashboard-card recent-posts">
-            <div className="card-title">
-              <h2>Recent Student Posts</h2>
+          <h1>Welcome, Student!</h1>
 
-              <button type="button">
-                View All
-              </button>
-            </div>
-
-            <div className="post-list">
-              {posts.map(
-                ([symbol, title, meta, place, pay, time]) => (
-                  <article
-                    className="post-row"
-                    key={title}
-                  >
-                    <span className="post-symbol">
-                      {symbol}
-                    </span>
-
-                    <div className="post-details">
-                      <h3>{title}</h3>
-                      <p>{meta}</p>
-                      <small>♦ {place}</small>
-                    </div>
-
-                    <div className="post-rate">
-                      <strong>{pay}</strong>
-                      <small>{time}</small>
-                    </div>
-                  </article>
-                )
-              )}
-            </div>
-
-            <button
-              type="button"
-              className="outline-dashboard-button"
-            >
-              View All Student Posts
-            </button>
-          </section>
-
-          <section className="dashboard-card profile-card">
-            <h2>Profile Completion</h2>
-
-            <p className="profile-intro">
-              Complete your profile to get more job opportunities
-            </p>
-
-            <div className="profile-inner">
-              <div className="progress-ring">
-                <span>75%</span>
-              </div>
-
-              <div className="profile-copy">
-                <ul>
-                  <li>
-                    ✓ <span>Basic Information</span>
-                  </li>
-
-                  <li>
-                    ✓ <span>Educational Background</span>
-                  </li>
-
-                  <li>
-                    ✓ <span>Teaching Experience</span>
-                  </li>
-
-                  <li className="pending">
-                    ○ <span>Add Profile Picture</span>
-                  </li>
-                </ul>
-
-                <button
-                  className="primary-dashboard-button"
-                  type="button"
-                >
-                  Complete Profile
-                </button>
-              </div>
-            </div>
-          </section>
+          <p>
+            Explore tutors and find the perfect match for your learning journey.
+          </p>
         </div>
       </section>
     </main>
