@@ -4,16 +4,13 @@ import "./Login.css";
 
 function Login({ onClose, onRegister, onLoginSuccess }) {
   const [role, setRole] = useState("Student");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
 
     // Empty field validation
@@ -49,6 +46,9 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
         }
       );
 
+      // Get logged-in user
+      const user = response.data.user;
+
       // Save Sanctum token
       localStorage.setItem(
         "authToken",
@@ -58,7 +58,7 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
       // Save current user
       localStorage.setItem(
         "currentUser",
-        JSON.stringify(response.data.user)
+        JSON.stringify(user)
       );
 
       // Save login status
@@ -67,12 +67,20 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
         "true"
       );
 
-      // Login successful
-      if (onLoginSuccess) {
-        onLoginSuccess(response.data.user);
+      // Save role separately
+      if (user?.role) {
+        localStorage.setItem(
+          "role",
+          user.role
+        );
       }
 
+      // Close login modal
+      if (onLoginSuccess) {
+        onLoginSuccess(user);
+      }
     } catch (error) {
+      // Laravel validation errors
       if (error.response?.data?.errors) {
         const errors = error.response.data.errors;
 
@@ -82,7 +90,7 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
       } else {
         setError(
           error.response?.data?.message ||
-          "Login failed. Please try again."
+            "Login failed. Please try again."
         );
       }
     }
@@ -97,7 +105,6 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
         className="login-card"
         onClick={(e) => e.stopPropagation()}
       >
-
         {/* Close */}
         <button
           className="close-button"
@@ -179,7 +186,9 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
           <label>Email</label>
 
           <div className="input-wrapper">
-            <span className="input-icon">✉</span>
+            <span className="input-icon">
+              ✉
+            </span>
 
             <input
               type="email"
@@ -198,7 +207,9 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
           <label>Password</label>
 
           <div className="input-wrapper">
-            <span className="input-icon">🔒</span>
+            <span className="input-icon">
+              🔒
+            </span>
 
             <input
               type={
@@ -252,7 +263,6 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
         {/* Register */}
         <p className="bottom-text">
           Don't have an account?{" "}
-
           <button
             type="button"
             onClick={onRegister}
@@ -260,7 +270,6 @@ function Login({ onClose, onRegister, onLoginSuccess }) {
             Sign up
           </button>
         </p>
-
       </div>
     </div>
   );

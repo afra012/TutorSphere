@@ -1,0 +1,356 @@
+/* =========================================
+   TEACHER DASHBOARD LAYOUT
+========================================= */
+
+.teacher-dashboard-layout {
+  display: flex;
+
+  width: 100%;
+  min-height: calc(100vh - 76px);
+
+  margin-top: 76px;
+
+  background: #faf9ff;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   MAIN DASHBOARD
+========================================= */
+
+.teacher-dashboard-main {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 40px 42px;
+
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================
+   CONTENT CONTAINER
+========================================= */
+
+.teacher-dashboard-container {
+  width: 100%;
+
+  max-width: 1120px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.teacher-dashboard-header {
+  margin-bottom: 32px;
+}
+
+.teacher-dashboard-label {
+  margin: 0 0 8px;
+
+  color: #5720dc;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.7px;
+}
+
+.teacher-dashboard-header h1 {
+  margin: 0;
+
+  color: #30294c;
+
+  font-size: 32px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.teacher-dashboard-subtitle {
+  margin: 10px 0 0;
+
+  color: #756d86;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   DASHBOARD CARDS
+========================================= */
+
+.teacher-dashboard-cards {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   DASHBOARD CARD
+========================================= */
+
+.teacher-dashboard-card {
+  position: relative;
+
+  min-height: 190px;
+
+  padding: 24px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #eee8ff;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 8px 25px rgba(71, 37, 130, 0.06);
+
+  box-sizing: border-box;
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.teacher-dashboard-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(71, 37, 130, 0.10);
+}
+
+
+/* =========================================
+   CARD ICON
+========================================= */
+
+.teacher-card-icon {
+  width: 50px;
+  height: 50px;
+
+  flex: 0 0 50px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+}
+
+.teacher-card-icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.request-icon {
+  background: #eadfff;
+
+  color: #5720dc;
+}
+
+.review-icon {
+  background: #fff1d6;
+
+  color: #d58b00;
+}
+
+
+/* =========================================
+   CARD CONTENT
+========================================= */
+
+.teacher-card-content {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.teacher-card-content span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #756d86;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.teacher-card-content strong {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #30294c;
+
+  font-size: 34px;
+  line-height: 1;
+
+  font-weight: 700;
+}
+
+.teacher-card-content p {
+  margin: 0;
+
+  color: #91899f;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   VIEW ALL
+========================================= */
+
+.teacher-dashboard-card button {
+  position: absolute;
+
+  right: 24px;
+  bottom: 22px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #5720dc;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.teacher-dashboard-card button:hover {
+  color: #4214aa;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .teacher-dashboard-main {
+    padding: 32px 28px;
+  }
+
+  .teacher-dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 820px) {
+
+  .teacher-dashboard-layout {
+    display: block;
+
+    min-height: auto;
+
+    margin-top: 76px;
+  }
+
+  .teacher-dashboard-main {
+    width: 100%;
+
+    padding: 28px 18px;
+  }
+
+  .teacher-dashboard-container {
+    max-width: none;
+  }
+
+  .teacher-dashboard-header {
+    margin-bottom: 25px;
+  }
+
+  .teacher-dashboard-header h1 {
+    font-size: 27px;
+  }
+
+  .teacher-dashboard-cards {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+  .teacher-dashboard-main {
+    padding: 22px 14px;
+  }
+
+  .teacher-dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .teacher-dashboard-subtitle {
+    font-size: 13px;
+  }
+
+  .teacher-dashboard-card {
+    min-height: 175px;
+
+    padding: 20px;
+
+    gap: 13px;
+  }
+
+  .teacher-card-icon {
+    width: 44px;
+    height: 44px;
+
+    flex-basis: 44px;
+  }
+
+  .teacher-card-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .teacher-card-content strong {
+    font-size: 30px;
+  }
+}

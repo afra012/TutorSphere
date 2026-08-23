@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import "./DashboardSidebar.css";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import "./TeacherSidebar.css";
 
 function Icon({ name }) {
   const paths = {
@@ -7,21 +8,14 @@ function Icon({ name }) {
       <path d="M3 12 12 4l9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8Z" />
     ),
 
-    search: (
-      <>
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-4-4" />
-      </>
-    ),
-
-    post: (
+    requests: (
       <>
         <path d="M14 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-9" />
         <path d="m13 12 7-7 2 2-7 7-3 1 1-3Z" />
       </>
     ),
 
-    star: (
+    reviews: (
       <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
     ),
 
@@ -42,7 +36,7 @@ function Icon({ name }) {
 
   return (
     <svg
-      className="sidebar-icon"
+      className="teacher-sidebar-icon"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -56,57 +50,68 @@ function Icon({ name }) {
 }
 
 const items = [
-  ["Dashboard", "dashboard"],
-  ["Find Tutor", "search"],
-  ["My Post", "post"],
-  ["My Reviews", "star"],
-  ["Profile", "profile"],
+  ["Dashboard", "dashboard", "/teacher-dashboard"],
+  ["Requests", "requests", "/teacher-requests"],
+  ["Reviews", "reviews", "/teacher-reviews"],
+  ["Profile", "profile", "/teacher-profile"],
 ];
 
-export default function DashboardSidebar() {
+export default function TeacherSidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    // Remove saved authentication information
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentUser");
+
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
 
-    // Clear any session data
     sessionStorage.clear();
 
-    // Go back to Home page
-    navigate("/", { replace: true });
+    navigate("/", {
+      replace: true,
+    });
   };
 
   return (
     <aside
-      className="dashboard-sidebar"
-      aria-label="Dashboard navigation"
+      className="teacher-sidebar"
+      aria-label="Teacher dashboard navigation"
     >
-      <nav className="sidebar-nav">
-        {items.map(([label, icon], index) => (
+
+      <nav className="teacher-sidebar-nav">
+
+        {items.map(([label, icon, path]) => (
           <button
-            className={`sidebar-link ${
-              index === 0 ? "is-active" : ""
-            }`}
-            type="button"
             key={label}
+            type="button"
+            className={`teacher-sidebar-link ${
+              location.pathname === path ? "is-active" : ""
+            }`}
+            onClick={() => navigate(path)}
           >
             <Icon name={icon} />
-            {label}
+
+            <span>{label}</span>
           </button>
         ))}
 
         <button
-          className="sidebar-link sidebar-logout"
           type="button"
+          className="teacher-sidebar-link teacher-sidebar-logout"
           onClick={handleLogout}
         >
           <Icon name="logout" />
-          Logout
+
+          <span>Logout</span>
         </button>
+
       </nav>
+
+
+
     </aside>
   );
 }

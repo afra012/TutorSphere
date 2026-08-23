@@ -2,15 +2,47 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import "./Navbar.css";
+
 import Login from "../../pages/Auth/Login/login";
 import Register from "../../pages/Auth/Register/register";
 
-function Navbar({ hideLinks = false, dashboardMode = false }) {
+function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  const currentRole =
+    role?.toLowerCase() === "teacher" ? "Teacher" : "Student";
+
+  const handleLoginSuccess = (user) => {
+    setLoginOpen(false);
+
+    const userRole = user?.role?.toLowerCase();
+
+    if (userRole === "student") {
+      navigate("/student-dashboard");
+    } else if (userRole === "teacher") {
+      navigate("/teacher-dashboard");
+    } else if (userRole === "admin") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/student-dashboard");
+    }
+  };
+
+  const handleRegisterSuccess = (role) => {
+    setRegisterOpen(false);
+
+    const userRole = role?.toLowerCase();
+
+    if (userRole === "student") {
+      navigate("/student-dashboard");
+    } else if (userRole === "teacher") {
+      navigate("/teacher-dashboard");
+    }
+  };
 
   return (
     <>
@@ -21,7 +53,7 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
       >
         <nav className="navbar">
           {/* Logo */}
-          <a href="/" className="navbar-logo">
+          <Link to="/" className="navbar-logo">
             <div className="logo-icon">
               <svg
                 viewBox="0 0 64 64"
@@ -49,13 +81,14 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
               <h2>TutorSphere</h2>
               <p>Find Your Perfect Tutor</p>
             </div>
-          </a>
+          </Link>
 
           {/* Mobile Menu */}
           <button
             type="button"
             className="menu-button"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Open menu"
           >
             ☰
           </button>
@@ -69,32 +102,28 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
             {/* Normal Navbar Links */}
             {!hideLinks && !dashboardMode && (
               <div className="navbar-links">
-                <a href="/" className="nav-link active">
+                <Link to="/" className="nav-link active">
                   Home
-                </a>
+                </Link>
 
-                <a href="/about" className="nav-link">
+                <Link to="/about" className="nav-link">
                   About Us
-                </a>
+                </Link>
 
-                <a href="/job-dashboard" className="nav-link">
-                  Job Dashboard
-                </a>
-
-                {/* Reviews */}
                 <Link to="/reviews" className="nav-link">
                   Reviews
                 </Link>
 
-                <a href="/help" className="nav-link">
+                <Link to="/help" className="nav-link">
                   Help
-                </a>
+                </Link>
               </div>
             )}
 
             {/* Dashboard Account Actions */}
             {dashboardMode ? (
               <div className="dashboard-account-actions">
+
                 {/* Notification */}
                 <button
                   type="button"
@@ -111,7 +140,7 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
                     <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4" />
                   </svg>
 
-                  <i />
+                  <i></i>
                 </button>
 
                 {/* Profile */}
@@ -126,13 +155,19 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
 
                   <span className="profile-name">
                     <strong>Hi</strong>
-                    <small>Student</small>
+                    <small>{currentRole}</small>
+                  </span>
+
+                  <span className="profile-chevron">
+                    ›
                   </span>
                 </button>
+
               </div>
             ) : (
               /* Login / Register Buttons */
               <div className="navbar-buttons">
+
                 {/* Login */}
                 <button
                   type="button"
@@ -158,6 +193,7 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
                 >
                   Register
                 </button>
+
               </div>
             )}
           </div>
@@ -172,10 +208,7 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
             setLoginOpen(false);
             setRegisterOpen(true);
           }}
-          onLoginSuccess={() => {
-            setLoginOpen(false);
-            navigate("/job-dashboard");
-          }}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
 
@@ -187,10 +220,7 @@ function Navbar({ hideLinks = false, dashboardMode = false }) {
             setRegisterOpen(false);
             setLoginOpen(true);
           }}
-          onRegisterSuccess={() => {
-            setRegisterOpen(false);
-            setLoginOpen(true);
-          }}
+          onRegisterSuccess={handleRegisterSuccess}
         />
       )}
     </>
