@@ -2,7 +2,11 @@ import { useState } from "react";
 import axios from "axios";
 import "./Register.css";
 
-function Register({ onClose, onLogin, onRegisterSuccess }) {
+function Register({
+  onClose,
+  onLogin,
+  onRegisterSuccess,
+}) {
   const [role, setRole] = useState("Tutor");
 
   const [formData, setFormData] = useState({
@@ -27,7 +31,6 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
 
     const name = formData.name.trim();
@@ -36,31 +39,46 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
 
     // Required fields
     if (!name || !email || !password) {
-      setError("Please fill in all fields.");
+      setError(
+        "Please fill in all fields."
+      );
       return;
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address.");
+      setError(
+        "Please enter a valid email address."
+      );
       return;
     }
 
     // Password validation
     if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(
+        "Password must be at least 6 characters."
+      );
       return;
     }
 
     // Terms validation
     if (!agree) {
-      setError("Please agree to the Terms & Conditions.");
+      setError(
+        "Please agree to the Terms & Conditions."
+      );
       return;
     }
 
     try {
+      // Convert frontend role to backend role
+      const backendRole =
+        role === "Tutor"
+          ? "teacher"
+          : "student";
+
       // Send registration data to Laravel
       const response = await axios.post(
         "http://127.0.0.1:8000/api/register",
@@ -68,9 +86,7 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
           name: name,
           email: email,
           password: password,
-
-          // Convert frontend role to backend role
-          role: role === "Tutor" ? "teacher" : "student",
+          role: backendRole,
         }
       );
 
@@ -80,13 +96,25 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
         response.data.token
       );
 
-      // Save logged-in user information
+      // Save logged-in user
       localStorage.setItem(
         "currentUser",
         JSON.stringify(response.data.user)
       );
 
-      // Clear form after successful registration
+      // Save login status
+      localStorage.setItem(
+        "isLoggedIn",
+        "true"
+      );
+
+      // Save role
+      localStorage.setItem(
+        "role",
+        backendRole
+      );
+
+      // Clear form
       setFormData({
         name: "",
         email: "",
@@ -96,23 +124,25 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
       setAgree(false);
 
       // Registration successful
+      // Send actual backend role to App
       if (onRegisterSuccess) {
-        onRegisterSuccess();
+        onRegisterSuccess(
+          backendRole
+        );
       }
-
     } catch (error) {
       // Laravel validation errors
       if (error.response?.data?.errors) {
-        const errors = error.response.data.errors;
+        const errors =
+          error.response.data.errors;
 
         setError(
           Object.values(errors)[0][0]
         );
       } else {
-        // Other Laravel/API errors
         setError(
           error.response?.data?.message ||
-          "Registration failed. Please try again."
+            "Registration failed. Please try again."
         );
       }
     }
@@ -125,9 +155,10 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
     >
       <div
         className="register-card"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
-
         {/* Close */}
         <button
           className="register-close"
@@ -141,7 +172,8 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
         <h2>Register</h2>
 
         <p className="register-subtitle">
-          Create your TutorSphere account in minutes.
+          Create your TutorSphere account in
+          minutes.
         </p>
 
         {/* Full Name */}
@@ -213,8 +245,8 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
 
             <input
               type="email"
+              placeholder="afraran11@gmail.com"
               name="email"
-              //placeholder="afraran11@gmail.com"
               value={formData.email}
               onChange={handleChange}
             />
@@ -231,7 +263,7 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
             <input
               type="password"
               name="password"
-              //placeholder="••••••••"
+              placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
             />
@@ -244,7 +276,9 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
             type="checkbox"
             checked={agree}
             onChange={(e) => {
-              setAgree(e.target.checked);
+              setAgree(
+                e.target.checked
+              );
               setError("");
             }}
           />
@@ -276,7 +310,6 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
         {/* Login */}
         <p className="register-bottom">
           Already have an account?{" "}
-
           <button
             type="button"
             onClick={onLogin}
@@ -284,7 +317,6 @@ function Register({ onClose, onLogin, onRegisterSuccess }) {
             Log in
           </button>
         </p>
-
       </div>
     </div>
   );
