@@ -3,6 +3,13 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 
 import Home from "./pages/Home/Home";
+
+import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
+import StudentProfile from "./pages/StudentDashboard/StudentProfile";
+
+import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
+
+
 import About from "./pages/About/About";
 import Help from "./pages/Help/Help";
 
@@ -189,6 +196,25 @@ function App() {
         />
 
         {/* =================================================
+            STUDENT PROFILE
+        ================================================= */}
+
+        <Route
+          path="/student-profile"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+
+              <StudentProfile />
+            </>
+          }
+        />
+
+
+        {/* =================================================
             TEACHER DASHBOARD
         ================================================= */}
 
@@ -225,7 +251,11 @@ function App() {
         />
 
         {/* =================================================
+
+            EXISTING PROFILE
+
             TEACHER REQUESTS
+
         ================================================= */}
 
         <Route

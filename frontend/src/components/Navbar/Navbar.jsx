@@ -81,7 +81,13 @@ function Navbar({
       >
         <nav className="navbar">
 
+
+          {/* =================================================
+              LOGO
+          ================================================= */}
+
           {/* Logo */}
+
 
           <Link to="/" className="navbar-logo">
             <div className="logo-icon">
@@ -113,7 +119,13 @@ function Navbar({
             </div>
           </Link>
 
+
+          {/* =================================================
+              MOBILE MENU
+          ================================================= */}
+
           {/* Mobile Menu */}
+
 
           <button
             type="button"
@@ -124,7 +136,13 @@ function Navbar({
             ☰
           </button>
 
+
+          {/* =================================================
+              NAVBAR CONTENT
+          ================================================= */}
+
           {/* Navbar Content */}
+
 
           <div
             className={`navbar-content ${
@@ -132,7 +150,11 @@ function Navbar({
             }`}
           >
 
+
+            {/* NORMAL NAVBAR LINKS */}
+
             {/* Normal Navbar Links */}
+
 
             {!hideLinks && !dashboardMode && (
               <div className="navbar-links">
@@ -156,12 +178,22 @@ function Navbar({
               </div>
             )}
 
+
+            {/* =================================================
+                DASHBOARD ACCOUNT
+            ================================================= */}
+
             {/* Dashboard Account Actions */}
+
 
             {dashboardMode ? (
               <div className="dashboard-account-actions">
 
+
+                {/* NOTIFICATION */}
+
                 {/* Notification */}
+
 
                 <button
                   type="button"
@@ -181,7 +213,13 @@ function Navbar({
                   <i></i>
                 </button>
 
+
+                {/* =================================================
+                    PROFILE
+                ================================================= */}
+
                 {/* Profile */}
+
 
                 <button
                   type="button"
@@ -204,11 +242,20 @@ function Navbar({
 
               </div>
             ) : (
+
+              /* =================================================
+                  LOGIN / REGISTER
+              ================================================= */
+
+              <div className="navbar-buttons">
+
+
               /* Login / Register Buttons */
 
               <div className="navbar-buttons">
 
                 {/* Login */}
+
 
                 <button
                   type="button"
@@ -222,7 +269,10 @@ function Navbar({
                   Login
                 </button>
 
+
+
                 {/* Register */}
+
 
                 <button
                   type="button"
@@ -243,7 +293,13 @@ function Navbar({
         </nav>
       </header>
 
+
+      {/* =========================================================
+          LOGIN MODAL
+      ========================================================= */}
+
       {/* Login Modal */}
+
 
       {loginOpen && (
         <Login
@@ -256,7 +312,13 @@ function Navbar({
         />
       )}
 
+
+      {/* =========================================================
+          REGISTER MODAL
+      ========================================================= */}
+
       {/* Register Modal */}
+
 
       {registerOpen && (
         <Register
@@ -268,6 +330,7 @@ function Navbar({
           onRegisterSuccess={handleRegisterSuccess}
         />
       )}
+
     </>
   );
 }
