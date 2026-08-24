@@ -6,7 +6,11 @@ import "./Navbar.css";
 import Login from "../../pages/Auth/Login/login";
 import Register from "../../pages/Auth/Register/register";
 
-function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) {
+function Navbar({
+  hideLinks = false,
+  dashboardMode = false,
+  role = "student",
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
@@ -15,6 +19,10 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
 
   const currentRole =
     role?.toLowerCase() === "teacher" ? "Teacher" : "Student";
+
+  /* =========================================================
+     LOGIN SUCCESS
+  ========================================================= */
 
   const handleLoginSuccess = (user) => {
     setLoginOpen(false);
@@ -32,6 +40,10 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
     }
   };
 
+  /* =========================================================
+     REGISTER SUCCESS
+  ========================================================= */
+
   const handleRegisterSuccess = (role) => {
     setRegisterOpen(false);
 
@@ -44,6 +56,22 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
     }
   };
 
+  /* =========================================================
+     PROFILE CLICK
+  ========================================================= */
+
+  const handleProfileClick = () => {
+    const userRole = role?.toLowerCase();
+
+    if (userRole === "teacher") {
+      navigate("/teacher-profile");
+    } else {
+      navigate("/student-profile");
+    }
+
+    setMenuOpen(false);
+  };
+
   return (
     <>
       <header
@@ -52,7 +80,9 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
         }`}
       >
         <nav className="navbar">
+
           {/* Logo */}
+
           <Link to="/" className="navbar-logo">
             <div className="logo-icon">
               <svg
@@ -84,6 +114,7 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
           </Link>
 
           {/* Mobile Menu */}
+
           <button
             type="button"
             className="menu-button"
@@ -94,14 +125,18 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
           </button>
 
           {/* Navbar Content */}
+
           <div
             className={`navbar-content ${
               menuOpen ? "show" : ""
             }`}
           >
+
             {/* Normal Navbar Links */}
+
             {!hideLinks && !dashboardMode && (
               <div className="navbar-links">
+
                 <Link to="/" className="nav-link active">
                   Home
                 </Link>
@@ -117,14 +152,17 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
                 <Link to="/help" className="nav-link">
                   Help
                 </Link>
+
               </div>
             )}
 
             {/* Dashboard Account Actions */}
+
             {dashboardMode ? (
               <div className="dashboard-account-actions">
 
                 {/* Notification */}
+
                 <button
                   type="button"
                   className="notification-button"
@@ -144,10 +182,11 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
                 </button>
 
                 {/* Profile */}
+
                 <button
                   type="button"
                   className="profile-button"
-                  onClick={() => navigate("/profile")}
+                  onClick={handleProfileClick}
                 >
                   <span className="profile-avatar">
                     A
@@ -166,9 +205,11 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
               </div>
             ) : (
               /* Login / Register Buttons */
+
               <div className="navbar-buttons">
 
                 {/* Login */}
+
                 <button
                   type="button"
                   className="login-button"
@@ -182,6 +223,7 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
                 </button>
 
                 {/* Register */}
+
                 <button
                   type="button"
                   className="register-button"
@@ -196,11 +238,13 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
 
               </div>
             )}
+
           </div>
         </nav>
       </header>
 
       {/* Login Modal */}
+
       {loginOpen && (
         <Login
           onClose={() => setLoginOpen(false)}
@@ -213,6 +257,7 @@ function Navbar({ hideLinks = false, dashboardMode = false, role = "student" }) 
       )}
 
       {/* Register Modal */}
+
       {registerOpen && (
         <Register
           onClose={() => setRegisterOpen(false)}
