@@ -7,7 +7,6 @@
   box-sizing: border-box;
 }
 
-
 /* =========================================================
    PAGE
 ========================================================= */
@@ -15,18 +14,12 @@
 .teacher-profile-page {
   width: 100%;
   min-height: 100vh;
-
   display: flex;
-
   padding-top: 76px;
-
   background: #f7f3ff;
-
   color: #241742;
-
   font-family: Arial, Helvetica, sans-serif;
 }
-
 
 /* =========================================================
    SIDEBAR
@@ -36,13 +29,9 @@
   width: 230px;
   min-width: 230px;
   flex: 0 0 230px;
-
   min-height: calc(100vh - 76px);
-
   background: rgba(255, 255, 255, 0.8);
-
   border-right: 1px solid #ece5f7;
-
   padding: 25px 16px;
 }
 
@@ -53,28 +42,18 @@
 
 .teacher-sidebar-link {
   width: 100%;
-
   display: flex;
   align-items: center;
-
   gap: 13px;
-
   padding: 12px 13px;
-
   border: none;
   border-radius: 10px;
-
   background: transparent;
-
   color: #30294c;
-
   font-size: 13px;
   font-weight: 600;
-
   text-align: left;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -91,16 +70,13 @@
 .teacher-sidebar-icon {
   width: 19px;
   height: 19px;
-
   flex-shrink: 0;
 }
 
 .teacher-sidebar-divider {
   width: 100%;
   height: 1px;
-
   margin: 8px 0;
-
   background: #eee7f5;
 }
 
@@ -113,7 +89,6 @@
   background: #fff0f3;
 }
 
-
 /* =========================================================
    MAIN CONTENT
 ========================================================= */
@@ -121,16 +96,13 @@
 .teacher-profile-content {
   flex: 1;
   min-width: 0;
-
   padding: 22px 30px 35px;
-
   background: linear-gradient(
     135deg,
     #fbf9ff,
     #f3edff
   );
 }
-
 
 /* =========================================================
    PAGE HEADING
@@ -139,38 +111,172 @@
 .teacher-profile-heading {
   width: 100%;
   max-width: 1100px;
-
-  /* CENTER HEADING WITH FORM */
   margin: 0 auto 16px;
-
   padding: 0;
-
   text-align: left;
 }
 
 .teacher-profile-heading h1 {
   margin: 0 0 6px;
-
   color: #2b1858;
-
   font-size: 23px;
   font-weight: 700;
-
   line-height: 1.2;
-
   text-align: left;
 }
 
 .teacher-profile-heading p {
   margin: 0;
-
   color: #827a91;
-
   font-size: 11px;
-
   text-align: left;
 }
 
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.teacher-profile-success {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 62px;
+  margin: 0 auto 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #bde8ce;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    #f1fff6,
+    #e9faef
+  );
+  color: #237a43;
+  box-shadow: 0 4px 15px rgba(35, 122, 67, 0.08);
+  animation: teacherMessageIn 0.25s ease-out;
+}
+
+.teacher-success-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #d6f5e1;
+  color: #218347;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.teacher-success-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.teacher-success-content strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: #237a43;
+}
+
+.teacher-success-content span {
+  font-size: 10px;
+  color: #5e8b6c;
+}
+
+.teacher-message-close {
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #55916a;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.teacher-message-close:hover {
+  background: #d9f4e2;
+  color: #237a43;
+}
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.teacher-profile-error {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 62px;
+  margin: 0 auto 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #f2c5cd;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    #fff7f8,
+    #fff0f3
+  );
+  color: #b52d48;
+  box-shadow: 0 4px 15px rgba(181, 45, 72, 0.07);
+  animation: teacherMessageIn 0.25s ease-out;
+}
+
+.teacher-error-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #ffe0e5;
+  color: #c44863;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.teacher-error-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.teacher-error-content strong {
+  font-size: 12px;
+  color: #b52d48;
+}
+
+.teacher-error-content span {
+  font-size: 10px;
+  color: #a96b79;
+}
+
+@keyframes teacherMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* =========================================================
    PROFILE CARD
@@ -179,22 +285,14 @@
 .teacher-profile-card {
   width: 100%;
   max-width: 1100px;
-
-  /* IMPORTANT - CENTER FORM */
   margin: 0 auto;
-
   padding: 20px;
-
   background: #ffffff;
-
   border: 1px solid #ebe5f3;
   border-radius: 9px;
-
   box-shadow: 0 4px 20px rgba(58, 31, 104, 0.05);
-
   overflow: hidden;
 }
-
 
 /* =========================================================
    TOP SECTION
@@ -202,15 +300,10 @@
 
 .teacher-top-section {
   width: 100%;
-
   display: grid;
-
-  grid-template-columns:
-    230px minmax(0, 1fr);
-
+  grid-template-columns: 230px minmax(0, 1fr);
   gap: 25px;
 }
-
 
 /* =========================================================
    PROFILE PICTURE COLUMN
@@ -218,9 +311,7 @@
 
 .teacher-picture-column {
   padding-right: 25px;
-
   border-right: 1px solid #ece6f3;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,17 +319,12 @@
 
 .teacher-picture-column h3 {
   width: 100%;
-
   margin: 0 0 14px;
-
   color: #392453;
-
   font-size: 12px;
   font-weight: 700;
-
   text-align: left;
 }
-
 
 /* =========================================================
    PROFILE PICTURE
@@ -246,28 +332,20 @@
 
 .teacher-picture-wrapper {
   position: relative;
-
   width: 120px;
   height: 120px;
-
   flex-shrink: 0;
-
   border-radius: 50%;
-
   background: #f1eaff;
-
   border: 1px solid #d9cafa;
 }
 
 .teacher-picture-wrapper img {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
   border-radius: 50%;
 }
-
 
 /* =========================================================
    DEFAULT AVATAR
@@ -275,47 +353,33 @@
 
 .teacher-default-avatar {
   position: relative;
-
   width: 100%;
   height: 100%;
-
   overflow: hidden;
-
   border-radius: 50%;
 }
 
 .teacher-avatar-head {
   position: absolute;
-
   width: 43px;
   height: 43px;
-
   top: 25px;
   left: 50%;
-
   transform: translateX(-50%);
-
   background: #c5a6f2;
-
   border-radius: 50%;
 }
 
 .teacher-avatar-body {
   position: absolute;
-
   width: 77px;
   height: 44px;
-
   bottom: 12px;
   left: 50%;
-
   transform: translateX(-50%);
-
   background: #c5a6f2;
-
   border-radius: 45px 45px 12px 12px;
 }
-
 
 /* =========================================================
    CAMERA ICON
@@ -323,25 +387,18 @@
 
 .teacher-camera-icon {
   position: absolute;
-
   right: 1px;
   bottom: 9px;
-
   width: 28px;
   height: 28px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: #ffffff;
-
   border: 1px solid #ddd1ed;
   border-radius: 50%;
-
   font-size: 12px;
 }
-
 
 /* =========================================================
    PROFILE PICTURE TEXT
@@ -349,12 +406,9 @@
 
 .teacher-picture-column p {
   margin: 9px 0;
-
   color: #8c8499;
-
   font-size: 9px;
 }
-
 
 /* =========================================================
    UPLOAD BUTTON
@@ -363,25 +417,17 @@
 .teacher-upload-button {
   min-width: 100px;
   height: 31px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 0 14px;
-
   border: 1px solid #7131e9;
   border-radius: 5px;
-
   background: #ffffff;
-
   color: #6625da;
-
   font-size: 10px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -392,7 +438,6 @@
 .teacher-upload-button input {
   display: none;
 }
-
 
 /* =========================================================
    PERSONAL / FORM SECTION
@@ -406,15 +451,11 @@
 .teacher-personal-section h3,
 .teacher-form-section h3 {
   margin: 0 0 14px;
-
   color: #7544d9;
-
   font-size: 12px;
   font-weight: 700;
-
   text-align: left;
 }
-
 
 /* =========================================================
    DIVIDER
@@ -423,12 +464,9 @@
 .teacher-divider {
   width: 100%;
   height: 1px;
-
   margin: 20px 0;
-
   background: #ece6f2;
 }
-
 
 /* =========================================================
    FORM GRID
@@ -436,16 +474,14 @@
 
 .teacher-form-grid {
   width: 100%;
-
   display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
+  grid-template-columns: repeat(
+    2,
+    minmax(0, 1fr)
+  );
   column-gap: 20px;
   row-gap: 13px;
 }
-
 
 /* =========================================================
    FORM FIELD
@@ -458,21 +494,16 @@
 
 .teacher-field label {
   display: block;
-
   margin: 0 0 6px;
-
   color: #453a51;
-
   font-size: 10px;
   font-weight: 600;
-
   text-align: left;
 }
 
 .teacher-field label span {
   color: #d14c67;
 }
-
 
 /* =========================================================
    INPUT / SELECT / TEXTAREA
@@ -482,26 +513,17 @@
 .teacher-field select,
 .teacher-field textarea {
   display: block;
-
   width: 100%;
   max-width: 100%;
-
   margin: 0;
-
   border: 1px solid #ded5ed;
   border-radius: 5px;
-
   background: #ffffff;
-
   color: #352d40;
-
   outline: none;
-
   font-family: inherit;
   font-size: 10px;
-
   box-sizing: border-box;
-
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -510,15 +532,12 @@
 .teacher-field input,
 .teacher-field select {
   height: 36px;
-
   padding: 0 12px;
 }
 
 .teacher-field textarea {
   min-height: 75px;
-
   padding: 11px 12px 24px;
-
   resize: vertical;
 }
 
@@ -531,11 +550,9 @@
 .teacher-field select:focus,
 .teacher-field textarea:focus {
   border-color: #8146e9;
-
   box-shadow:
     0 0 0 3px rgba(129, 70, 233, 0.06);
 }
-
 
 /* =========================================================
    BIO / ABOUT ME
@@ -543,13 +560,11 @@
 
 .teacher-full-field {
   width: 100%;
-
   margin-top: 13px;
 }
 
 .teacher-textarea-wrapper {
   position: relative;
-
   width: 100%;
 }
 
@@ -559,15 +574,11 @@
 
 .teacher-textarea-wrapper small {
   position: absolute;
-
   right: 9px;
   bottom: 7px;
-
   color: #8e869a;
-
   font-size: 8px;
 }
-
 
 /* =========================================================
    CHECKBOX SECTION
@@ -575,37 +586,27 @@
 
 .teacher-checkbox-row {
   min-height: 36px;
-
   display: flex;
   align-items: center;
-
   gap: 22px;
-
   flex-wrap: wrap;
 }
 
 .teacher-checkbox-row label {
   margin: 0;
-
   display: flex;
   align-items: center;
-
   gap: 5px;
-
   white-space: nowrap;
-
   font-size: 9px;
-
   cursor: pointer;
 }
 
 .teacher-checkbox-row input {
   width: 14px;
   height: 14px;
-
   accent-color: #7031e8;
 }
-
 
 /* =========================================================
    FORM ACTION BUTTONS
@@ -613,15 +614,11 @@
 
 .teacher-form-actions {
   margin-top: 22px;
-
   padding-top: 16px;
-
   border-top: 1px solid #ece6f3;
-
   display: flex;
   justify-content: flex-end;
   align-items: center;
-
   gap: 10px;
 }
 
@@ -629,17 +626,12 @@
 .teacher-save-button {
   min-width: 100px;
   height: 35px;
-
   border-radius: 5px;
-
   font-size: 10px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
-
 
 /* =========================================================
    CANCEL BUTTON
@@ -647,9 +639,7 @@
 
 .teacher-cancel-button {
   border: 1px solid #e0d9e9;
-
   background: #ffffff;
-
   color: #51495d;
 }
 
@@ -657,22 +647,18 @@
   background: #f8f6fa;
 }
 
-
 /* =========================================================
    SAVE BUTTON
 ========================================================= */
 
 .teacher-save-button {
   border: none;
-
   background: linear-gradient(
     135deg,
     #7734ef,
     #6023d1
   );
-
   color: #ffffff;
-
   box-shadow:
     0 4px 10px rgba(99, 37, 213, 0.17);
 }
@@ -682,30 +668,77 @@
     0 6px 14px rgba(99, 37, 213, 0.23);
 }
 
+/* =========================================================
+   MULTIPLE SELECT
+========================================================= */
+
+.teacher-multi-select {
+  min-height: 90px !important;
+  height: auto !important;
+  padding: 7px !important;
+  cursor: pointer;
+}
+
+.teacher-multi-select option {
+  padding: 7px 9px;
+  border-radius: 4px;
+}
+
+.teacher-multi-select option:checked {
+  background: #eadfff;
+  color: #6525dd;
+}
+
+.teacher-select-help {
+  display: block;
+  margin-top: 5px;
+  color: #938a9e;
+  font-size: 8px;
+}
+
+/* =========================================================
+   VALIDATION ERROR
+========================================================= */
+
+.teacher-validation-error {
+  display: block;
+  margin-top: 5px;
+  color: #c44863;
+  font-size: 8px;
+}
+
+/* =========================================================
+   DISABLED SAVE BUTTON
+========================================================= */
+
+.teacher-save-button:disabled,
+.teacher-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /* =========================================================
    RESPONSIVE - TABLET
 ========================================================= */
 
 @media (max-width: 1150px) {
-
   .teacher-profile-content {
     padding: 20px;
   }
 
   .teacher-profile-heading,
-  .teacher-profile-card {
+  .teacher-profile-card,
+  .teacher-profile-success,
+  .teacher-profile-error {
     max-width: 950px;
   }
 }
-
 
 /* =========================================================
    RESPONSIVE - SMALL TABLET
 ========================================================= */
 
 @media (max-width: 950px) {
-
   .teacher-profile-sidebar {
     width: 200px;
     min-width: 200px;
@@ -718,13 +751,11 @@
   }
 }
 
-
 /* =========================================================
    RESPONSIVE - MOBILE / TABLET
 ========================================================= */
 
 @media (max-width: 760px) {
-
   .teacher-profile-page {
     flex-direction: column;
   }
@@ -732,32 +763,25 @@
   .teacher-profile-sidebar {
     width: 100%;
     min-width: 100%;
-
     min-height: auto;
-
     flex-basis: auto;
-
     border-right: none;
     border-bottom: 1px solid #ece5f7;
-
     padding: 12px;
   }
 
   .teacher-sidebar-nav {
     display: flex;
-
     overflow-x: auto;
   }
 
   .teacher-sidebar-link {
     width: auto;
-
     white-space: nowrap;
   }
 
   .teacher-profile-content {
     width: 100%;
-
     padding: 18px;
   }
 
@@ -768,7 +792,6 @@
   .teacher-picture-column {
     border-right: none;
     border-bottom: 1px solid #ece6f3;
-
     padding-right: 0;
     padding-bottom: 20px;
   }
@@ -776,15 +799,18 @@
   .teacher-form-grid {
     grid-template-columns: 1fr;
   }
-}
 
+  .teacher-profile-success,
+  .teacher-profile-error {
+    max-width: 100%;
+  }
+}
 
 /* =========================================================
    RESPONSIVE - PHONE
 ========================================================= */
 
 @media (max-width: 550px) {
-
   .teacher-profile-content {
     padding: 16px 10px;
   }
@@ -801,4 +827,10 @@
   .teacher-save-button {
     width: 100%;
   }
+
+  .teacher-profile-success,
+  .teacher-profile-error {
+    align-items: flex-start;
+  }
 }
+
