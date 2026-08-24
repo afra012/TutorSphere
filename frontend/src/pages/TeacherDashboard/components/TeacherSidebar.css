@@ -7,6 +7,7 @@
   min-width: 220px;
   flex: 0 0 220px;
 
+  height: calc(100vh - 76px);
   min-height: calc(100vh - 76px);
 
   padding: 26px 16px;
@@ -20,9 +21,11 @@
 
   box-sizing: border-box;
 
-  position: relative;
-}
+  position: sticky;
+  top: 76px;
 
+  overflow-y: auto;
+}
 
 /* =========================================
    NAVIGATION
@@ -36,9 +39,8 @@
   gap: 5px;
 }
 
-
 /* =========================================
-   SIDEBAR LINK
+   LINK
 ========================================= */
 
 .teacher-sidebar-link {
@@ -72,32 +74,19 @@
     transform 0.2s ease;
 }
 
-
-/* =========================================
-   HOVER
-========================================= */
-
 .teacher-sidebar-link:hover {
   background: #f4eeff;
-
   color: #5720dc;
 }
 
-
-/* =========================================
-   ACTIVE
-========================================= */
-
 .teacher-sidebar-link.is-active {
   background: #eadfff;
-
   color: #5720dc;
 }
 
 .teacher-sidebar-link.is-active:hover {
   background: #e6d8ff;
 }
-
 
 /* =========================================
    ICON
@@ -112,7 +101,6 @@
   flex: none;
 }
 
-
 /* =========================================
    LOGOUT
 ========================================= */
@@ -125,89 +113,22 @@
 
 .teacher-sidebar-logout:hover {
   background: #fff0f3;
-
   color: #b22e4d;
 }
-
-
-/* =========================================
-   TEACHER INFO CARD
-========================================= */
-
-.teacher-info-card {
-  margin-top: auto;
-
-  padding: 15px 12px;
-
-  border: 1px solid #e7dcf8;
-
-  border-radius: 14px;
-
-  background: linear-gradient(
-    180deg,
-    #f5efff,
-    #eee5ff
-  );
-
-  text-align: center;
-
-  box-sizing: border-box;
-}
-
-.teacher-info-icon {
-  width: 40px;
-  height: 40px;
-
-  margin: 0 auto 8px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: #eadfff;
-
-  color: #5720dc;
-}
-
-.teacher-info-icon .teacher-sidebar-icon {
-  width: 21px;
-  height: 21px;
-}
-
-.teacher-info-card h3 {
-  margin: 5px 0;
-
-  color: #31204e;
-
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.teacher-info-card p {
-  margin: 0;
-
-  color: #6b6279;
-
-  font-size: 9px;
-
-  line-height: 1.5;
-}
-
 
 /* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 820px) {
-
   .teacher-sidebar {
     width: 100%;
+
     min-width: 0;
+
     flex: none;
 
+    height: auto;
     min-height: auto;
 
     padding: 10px 12px;
@@ -215,6 +136,8 @@
     border-right: 0;
 
     border-bottom: 1px solid #eee8ff;
+
+    position: static;
 
     overflow: hidden;
   }
@@ -245,7 +168,7 @@
     padding: 10px 12px;
   }
 
-  .teacher-info-card {
-    display: none;
+  .teacher-sidebar-logout {
+    margin-top: 0;
   }
 }
