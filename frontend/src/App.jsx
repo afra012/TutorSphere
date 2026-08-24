@@ -17,6 +17,7 @@ import Register from "./pages/Auth/Register/register";
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import StudentReviews from "./pages/StudentDashboard/components/StudentReviews/StudentReviews";
+import StudentPosts from "./pages/StudentDashboard/StudentPosts";
 
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
@@ -174,6 +175,20 @@ function App() {
                 role="student"
               />
               <StudentReviews />
+            </>
+          }
+        />
+
+        {/* Student posts */}
+        <Route
+          path="/my-post"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+              <StudentPosts />
             </>
           }
         />
