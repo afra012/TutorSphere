@@ -1,0 +1,804 @@
+/* =========================================================
+   TEACHER PROFILE - COMPLETE CSS
+========================================================= */
+
+.teacher-profile-page,
+.teacher-profile-page * {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.teacher-profile-page {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+
+  padding-top: 76px;
+
+  background: #f7f3ff;
+
+  color: #241742;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.teacher-profile-sidebar {
+  width: 230px;
+  min-width: 230px;
+  flex: 0 0 230px;
+
+  min-height: calc(100vh - 76px);
+
+  background: rgba(255, 255, 255, 0.8);
+
+  border-right: 1px solid #ece5f7;
+
+  padding: 25px 16px;
+}
+
+.teacher-sidebar-nav {
+  display: grid;
+  gap: 6px;
+}
+
+.teacher-sidebar-link {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 12px 13px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #30294c;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.teacher-sidebar-link:hover {
+  color: #6525dd;
+  background: #f3edff;
+}
+
+.teacher-sidebar-link.is-active {
+  color: #6525dd;
+  background: #eadfff;
+}
+
+.teacher-sidebar-icon {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+}
+
+.teacher-sidebar-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 8px 0;
+
+  background: #eee7f5;
+}
+
+.teacher-logout {
+  color: #3b3450;
+}
+
+.teacher-logout:hover {
+  color: #c44863;
+  background: #fff0f3;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.teacher-profile-content {
+  flex: 1;
+  min-width: 0;
+
+  padding: 22px 30px 35px;
+
+  background: linear-gradient(
+    135deg,
+    #fbf9ff,
+    #f3edff
+  );
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.teacher-profile-heading {
+  width: 100%;
+  max-width: 1100px;
+
+  /* CENTER HEADING WITH FORM */
+  margin: 0 auto 16px;
+
+  padding: 0;
+
+  text-align: left;
+}
+
+.teacher-profile-heading h1 {
+  margin: 0 0 6px;
+
+  color: #2b1858;
+
+  font-size: 23px;
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  text-align: left;
+}
+
+.teacher-profile-heading p {
+  margin: 0;
+
+  color: #827a91;
+
+  font-size: 11px;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   PROFILE CARD
+========================================================= */
+
+.teacher-profile-card {
+  width: 100%;
+  max-width: 1100px;
+
+  /* IMPORTANT - CENTER FORM */
+  margin: 0 auto;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #ebe5f3;
+  border-radius: 9px;
+
+  box-shadow: 0 4px 20px rgba(58, 31, 104, 0.05);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   TOP SECTION
+========================================================= */
+
+.teacher-top-section {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    230px minmax(0, 1fr);
+
+  gap: 25px;
+}
+
+
+/* =========================================================
+   PROFILE PICTURE COLUMN
+========================================================= */
+
+.teacher-picture-column {
+  padding-right: 25px;
+
+  border-right: 1px solid #ece6f3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.teacher-picture-column h3 {
+  width: 100%;
+
+  margin: 0 0 14px;
+
+  color: #392453;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   PROFILE PICTURE
+========================================================= */
+
+.teacher-picture-wrapper {
+  position: relative;
+
+  width: 120px;
+  height: 120px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #f1eaff;
+
+  border: 1px solid #d9cafa;
+}
+
+.teacher-picture-wrapper img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+}
+
+
+/* =========================================================
+   DEFAULT AVATAR
+========================================================= */
+
+.teacher-default-avatar {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+}
+
+.teacher-avatar-head {
+  position: absolute;
+
+  width: 43px;
+  height: 43px;
+
+  top: 25px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: #c5a6f2;
+
+  border-radius: 50%;
+}
+
+.teacher-avatar-body {
+  position: absolute;
+
+  width: 77px;
+  height: 44px;
+
+  bottom: 12px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: #c5a6f2;
+
+  border-radius: 45px 45px 12px 12px;
+}
+
+
+/* =========================================================
+   CAMERA ICON
+========================================================= */
+
+.teacher-camera-icon {
+  position: absolute;
+
+  right: 1px;
+  bottom: 9px;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  border: 1px solid #ddd1ed;
+  border-radius: 50%;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   PROFILE PICTURE TEXT
+========================================================= */
+
+.teacher-picture-column p {
+  margin: 9px 0;
+
+  color: #8c8499;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   UPLOAD BUTTON
+========================================================= */
+
+.teacher-upload-button {
+  min-width: 100px;
+  height: 31px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 14px;
+
+  border: 1px solid #7131e9;
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #6625da;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.teacher-upload-button:hover {
+  background: #f6f1ff;
+}
+
+.teacher-upload-button input {
+  display: none;
+}
+
+
+/* =========================================================
+   PERSONAL / FORM SECTION
+========================================================= */
+
+.teacher-personal-section {
+  width: 100%;
+  min-width: 0;
+}
+
+.teacher-personal-section h3,
+.teacher-form-section h3 {
+  margin: 0 0 14px;
+
+  color: #7544d9;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.teacher-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 20px 0;
+
+  background: #ece6f2;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.teacher-form-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  column-gap: 20px;
+  row-gap: 13px;
+}
+
+
+/* =========================================================
+   FORM FIELD
+========================================================= */
+
+.teacher-field {
+  width: 100%;
+  min-width: 0;
+}
+
+.teacher-field label {
+  display: block;
+
+  margin: 0 0 6px;
+
+  color: #453a51;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-align: left;
+}
+
+.teacher-field label span {
+  color: #d14c67;
+}
+
+
+/* =========================================================
+   INPUT / SELECT / TEXTAREA
+========================================================= */
+
+.teacher-field input,
+.teacher-field select,
+.teacher-field textarea {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+
+  border: 1px solid #ded5ed;
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #352d40;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 10px;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.teacher-field input,
+.teacher-field select {
+  height: 36px;
+
+  padding: 0 12px;
+}
+
+.teacher-field textarea {
+  min-height: 75px;
+
+  padding: 11px 12px 24px;
+
+  resize: vertical;
+}
+
+.teacher-field input::placeholder,
+.teacher-field textarea::placeholder {
+  color: #aaa3b4;
+}
+
+.teacher-field input:focus,
+.teacher-field select:focus,
+.teacher-field textarea:focus {
+  border-color: #8146e9;
+
+  box-shadow:
+    0 0 0 3px rgba(129, 70, 233, 0.06);
+}
+
+
+/* =========================================================
+   BIO / ABOUT ME
+========================================================= */
+
+.teacher-full-field {
+  width: 100%;
+
+  margin-top: 13px;
+}
+
+.teacher-textarea-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+.teacher-textarea-wrapper textarea {
+  width: 100%;
+}
+
+.teacher-textarea-wrapper small {
+  position: absolute;
+
+  right: 9px;
+  bottom: 7px;
+
+  color: #8e869a;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   CHECKBOX SECTION
+========================================================= */
+
+.teacher-checkbox-row {
+  min-height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 22px;
+
+  flex-wrap: wrap;
+}
+
+.teacher-checkbox-row label {
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  white-space: nowrap;
+
+  font-size: 9px;
+
+  cursor: pointer;
+}
+
+.teacher-checkbox-row input {
+  width: 14px;
+  height: 14px;
+
+  accent-color: #7031e8;
+}
+
+
+/* =========================================================
+   FORM ACTION BUTTONS
+========================================================= */
+
+.teacher-form-actions {
+  margin-top: 22px;
+
+  padding-top: 16px;
+
+  border-top: 1px solid #ece6f3;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.teacher-cancel-button,
+.teacher-save-button {
+  min-width: 100px;
+  height: 35px;
+
+  border-radius: 5px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+========================================================= */
+
+.teacher-cancel-button {
+  border: 1px solid #e0d9e9;
+
+  background: #ffffff;
+
+  color: #51495d;
+}
+
+.teacher-cancel-button:hover {
+  background: #f8f6fa;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.teacher-save-button {
+  border: none;
+
+  background: linear-gradient(
+    135deg,
+    #7734ef,
+    #6023d1
+  );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 10px rgba(99, 37, 213, 0.17);
+}
+
+.teacher-save-button:hover {
+  box-shadow:
+    0 6px 14px rgba(99, 37, 213, 0.23);
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 1150px) {
+
+  .teacher-profile-content {
+    padding: 20px;
+  }
+
+  .teacher-profile-heading,
+  .teacher-profile-card {
+    max-width: 950px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - SMALL TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+
+  .teacher-profile-sidebar {
+    width: 200px;
+    min-width: 200px;
+    flex-basis: 200px;
+  }
+
+  .teacher-top-section {
+    grid-template-columns:
+      190px minmax(0, 1fr);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE / TABLET
+========================================================= */
+
+@media (max-width: 760px) {
+
+  .teacher-profile-page {
+    flex-direction: column;
+  }
+
+  .teacher-profile-sidebar {
+    width: 100%;
+    min-width: 100%;
+
+    min-height: auto;
+
+    flex-basis: auto;
+
+    border-right: none;
+    border-bottom: 1px solid #ece5f7;
+
+    padding: 12px;
+  }
+
+  .teacher-sidebar-nav {
+    display: flex;
+
+    overflow-x: auto;
+  }
+
+  .teacher-sidebar-link {
+    width: auto;
+
+    white-space: nowrap;
+  }
+
+  .teacher-profile-content {
+    width: 100%;
+
+    padding: 18px;
+  }
+
+  .teacher-top-section {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-picture-column {
+    border-right: none;
+    border-bottom: 1px solid #ece6f3;
+
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+
+  .teacher-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - PHONE
+========================================================= */
+
+@media (max-width: 550px) {
+
+  .teacher-profile-content {
+    padding: 16px 10px;
+  }
+
+  .teacher-profile-card {
+    padding: 15px;
+  }
+
+  .teacher-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .teacher-cancel-button,
+  .teacher-save-button {
+    width: 100%;
+  }
+}

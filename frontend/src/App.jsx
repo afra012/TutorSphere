@@ -3,23 +3,27 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 
 import Home from "./pages/Home/Home";
+
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 
+
 import About from "./pages/About/About";
+import Help from "./pages/Help/Help";
 
 import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
-import Help from "./pages/Help/Help";
+import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 
-import TeacherProfile from "./pages/TeacherProfile/TeacherProfile";
-import Profile from "./pages/Profile/Profile";
+import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
+import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
+import TeacherRequests from "./pages/TeacherDashboard/TeacherRequests";
+import TeacherReviews from "./pages/TeacherDashboard/TeacherReviews";
 
 import Review from "./pages/Reviews/Review";
-
 
 /* =========================================================
    LOGIN PAGE
@@ -57,7 +61,6 @@ function HomeWithLogin() {
   );
 }
 
-
 /* =========================================================
    REGISTER PAGE
 ========================================================= */
@@ -92,7 +95,6 @@ function HomeWithRegister() {
   );
 }
 
-
 /* =========================================================
    REVIEWS PAGE
 ========================================================= */
@@ -105,7 +107,6 @@ function ReviewsPage() {
     </>
   );
 }
-
 
 /* =========================================================
    APP
@@ -130,7 +131,6 @@ function App() {
           }
         />
 
-
         {/* =================================================
             ABOUT
         ================================================= */}
@@ -145,7 +145,6 @@ function App() {
           }
         />
 
-
         {/* =================================================
             LOGIN
         ================================================= */}
@@ -155,7 +154,6 @@ function App() {
           element={<HomeWithLogin />}
         />
 
-
         {/* =================================================
             REGISTER
         ================================================= */}
@@ -164,7 +162,6 @@ function App() {
           path="/register"
           element={<HomeWithRegister />}
         />
-
 
         {/* =================================================
             HELP
@@ -179,7 +176,6 @@ function App() {
             </>
           }
         />
-
 
         {/* =================================================
             STUDENT DASHBOARD
@@ -198,7 +194,6 @@ function App() {
             </>
           }
         />
-
 
         {/* =================================================
             STUDENT PROFILE
@@ -237,7 +232,6 @@ function App() {
           }
         />
 
-
         {/* =================================================
             TEACHER PROFILE
         ================================================= */}
@@ -256,38 +250,12 @@ function App() {
           }
         />
 
-
         {/* =================================================
+
             EXISTING PROFILE
-        ================================================= */}
 
-        <Route
-          path="/profile"
-          element={
-            <>
-              <Navbar
-                dashboardMode={true}
-                role="student"
-              />
-
-              <Profile />
-            </>
-          }
-        />
-
-
-        {/* =================================================
-            REVIEWS
-        ================================================= */}
-
-        <Route
-          path="/reviews"
-          element={<ReviewsPage />}
-        />
-
-
-        {/* =================================================
             TEACHER REQUESTS
+
         ================================================= */}
 
         <Route
@@ -299,13 +267,10 @@ function App() {
                 role="teacher"
               />
 
-              <div style={{ paddingTop: "76px" }}>
-                <h1>Teacher Requests</h1>
-              </div>
+              <TeacherRequests />
             </>
           }
         />
-
 
         {/* =================================================
             TEACHER REVIEWS
@@ -320,11 +285,18 @@ function App() {
                 role="teacher"
               />
 
-              <div style={{ paddingTop: "76px" }}>
-                <h1>Teacher Reviews</h1>
-              </div>
+              <TeacherReviews />
             </>
           }
+        />
+
+        {/* =================================================
+            GENERAL REVIEWS
+        ================================================= */}
+
+        <Route
+          path="/reviews"
+          element={<ReviewsPage />}
         />
 
       </Routes>
