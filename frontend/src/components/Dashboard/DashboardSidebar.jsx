@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./DashboardSidebar.css";
 
 function Icon({ name }) {
@@ -56,26 +56,44 @@ function Icon({ name }) {
 }
 
 const items = [
-  ["Dashboard", "dashboard"],
-  ["Find Tutor", "search"],
-  ["My Post", "post"],
-  ["My Reviews", "star"],
-  ["Profile", "profile"],
+  {
+    label: "Dashboard",
+    icon: "dashboard",
+    path: "/student-dashboard",
+  },
+  {
+    label: "Find Tutor",
+    icon: "search",
+    path: "/find-tutor",
+  },
+  {
+    label: "My Post",
+    icon: "post",
+    path: "/my-post",
+  },
+  {
+    label: "My Reviews",
+    icon: "star",
+    path: "/reviews",
+  },
+  {
+    label: "Profile",
+    icon: "profile",
+    path: "/student-profile",
+  },
 ];
 
 export default function DashboardSidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    // Remove saved authentication information
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
 
-    // Clear any session data
     sessionStorage.clear();
 
-    // Go back to Home page
     navigate("/", { replace: true });
   };
 
@@ -85,16 +103,17 @@ export default function DashboardSidebar() {
       aria-label="Dashboard navigation"
     >
       <nav className="sidebar-nav">
-        {items.map(([label, icon], index) => (
+        {items.map((item) => (
           <button
-            className={`sidebar-link ${
-              index === 0 ? "is-active" : ""
-            }`}
+            key={item.label}
             type="button"
-            key={label}
+            onClick={() => navigate(item.path)}
+            className={`sidebar-link ${
+              location.pathname === item.path ? "is-active" : ""
+            }`}
           >
-            <Icon name={icon} />
-            {label}
+            <Icon name={item.icon} />
+            {item.label}
           </button>
         ))}
 

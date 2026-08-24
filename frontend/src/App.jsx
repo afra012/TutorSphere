@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar/Navbar";
 
 import Home from "./pages/Home/Home";
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
+import StudentProfile from "./pages/StudentDashboard/StudentProfile";
+
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 
 import About from "./pages/About/About";
@@ -99,7 +101,6 @@ function ReviewsPage() {
   return (
     <>
       <Navbar />
-
       <Review />
     </>
   );
@@ -200,6 +201,25 @@ function App() {
 
 
         {/* =================================================
+            STUDENT PROFILE
+        ================================================= */}
+
+        <Route
+          path="/student-profile"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+
+              <StudentProfile />
+            </>
+          }
+        />
+
+
+        {/* =================================================
             TEACHER DASHBOARD
         ================================================= */}
 
@@ -238,7 +258,7 @@ function App() {
 
 
         {/* =================================================
-            PROFILE
+            EXISTING PROFILE
         ================================================= */}
 
         <Route
