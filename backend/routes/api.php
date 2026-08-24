@@ -2,75 +2,96 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
-use App\Models\User;
+use App\Http\Controllers\TeacherProfileController;
 
-/*
-|--------------------------------------------------------------------------
-| Authentication
-|--------------------------------------------------------------------------
-*/
+
+// =========================================================
+// Authentication
+// =========================================================
 
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware('auth:sanctum');
+
+// =========================================================
+// Authenticated User
+// =========================================================
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/user', function (Request $request) {
+        return response()->json(
+            $request->user()
+        );
+    });
+
+    Route::get('/users', function (Request $request) {
+        return response()->json([
+            'users' => \App\Models\User::all()
+        ]);
+    });
 
 
-/*
-|--------------------------------------------------------------------------
-| Current User
-|--------------------------------------------------------------------------
-*/
+    // =====================================================
+    // Teacher Profile
+    // =====================================================
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+    Route::get(
+        '/teacher-profile',
+        [TeacherProfileController::class, 'show']
+    );
+
+    Route::put(
+        '/teacher-profile',
+        [TeacherProfileController::class, 'update']
+    );
+
+    Route::get(
+        '/teacher-profile/subjects',
+        [TeacherProfileController::class, 'subjects']
+    );
+
+    Route::get(
+        '/teacher-profile/languages',
+        [TeacherProfileController::class, 'languages']
+    );
+
+    Route::post(
+        '/teacher-profile/image',
+        [TeacherProfileController::class, 'uploadImage']
+    );
+});
 
 
-/*
-|--------------------------------------------------------------------------
-| Users
-|--------------------------------------------------------------------------
-|
-| Both Student and Teacher will be returned.
-|
-*/
+// =========================================================
+// Reviews
+// =========================================================
 
-Route::get('/users', function () {
-    return User::select(
-        'id',
-        'name',
-        'role'
-    )->get();
-})->middleware('auth:sanctum');
+Route::get(
+    '/reviews',
+    [ReviewController::class, 'index']
+);
 
+Route::middleware('auth:sanctum')->group(function () {
 
-/*
-|--------------------------------------------------------------------------
-| Reviews
-|--------------------------------------------------------------------------
-*/
+    Route::post(
+        '/reviews',
+        [ReviewController::class, 'store']
+    );
 
-Route::get('/reviews', [
-    ReviewController::class,
-    'index'
-]);
+    Route::put(
+        '/reviews/{id}',
+        [ReviewController::class, 'update']
+    );
 
-Route::post('/reviews', [
-    ReviewController::class,
-    'store'
-])->middleware('auth:sanctum');
-
-Route::put('/reviews/{id}', [
-    ReviewController::class,
-    'update'
-])->middleware('auth:sanctum');
-
-Route::delete('/reviews/{id}', [
-    ReviewController::class,
-    'destroy'
-])->middleware('auth:sanctum');
+    Route::delete(
+        '/reviews/{id}',
+        [ReviewController::class, 'destroy']
+    );
+});

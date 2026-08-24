@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../../../api/axios";
 import "./Register.css";
 
 function Register({
@@ -31,21 +31,18 @@ function Register({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
 
     const name = formData.name.trim();
     const email = formData.email.trim().toLowerCase();
     const password = formData.password;
 
-    // Required fields
     if (!name || !email || !password) {
-      setError(
-        "Please fill in all fields."
-      );
+      setError("Please fill in all fields.");
       return;
     }
 
-    // Email validation
     const emailRegex =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -56,7 +53,6 @@ function Register({
       return;
     }
 
-    // Password validation
     if (password.length < 6) {
       setError(
         "Password must be at least 6 characters."
@@ -64,7 +60,6 @@ function Register({
       return;
     }
 
-    // Terms validation
     if (!agree) {
       setError(
         "Please agree to the Terms & Conditions."
@@ -73,36 +68,37 @@ function Register({
     }
 
     try {
-      // Convert frontend role to backend role
       const backendRole =
         role === "Tutor"
           ? "teacher"
           : "student";
 
-      // Send registration data to Laravel
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/register",
+      const response = await api.post(
+        "/register",
         {
-          name: name,
-          email: email,
-          password: password,
+          name,
+          email,
+          password,
           role: backendRole,
         }
       );
 
+      const user = response.data.user;
+      const token = response.data.token;
+
       // Save Sanctum token
       localStorage.setItem(
         "authToken",
-        response.data.token
+        token
       );
 
-      // Save logged-in user
+      // Save user
       localStorage.setItem(
         "currentUser",
-        JSON.stringify(response.data.user)
+        JSON.stringify(user)
       );
 
-      // Save login status
+      // Save login state
       localStorage.setItem(
         "isLoggedIn",
         "true"
@@ -123,21 +119,22 @@ function Register({
 
       setAgree(false);
 
-      // Registration successful
-      // Send actual backend role to App
       if (onRegisterSuccess) {
-        onRegisterSuccess(
-          backendRole
-        );
+        onRegisterSuccess(backendRole);
       }
     } catch (error) {
-      // Laravel validation errors
+      console.error(
+        "Registration error:",
+        error
+      );
+
       if (error.response?.data?.errors) {
         const errors =
           error.response.data.errors;
 
         setError(
-          Object.values(errors)[0][0]
+          Object.values(errors)[0]?.[0] ||
+            "Registration validation failed."
         );
       } else {
         setError(
@@ -159,7 +156,6 @@ function Register({
           e.stopPropagation()
         }
       >
-        {/* Close */}
         <button
           className="register-close"
           type="button"
@@ -168,7 +164,6 @@ function Register({
           ×
         </button>
 
-        {/* Heading */}
         <h2>Register</h2>
 
         <p className="register-subtitle">
@@ -176,7 +171,6 @@ function Register({
           minutes.
         </p>
 
-        {/* Full Name */}
         <div className="register-group">
           <label>Full Name</label>
 
@@ -193,13 +187,10 @@ function Register({
           </div>
         </div>
 
-        {/* Register As */}
         <div className="register-group">
           <label>Register As</label>
 
           <div className="register-roles">
-
-            {/* Teacher */}
             <button
               type="button"
               className={
@@ -216,7 +207,6 @@ function Register({
               Teacher
             </button>
 
-            {/* Student */}
             <button
               type="button"
               className={
@@ -232,11 +222,9 @@ function Register({
               <span>♟</span>
               Student
             </button>
-
           </div>
         </div>
 
-        {/* Email */}
         <div className="register-group">
           <label>Email</label>
 
@@ -253,7 +241,6 @@ function Register({
           </div>
         </div>
 
-        {/* Password */}
         <div className="register-group">
           <label>Password</label>
 
@@ -270,7 +257,6 @@ function Register({
           </div>
         </div>
 
-        {/* Terms */}
         <label className="terms">
           <input
             type="checkbox"
@@ -291,14 +277,12 @@ function Register({
           </span>
         </label>
 
-        {/* Error */}
         {error && (
           <div className="register-error">
             {error}
           </div>
         )}
 
-        {/* Register */}
         <button
           type="button"
           className="register-submit"
@@ -307,9 +291,9 @@ function Register({
           Register
         </button>
 
-        {/* Login */}
         <p className="register-bottom">
           Already have an account?{" "}
+
           <button
             type="button"
             onClick={onLogin}
