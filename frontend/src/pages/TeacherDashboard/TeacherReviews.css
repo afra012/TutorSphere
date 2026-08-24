@@ -1,41 +1,279 @@
-.teacher-review-content {
-  max-width: 1050px;
+/* =========================================================
+   TEACHER REVIEWS PAGE
+========================================================= */
 
-  margin: 0 auto;
+.teacher-reviews-page {
+  min-height: 100vh;
+  background: #faf9ff;
+  color: #29243a;
 }
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.teacher-reviews-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 76px);
+  padding-top: 76px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.teacher-reviews-main {
+  flex: 1;
+  min-width: 0;
+  background: #faf9ff;
+  overflow-x: hidden;
+}
+
+.teacher-reviews-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 38px 42px 60px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.teacher-reviews-header {
+  margin-bottom: 28px;
+}
+
+.teacher-reviews-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  margin-bottom: 12px;
+
+  border-radius: 20px;
+
+  background: #eee7ff;
+  color: #6330d8;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.teacher-reviews-header h1 {
+  margin: 0;
+
+  color: #29243a;
+
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+.teacher-reviews-header p {
+  margin: 8px 0 0;
+
+  color: #716b80;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.teacher-review-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+
+  margin-bottom: 30px;
+}
+
+.teacher-review-stat-card {
+  min-height: 92px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #eee8f8;
+  border-radius: 16px;
+
+  box-shadow: 0 5px 18px rgba(77, 42, 135, 0.045);
+
+  box-sizing: border-box;
+}
+
+.teacher-review-stat-icon {
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #eee5ff;
+  color: #6833d8;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.teacher-review-stat-card span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #81798e;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.teacher-review-stat-card strong {
+  display: block;
+
+  color: #2c2540;
+
+  font-size: 20px;
+  font-weight: 750;
+}
+
+/* =========================================================
+   REVIEWS SECTION
+========================================================= */
+
+.teacher-reviews-section {
+  width: 100%;
+}
+
+.teacher-reviews-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+}
+
+.teacher-reviews-section-header h2 {
+  margin: 0;
+
+  color: #2d2740;
+
+  font-size: 21px;
+  font-weight: 750;
+}
+
+.teacher-reviews-section-header p {
+  margin: 5px 0 0;
+
+  color: #81798e;
+
+  font-size: 13px;
+}
+
+.teacher-review-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 12px;
+
+  border-radius: 20px;
+
+  background: #eee7ff;
+  color: #6330d8;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   REVIEW GRID
+========================================================= */
 
 .teacher-review-list {
   display: grid;
 
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 18px;
 }
 
+/* =========================================================
+   REVIEW CARD
+========================================================= */
+
 .teacher-review-card {
-  padding: 23px;
+  padding: 22px;
 
-  border: 1px solid #ebe4f5;
+  background: #ffffff;
 
-  border-radius: 16px;
-
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ebe5f5;
+  border-radius: 17px;
 
   box-shadow:
-    0 8px 25px rgba(77, 42, 135, 0.06);
+    0 7px 24px rgba(77, 42, 135, 0.055);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+  box-sizing: border-box;
 }
+
+.teacher-review-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #ded0fa;
+
+  box-shadow:
+    0 12px 30px rgba(77, 42, 135, 0.09);
+}
+
+/* =========================================================
+   REVIEW TOP
+========================================================= */
 
 .teacher-review-top {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
+  gap: 15px;
+}
+
+/* =========================================================
+   STUDENT
+========================================================= */
+
+.teacher-review-student {
+  display: flex;
+  align-items: center;
   gap: 12px;
+
+  min-width: 0;
 }
 
 .teacher-review-avatar {
-  width: 43px;
-  height: 43px;
+  width: 45px;
+  height: 45px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -43,41 +281,362 @@
 
   border-radius: 50%;
 
-  background: #eee5ff;
+  background:
+    linear-gradient(
+      135deg,
+      #e9ddff,
+      #cdb5ff
+    );
 
-  color: #5b27d6;
-
-  font-weight: 700;
-}
-
-.teacher-review-top h2 {
-  margin: 0 0 5px;
-
-  color: #29243a;
+  color: #5c27d0;
 
   font-size: 16px;
+  font-weight: 750;
+}
+
+.teacher-review-student h3 {
+  margin: 0 0 4px;
+
+  color: #2c2640;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.teacher-review-student span {
+  display: inline-block;
+
+  padding: 3px 8px;
+
+  border-radius: 10px;
+
+  background: #f1ebff;
+  color: #6940b8;
+
+  font-size: 10px;
+  font-weight: 650;
+}
+
+/* =========================================================
+   RATING
+========================================================= */
+
+.teacher-review-rating {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+
+  flex-shrink: 0;
 }
 
 .teacher-stars {
-  color: #7540df;
+  color: #f3ae00;
 
-  font-size: 14px;
+  font-size: 17px;
 
   letter-spacing: 2px;
+  line-height: 1;
 }
+
+.teacher-review-rating small {
+  margin-top: 5px;
+
+  color: #91899d;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.teacher-review-divider {
+  height: 1px;
+
+  margin: 18px 0;
+
+  background: #eeeaf4;
+}
+
+/* =========================================================
+   REVIEW TEXT
+========================================================= */
 
 .teacher-review-text {
-  margin: 19px 0 0;
+  min-height: 70px;
 
-  color: #666073;
+  margin: 0;
+
+  color: #625b70;
 
   font-size: 14px;
-
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
-@media (max-width: 750px) {
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.teacher-review-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 17px;
+
+  color: #9a92a6;
+
+  font-size: 11px;
+}
+
+.teacher-review-footer strong {
+  color: #655d72;
+  font-weight: 700;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.teacher-reviews-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  margin-bottom: 18px;
+  padding: 15px 17px;
+
+  border: 1px solid #f2cbd3;
+  border-radius: 13px;
+
+  background: #fff4f6;
+
+  color: #a92848;
+}
+
+.teacher-reviews-error > span {
+  width: 27px;
+  height: 27px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f9dce3;
+  color: #a92848;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.teacher-reviews-error strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 13px;
+}
+
+.teacher-reviews-error p {
+  margin: 0;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   EMPTY / LOADING
+========================================================= */
+
+.teacher-reviews-empty {
+  padding: 55px 25px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #ebe5f5;
+  border-radius: 17px;
+
+  box-shadow: 0 6px 22px rgba(77, 42, 135, 0.045);
+}
+
+.teacher-reviews-empty-icon,
+.teacher-reviews-loading-icon {
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 17px;
+
+  background: #eee6ff;
+  color: #6731d5;
+
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.teacher-reviews-loading-icon {
+  animation: reviewPulse 1.2s ease-in-out infinite;
+}
+
+.teacher-reviews-empty h3 {
+  margin: 0;
+
+  color: #302a42;
+
+  font-size: 18px;
+}
+
+.teacher-reviews-empty p {
+  max-width: 420px;
+
+  margin: 8px auto 0;
+
+  color: #81798e;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.teacher-reviews-empty button {
+  margin-top: 20px;
+
+  padding: 10px 17px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #6731d5;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.teacher-reviews-empty button:hover {
+  background: #5522bc;
+
+  transform: translateY(-1px);
+}
+
+@keyframes reviewPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .teacher-reviews-container {
+    padding: 32px 25px 50px;
+  }
+
   .teacher-review-list {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 820px) {
+  .teacher-reviews-layout {
+    flex-direction: column;
+    padding-top: 68px;
+  }
+
+  .teacher-reviews-container {
+    padding: 25px 18px 45px;
+  }
+
+  .teacher-reviews-header h1 {
+    font-size: 28px;
+  }
+
+  .teacher-review-stats {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .teacher-review-stat-card {
+    min-height: 76px;
+  }
+
+  .teacher-reviews-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+  .teacher-reviews-container {
+    padding: 22px 14px 35px;
+  }
+
+  .teacher-reviews-header {
+    margin-bottom: 22px;
+  }
+
+  .teacher-reviews-header h1 {
+    font-size: 25px;
+  }
+
+  .teacher-reviews-header p {
+    font-size: 12px;
+  }
+
+  .teacher-review-card {
+    padding: 18px;
+  }
+
+  .teacher-review-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .teacher-review-rating {
+    align-items: flex-start;
+  }
+
+  .teacher-review-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
   }
 }
