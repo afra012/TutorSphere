@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StudentProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -10,11 +9,9 @@ use Illuminate\Validation\Rule;
 
 class StudentProfileController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | GET STUDENT PROFILE
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // GET STUDENT PROFILE
+    // =========================================================
 
     public function show(Request $request)
     {
@@ -32,40 +29,45 @@ class StudentProfileController extends Controller
             ], 403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | LEFT JOIN
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // LEFT JOIN
+        // SQL:
+        // SELECT ...
+        // FROM users
+        // LEFT JOIN student_profiles
+        // ON users.id = student_profiles.user_id
+        // WHERE users.id = ?
+        // =====================================================
 
-        $profile = DB::table('users')
-            ->leftJoin(
-                'student_profiles',
-                'users.id',
-                '=',
-                'student_profiles.user_id'
-            )
-            ->where('users.id', $user->id)
-            ->select(
-                'users.id as user_id',
-                'users.name',
-                'users.email',
-                'student_profiles.profile_image',
-                'student_profiles.phone',
-                'student_profiles.address',
-                'student_profiles.education_level',
-                'student_profiles.institution',
-                'student_profiles.class_grade',
-                'student_profiles.preferred_time',
-                'student_profiles.about_me'
-            )
-            ->first();
+        $profileResult = DB::select(
+            "
+            SELECT
+                users.id AS user_id,
+                users.name,
+                users.email,
+                student_profiles.id AS profile_id,
+                student_profiles.profile_image,
+                student_profiles.phone,
+                student_profiles.address,
+                student_profiles.education_level,
+                student_profiles.institution,
+                student_profiles.class_grade,
+                student_profiles.preferred_time,
+                student_profiles.about_me
+            FROM users
+            LEFT JOIN student_profiles
+                ON users.id = student_profiles.user_id
+            WHERE users.id = ?
+            LIMIT 1
+            ",
+            [$user->id]
+        );
 
-        /*
-        |--------------------------------------------------------------------------
-        | PROFILE IMAGE URL
-        |--------------------------------------------------------------------------
-        */
+        $profile = $profileResult[0] ?? null;
+
+        // =====================================================
+        // PROFILE IMAGE URL
+        // =====================================================
 
         if ($profile && $profile->profile_image) {
             $profile->profile_image_url =
@@ -76,31 +78,29 @@ class StudentProfileController extends Controller
             $profile->profile_image_url = null;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | MULTIPLE TABLE JOIN
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // MULTIPLE TABLE INNER JOIN
+        //
+        // users
+        // student_subjects
+        // subjects
+        // =====================================================
 
-        $subjects = DB::table('users')
-            ->join(
-                'student_subjects',
-                'users.id',
-                '=',
-                'student_subjects.student_id'
-            )
-            ->join(
-                'subjects',
-                'student_subjects.subject_id',
-                '=',
-                'subjects.id'
-            )
-            ->where('users.id', $user->id)
-            ->select(
-                'subjects.id',
-                'subjects.subject_name'
-            )
-            ->get();
+        $subjects = DB::select(
+            "
+            SELECT
+                subjects.id,
+                subjects.subject_name
+            FROM users
+            INNER JOIN student_subjects
+                ON users.id = student_subjects.student_id
+            INNER JOIN subjects
+                ON student_subjects.subject_id = subjects.id
+            WHERE users.id = ?
+            ORDER BY subjects.subject_name ASC
+            ",
+            [$user->id]
+        );
 
         return response()->json([
             'message' => 'Student profile retrieved successfully.',
@@ -109,12 +109,9 @@ class StudentProfileController extends Controller
         ]);
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | UPDATE STUDENT PROFILE
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // UPDATE STUDENT PROFILE
+    // =========================================================
 
     public function update(Request $request)
     {
@@ -132,11 +129,9 @@ class StudentProfileController extends Controller
             ], 403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDATION
-        |--------------------------------------------------------------------------
-        */
+        // =====================================================
+        // VALIDATION
+        // =====================================================
 
         $validated = $request->validate([
             'name' => [
@@ -217,118 +212,230 @@ class StudentProfileController extends Controller
 
         try {
 
-            /*
-            |--------------------------------------------------------------------------
-            | UPDATE USERS TABLE
-            |--------------------------------------------------------------------------
-            */
+            // =================================================
+            // UPDATE USERS
+            // =================================================
 
-            $user->update([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-            ]);
+            DB::update(
+                "
+                UPDATE users
+                SET
+                    name = ?,
+                    email = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+                ",
+                [
+                    $validated['name'],
+                    $validated['email'],
+                    $user->id
+                ]
+            );
 
-            /*
-            |--------------------------------------------------------------------------
-            | GET EXISTING PROFILE OR CREATE NEW
-            |--------------------------------------------------------------------------
-            */
+            // =================================================
+            // CHECK EXISTING STUDENT PROFILE
+            // =================================================
 
-            $profile = StudentProfile::firstOrNew([
-                'user_id' => $user->id,
-            ]);
+            $existingProfile = DB::select(
+                "
+                SELECT id, profile_image
+                FROM student_profiles
+                WHERE user_id = ?
+                LIMIT 1
+                ",
+                [$user->id]
+            );
 
-            $profile->phone =
-                $validated['phone'] ?? null;
+            $profileId =
+                $existingProfile[0]->id
+                ?? null;
 
-            $profile->address =
-                $validated['address'] ?? null;
+            $oldImage =
+                $existingProfile[0]->profile_image
+                ?? null;
 
-            $profile->education_level =
-                $validated['education_level'] ?? null;
+            // =================================================
+            // PROFILE IMAGE
+            // =================================================
 
-            $profile->institution =
-                $validated['institution'] ?? null;
-
-            $profile->class_grade =
-                $validated['class_grade'] ?? null;
-
-            $profile->preferred_time =
-                $validated['preferred_time'] ?? null;
-
-            $profile->about_me =
-                $validated['about_me'] ?? null;
-
-            /*
-            |--------------------------------------------------------------------------
-            | PROFILE IMAGE
-            |--------------------------------------------------------------------------
-            */
+            $imagePath = $oldImage;
 
             if ($request->hasFile('profile_image')) {
 
                 $image = $request->file('profile_image');
 
-                /*
-                 * Delete old image if one exists
-                 */
+                // Delete old image
                 if (
-                    $profile->profile_image &&
-                    Storage::disk('public')->exists(
-                        $profile->profile_image
-                    )
+                    $oldImage &&
+                    Storage::disk('public')->exists($oldImage)
                 ) {
-                    Storage::disk('public')->delete(
-                        $profile->profile_image
-                    );
+                    Storage::disk('public')->delete($oldImage);
                 }
 
-                /*
-                 * Save new image
-                 */
+                // Store new image
                 $imagePath = $image->store(
                     'student_profiles',
                     'public'
                 );
-
-                /*
-                 * Save path in MySQL
-                 */
-                $profile->profile_image =
-                    $imagePath;
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | SAVE STUDENT PROFILE
-            |--------------------------------------------------------------------------
-            */
+            // =================================================
+            // INSERT OR UPDATE STUDENT PROFILE
+            // =================================================
 
-            $profile->save();
+            if ($profileId) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | SUBJECTS
-            |--------------------------------------------------------------------------
-            */
+                DB::update(
+                    "
+                    UPDATE student_profiles
+                    SET
+                        profile_image = ?,
+                        phone = ?,
+                        address = ?,
+                        education_level = ?,
+                        institution = ?,
+                        class_grade = ?,
+                        preferred_time = ?,
+                        about_me = ?,
+                        updated_at = NOW()
+                    WHERE id = ?
+                    ",
+                    [
+                        $imagePath,
+                        $validated['phone'] ?? null,
+                        $validated['address'] ?? null,
+                        $validated['education_level'] ?? null,
+                        $validated['institution'] ?? null,
+                        $validated['class_grade'] ?? null,
+                        $validated['preferred_time'] ?? null,
+                        $validated['about_me'] ?? null,
+                        $profileId
+                    ]
+                );
+
+            } else {
+
+                DB::insert(
+                    "
+                    INSERT INTO student_profiles
+                    (
+                        user_id,
+                        profile_image,
+                        phone,
+                        address,
+                        education_level,
+                        institution,
+                        class_grade,
+                        preferred_time,
+                        about_me,
+                        created_at,
+                        updated_at
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                    ",
+                    [
+                        $user->id,
+                        $imagePath,
+                        $validated['phone'] ?? null,
+                        $validated['address'] ?? null,
+                        $validated['education_level'] ?? null,
+                        $validated['institution'] ?? null,
+                        $validated['class_grade'] ?? null,
+                        $validated['preferred_time'] ?? null,
+                        $validated['about_me'] ?? null
+                    ]
+                );
+
+                $newProfile = DB::select(
+                    "
+                    SELECT id
+                    FROM student_profiles
+                    WHERE user_id = ?
+                    LIMIT 1
+                    ",
+                    [$user->id]
+                );
+
+                $profileId =
+                    $newProfile[0]->id ?? null;
+            }
+
+            // =================================================
+            // SUBJECTS
+            // =================================================
 
             if ($request->has('subject_ids')) {
-                $user->subjects()->sync(
-                    $validated['subject_ids'] ?? []
+
+                // Delete previous subject relationships
+
+                DB::delete(
+                    "
+                    DELETE FROM student_subjects
+                    WHERE student_id = ?
+                    ",
+                    [$user->id]
                 );
+
+                // Insert selected subjects
+
+                $subjectIds =
+                    $validated['subject_ids'] ?? [];
+
+                foreach ($subjectIds as $subjectId) {
+
+                    DB::insert(
+                        "
+                        INSERT INTO student_subjects
+                        (
+                            student_id,
+                            subject_id
+                        )
+                        VALUES (?, ?)
+                        ",
+                        [
+                            $user->id,
+                            $subjectId
+                        ]
+                    );
+                }
             }
 
             DB::commit();
 
-            /*
-            |--------------------------------------------------------------------------
-            | IMAGE URL
-            |--------------------------------------------------------------------------
-            */
+            // =================================================
+            // GET UPDATED PROFILE
+            // =================================================
+
+            $updatedProfile = DB::select(
+                "
+                SELECT
+                    users.id AS user_id,
+                    users.name,
+                    users.email,
+                    student_profiles.id AS profile_id,
+                    student_profiles.profile_image,
+                    student_profiles.phone,
+                    student_profiles.address,
+                    student_profiles.education_level,
+                    student_profiles.institution,
+                    student_profiles.class_grade,
+                    student_profiles.preferred_time,
+                    student_profiles.about_me
+                FROM users
+                LEFT JOIN student_profiles
+                    ON users.id = student_profiles.user_id
+                WHERE users.id = ?
+                LIMIT 1
+                ",
+                [$user->id]
+            );
+
+            $profile =
+                $updatedProfile[0] ?? null;
 
             $imageUrl = null;
 
-            if ($profile->profile_image) {
+            if ($profile && $profile->profile_image) {
                 $imageUrl =
                     $request->getSchemeAndHttpHost()
                     . '/storage/'
@@ -339,7 +446,8 @@ class StudentProfileController extends Controller
                 'message' =>
                     'Profile updated successfully!',
 
-                'profile' => $profile,
+                'profile' =>
+                    $profile,
 
                 'profile_image_url' =>
                     $imageUrl,
@@ -359,97 +467,82 @@ class StudentProfileController extends Controller
         }
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SUBJECTS
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // SUBJECTS
+    // =========================================================
 
     public function subjects()
     {
-        $subjects = DB::table('subjects')
-            ->select(
-                'id',
-                'subject_name'
-            )
-            ->orderBy('subject_name')
-            ->get();
+        $subjects = DB::select(
+            "
+            SELECT
+                id,
+                subject_name
+            FROM subjects
+            ORDER BY subject_name ASC
+            "
+        );
 
         return response()->json([
             'subjects' => $subjects,
         ]);
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | INNER JOIN
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // INNER JOIN
+    // =========================================================
 
     public function innerJoin(Request $request)
     {
         $user = $request->user();
 
-        $profile = DB::table('users')
-            ->join(
-                'student_profiles',
-                'users.id',
-                '=',
-                'student_profiles.user_id'
-            )
-            ->where(
-                'users.id',
-                $user->id
-            )
-            ->select(
-                'users.id',
-                'users.name',
-                'users.email',
-                'student_profiles.phone',
-                'student_profiles.address'
-            )
-            ->first();
+        $result = DB::select(
+            "
+            SELECT
+                users.id,
+                users.name,
+                users.email,
+                student_profiles.phone,
+                student_profiles.address
+            FROM users
+            INNER JOIN student_profiles
+                ON users.id = student_profiles.user_id
+            WHERE users.id = ?
+            ",
+            [$user->id]
+        );
 
         return response()->json([
-            'profile' => $profile,
+            'profile' => $result[0] ?? null,
         ]);
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | RIGHT JOIN
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // RIGHT JOIN
+    // =========================================================
 
     public function rightJoin(Request $request)
     {
         $user = $request->user();
 
-        $profile = DB::table('users')
-            ->rightJoin(
-                'student_profiles',
-                'users.id',
-                '=',
-                'student_profiles.user_id'
-            )
-            ->where(
-                'users.id',
-                $user->id
-            )
-            ->select(
-                'users.id',
-                'users.name',
-                'users.email',
-                'student_profiles.phone',
-                'student_profiles.address'
-            )
-            ->first();
+        $result = DB::select(
+            "
+            SELECT
+                users.id,
+                users.name,
+                users.email,
+                student_profiles.phone,
+                student_profiles.address
+            FROM users
+            RIGHT JOIN student_profiles
+                ON users.id = student_profiles.user_id
+            WHERE users.id = ?
+            ",
+            [$user->id]
+        );
 
         return response()->json([
-            'profile' => $profile,
+            'profile' => $result[0] ?? null,
         ]);
     }
 }
