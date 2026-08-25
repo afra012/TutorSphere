@@ -36,7 +36,6 @@ class User extends Authenticatable
         ];
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | Student Profile Relationship
@@ -61,11 +60,28 @@ class User extends Authenticatable
             'student_subjects',
             'student_id',
             'subject_id'
-
-    public function teacherProfile()
-    {
-        return $this->hasOne(TeacherProfile::class, 'user_id');
+        )->withTimestamps();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Profile Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function teacherProfile(): HasOne
+    {
+        return $this->hasOne(
+            TeacherProfile::class,
+            'user_id'
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Subjects Relationship
+    |--------------------------------------------------------------------------
+    */
 
     public function teachingSubjects()
     {
@@ -79,14 +95,19 @@ class User extends Authenticatable
         );
     }
 
-    public function teachingLanguages()
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Languages Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function teachingLanguages(): BelongsToMany
     {
         return $this->belongsToMany(
             Language::class,
             'teacher_languages',
             'teacher_id',
             'language_id'
-
         )->withTimestamps();
     }
 }
