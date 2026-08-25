@@ -1,5 +1,4 @@
 import { useLocation, useNavigate } from "react-router-dom";
-
 import "./TeacherSidebar.css";
 
 function Icon({ name }) {
@@ -23,6 +22,16 @@ function Icon({ name }) {
       <>
         <circle cx="12" cy="7" r="4" />
         <path d="M4 21c.8-4.2 3.5-6 8-6s7.2 1.8 8 6" />
+      </>
+    ),
+
+    // View Post icon
+    post: (
+      <>
+        <path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5Z" />
+        <path d="M8 8h8" />
+        <path d="M8 12h8" />
+        <path d="M8 16h5" />
       </>
     ),
 
@@ -53,6 +62,7 @@ const items = [
   ["Dashboard", "dashboard", "/teacher-dashboard"],
   ["Requests", "requests", "/teacher-requests"],
   ["Reviews", "reviews", "/teacher-reviews"],
+  ["View Post", "post", "/teacher-post"],
   ["Profile", "profile", "/teacher-profile"],
 ];
 
@@ -63,7 +73,6 @@ export default function TeacherSidebar() {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("currentUser");
-
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
@@ -80,9 +89,7 @@ export default function TeacherSidebar() {
       className="teacher-sidebar"
       aria-label="Teacher dashboard navigation"
     >
-
       <nav className="teacher-sidebar-nav">
-
         {items.map(([label, icon, path]) => (
           <button
             key={label}
@@ -93,7 +100,6 @@ export default function TeacherSidebar() {
             onClick={() => navigate(path)}
           >
             <Icon name={icon} />
-
             <span>{label}</span>
           </button>
         ))}
@@ -104,14 +110,9 @@ export default function TeacherSidebar() {
           onClick={handleLogout}
         >
           <Icon name="logout" />
-
           <span>Logout</span>
         </button>
-
       </nav>
-
-
-
     </aside>
   );
 }

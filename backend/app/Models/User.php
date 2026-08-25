@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\TeacherDashboard\Language;
+use App\Models\TeacherDashboard\Subject;
+use App\Models\TeacherDashboard\TeacherProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -33,6 +36,7 @@ class User extends Authenticatable
         ];
     }
 
+
     /*
     |--------------------------------------------------------------------------
     | Student Profile Relationship
@@ -57,6 +61,32 @@ class User extends Authenticatable
             'student_subjects',
             'student_id',
             'subject_id'
+
+    public function teacherProfile()
+    {
+        return $this->hasOne(TeacherProfile::class, 'user_id');
+    }
+
+    public function teachingSubjects()
+    {
+        return $this->hasManyThrough(
+            Subject::class,
+            TeacherProfile::class,
+            'user_id',
+            'id',
+            'id',
+            'id'
+        );
+    }
+
+    public function teachingLanguages()
+    {
+        return $this->belongsToMany(
+            Language::class,
+            'teacher_languages',
+            'teacher_id',
+            'language_id'
+
         )->withTimestamps();
     }
 }

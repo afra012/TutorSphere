@@ -61,21 +61,25 @@ const items = [
     icon: "dashboard",
     path: "/student-dashboard",
   },
+
   {
     label: "Find Tutor",
     icon: "search",
     path: "/find-tutor",
   },
+
   {
     label: "My Post",
     icon: "post",
     path: "/my-post",
   },
+
   {
     label: "My Reviews",
     icon: "star",
-    path: "/reviews",
+    path: "/student-reviews",
   },
+
   {
     label: "Profile",
     icon: "profile",
@@ -91,6 +95,8 @@ export default function DashboardSidebar() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentUser");
 
     sessionStorage.clear();
 
@@ -109,10 +115,13 @@ export default function DashboardSidebar() {
             type="button"
             onClick={() => navigate(item.path)}
             className={`sidebar-link ${
-              location.pathname === item.path ? "is-active" : ""
+              location.pathname === item.path
+                ? "is-active"
+                : ""
             }`}
           >
             <Icon name={item.icon} />
+
             {item.label}
           </button>
         ))}

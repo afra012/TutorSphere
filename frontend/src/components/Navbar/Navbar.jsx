@@ -18,7 +18,9 @@ function Navbar({
   const navigate = useNavigate();
 
   const currentRole =
-    role?.toLowerCase() === "teacher" ? "Teacher" : "Student";
+    role?.toLowerCase() === "teacher"
+      ? "Teacher"
+      : "Student";
 
   /* =========================================================
      LOGIN SUCCESS
@@ -44,15 +46,17 @@ function Navbar({
      REGISTER SUCCESS
   ========================================================= */
 
-  const handleRegisterSuccess = (role) => {
+  const handleRegisterSuccess = (registeredRole) => {
     setRegisterOpen(false);
 
-    const userRole = role?.toLowerCase();
+    const userRole = registeredRole?.toLowerCase();
 
     if (userRole === "student") {
       navigate("/student-dashboard");
     } else if (userRole === "teacher") {
       navigate("/teacher-dashboard");
+    } else {
+      navigate("/");
     }
   };
 
@@ -76,20 +80,22 @@ function Navbar({
     <>
       <header
         className={`navbar-container ${
-          dashboardMode ? "dashboard-navbar-container" : ""
+          dashboardMode
+            ? "dashboard-navbar-container"
+            : ""
         }`}
       >
         <nav className="navbar">
-
 
           {/* =================================================
               LOGO
           ================================================= */}
 
-          {/* Logo */}
-
-
-          <Link to="/" className="navbar-logo">
+          <Link
+            to="/"
+            className="navbar-logo"
+            onClick={() => setMenuOpen(false)}
+          >
             <div className="logo-icon">
               <svg
                 viewBox="0 0 64 64"
@@ -119,13 +125,9 @@ function Navbar({
             </div>
           </Link>
 
-
           {/* =================================================
-              MOBILE MENU
+              MOBILE MENU BUTTON
           ================================================= */}
-
-          {/* Mobile Menu */}
-
 
           <button
             type="button"
@@ -136,13 +138,9 @@ function Navbar({
             ☰
           </button>
 
-
           {/* =================================================
               NAVBAR CONTENT
           ================================================= */}
-
-          {/* Navbar Content */}
-
 
           <div
             className={`navbar-content ${
@@ -150,50 +148,48 @@ function Navbar({
             }`}
           >
 
-
-            {/* NORMAL NAVBAR LINKS */}
-
-            {/* Normal Navbar Links */}
-
+            {/* =================================================
+                PUBLIC NAVIGATION
+            ================================================= */}
 
             {!hideLinks && !dashboardMode && (
               <div className="navbar-links">
 
-                <Link to="/" className="nav-link active">
+                <Link
+                  to="/"
+                  className="nav-link"
+                  onClick={() => setMenuOpen(false)}
+                >
                   Home
                 </Link>
 
-                <Link to="/about" className="nav-link">
+                <Link
+                  to="/about"
+                  className="nav-link"
+                  onClick={() => setMenuOpen(false)}
+                >
                   About Us
                 </Link>
 
-                <Link to="/reviews" className="nav-link">
-                  Reviews
-                </Link>
-
-                <Link to="/help" className="nav-link">
+                <Link
+                  to="/help"
+                  className="nav-link"
+                  onClick={() => setMenuOpen(false)}
+                >
                   Help
                 </Link>
 
               </div>
             )}
 
-
             {/* =================================================
-                DASHBOARD ACCOUNT
+                DASHBOARD NAVBAR
             ================================================= */}
-
-            {/* Dashboard Account Actions */}
-
 
             {dashboardMode ? (
               <div className="dashboard-account-actions">
 
-
-                {/* NOTIFICATION */}
-
                 {/* Notification */}
-
 
                 <button
                   type="button"
@@ -213,13 +209,7 @@ function Navbar({
                   <i></i>
                 </button>
 
-
-                {/* =================================================
-                    PROFILE
-                ================================================= */}
-
                 {/* Profile */}
-
 
                 <button
                   type="button"
@@ -227,7 +217,7 @@ function Navbar({
                   onClick={handleProfileClick}
                 >
                   <span className="profile-avatar">
-                    A
+                    {currentRole.charAt(0)}
                   </span>
 
                   <span className="profile-name">
@@ -244,18 +234,10 @@ function Navbar({
             ) : (
 
               /* =================================================
-                  LOGIN / REGISTER
+                 LOGIN / REGISTER
               ================================================= */
 
               <div className="navbar-buttons">
-
-
-              /* Login / Register Buttons */
-
-              <div className="navbar-buttons">
-
-                {/* Login */}
-
 
                 <button
                   type="button"
@@ -268,11 +250,6 @@ function Navbar({
                 >
                   Login
                 </button>
-
-
-
-                {/* Register */}
-
 
                 <button
                   type="button"
@@ -293,13 +270,9 @@ function Navbar({
         </nav>
       </header>
 
-
-      {/* =========================================================
+      {/* =================================================
           LOGIN MODAL
-      ========================================================= */}
-
-      {/* Login Modal */}
-
+      ================================================= */}
 
       {loginOpen && (
         <Login
@@ -312,13 +285,9 @@ function Navbar({
         />
       )}
 
-
-      {/* =========================================================
+      {/* =================================================
           REGISTER MODAL
-      ========================================================= */}
-
-      {/* Register Modal */}
-
+      ================================================= */}
 
       {registerOpen && (
         <Register
@@ -330,7 +299,6 @@ function Navbar({
           onRegisterSuccess={handleRegisterSuccess}
         />
       )}
-
     </>
   );
 }

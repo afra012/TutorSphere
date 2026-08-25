@@ -1,9 +1,4 @@
-/* =========================================================
-   GLOBAL
-========================================================= */
-
-.navbar-container,
-.navbar-container * {
+* {
   box-sizing: border-box;
 }
 
@@ -13,53 +8,58 @@ body {
   font-family: Arial, sans-serif;
 }
 
-
-/* =========================================================
+/* =========================================
    NORMAL NAVBAR
-========================================================= */
+========================================= */
 
 .navbar-container {
   width: 100%;
   padding: 22px 40px;
+
   position: absolute;
   top: 0;
   left: 0;
+
   z-index: 1000;
 }
 
 .navbar {
   width: 100%;
   min-height: 76px;
+
   padding: 18px 30px;
 
   display: flex;
   align-items: center;
 
   background: #ffffff;
+
   border-radius: 20px;
 
   box-shadow: 0 6px 22px rgba(95, 40, 180, 0.1);
 }
 
-
-/* =========================================================
+/* =========================================
    LOGO
-========================================================= */
+========================================= */
 
 .navbar-logo {
   width: 280px;
 
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   text-decoration: none;
+
   flex-shrink: 0;
 }
 
 .logo-icon {
   width: 50px;
   color: #6425e8;
+
   flex-shrink: 0;
 }
 
@@ -85,10 +85,9 @@ body {
   font-size: 13px;
 }
 
-
-/* =========================================================
-   NAVBAR CONTENT
-========================================================= */
+/* =========================================
+   CONTENT
+========================================= */
 
 .navbar-content {
   flex: 1;
@@ -121,17 +120,18 @@ body {
   transition: 0.25s;
 }
 
-.nav-link:hover,
+.nav-link:hover {
+  color: #6425e8;
+}
+
 .nav-link.active {
   color: #6425e8;
-
   border-bottom: 2px solid #6425e8;
 }
 
-
-/* =========================================================
-   LOGIN / REGISTER BUTTONS
-========================================================= */
+/* =========================================
+   LOGIN REGISTER
+========================================= */
 
 .navbar-buttons {
   margin-left: auto;
@@ -149,6 +149,7 @@ body {
   border-radius: 10px;
 
   font-family: Arial, sans-serif;
+
   font-size: 15px;
   font-weight: 600;
 
@@ -159,6 +160,7 @@ body {
 
 .login-button {
   color: #6425e8;
+
   background: #ffffff;
 
   border: 2px solid #6425e8;
@@ -166,6 +168,7 @@ body {
 
 .register-button {
   color: #ffffff;
+
   background: #6425e8;
 
   border: 2px solid #6425e8;
@@ -175,19 +178,18 @@ body {
 .register-button:hover {
   transform: translateY(-2px);
 
-  box-shadow:
-    0 5px 14px rgba(100, 37, 232, 0.2);
+  box-shadow: 0 5px 14px rgba(100, 37, 232, 0.2);
 }
 
-
-/* =========================================================
-   MOBILE MENU BUTTON
-========================================================= */
+/* =========================================
+   MOBILE MENU
+========================================= */
 
 .menu-button {
   display: none;
 
   border: none;
+
   background: none;
 
   color: #6425e8;
@@ -197,10 +199,9 @@ body {
   cursor: pointer;
 }
 
-
-/* =========================================================
+/* =========================================
    DASHBOARD NAVBAR
-========================================================= */
+========================================= */
 
 .dashboard-navbar-container {
   position: fixed;
@@ -218,8 +219,7 @@ body {
 
   border-bottom: 1px solid #eee9f7;
 
-  box-shadow:
-    0 3px 13px rgba(66, 30, 145, 0.06);
+  box-shadow: 0 3px 13px rgba(66, 30, 145, 0.06);
 }
 
 .dashboard-navbar-container .navbar {
@@ -234,10 +234,9 @@ body {
   box-shadow: none;
 }
 
-
-/* =========================================================
-   DASHBOARD ACCOUNT AREA
-========================================================= */
+/* =========================================
+   DASHBOARD ACCOUNT
+========================================= */
 
 .dashboard-account-actions {
   margin-left: auto;
@@ -248,10 +247,9 @@ body {
   gap: 19px;
 }
 
-
-/* =========================================================
+/* =========================================
    NOTIFICATION
-========================================================= */
+========================================= */
 
 .notification-button {
   position: relative;
@@ -300,10 +298,9 @@ body {
   background: #ef3f5c;
 }
 
-
-/* =========================================================
+/* =========================================
    PROFILE
-========================================================= */
+========================================= */
 
 .profile-button {
   display: flex;
@@ -324,9 +321,6 @@ body {
   cursor: pointer;
 }
 
-
-/* Avatar */
-
 .profile-avatar {
   width: 42px;
   height: 42px;
@@ -336,27 +330,23 @@ body {
 
   border-radius: 50%;
 
-  background:
-    linear-gradient(
-      135deg,
-      #2a145b,
-      #a874ff
-    );
+  background: linear-gradient(
+    135deg,
+    #2a145b,
+    #a874ff
+  );
 
   color: #ffffff;
 
   font-size: 18px;
   font-weight: 700;
 
-  box-shadow:
-    0 3px 8px rgba(73, 25, 177, 0.25);
+  box-shadow: 0 3px 8px rgba(73, 25, 177, 0.25);
 }
-
-
-/* Name */
 
 .profile-name {
   display: flex;
+
   flex-direction: column;
 
   gap: 2px;
@@ -376,28 +366,19 @@ body {
   font-weight: 500;
 }
 
-
-/* Chevron */
-
 .profile-chevron {
   color: #4d4570;
 
   font-size: 22px;
 
   line-height: 1;
-
-  margin-left: 2px;
-
-  transform: rotate(0deg);
 }
 
-
-/* =========================================================
+/* =========================================
    TABLET
-========================================================= */
+========================================= */
 
 @media (max-width: 900px) {
-
   .navbar-container {
     padding: 18px;
   }
@@ -423,16 +404,13 @@ body {
   }
 }
 
-
-/* =========================================================
+/* =========================================
    MOBILE
-========================================================= */
+========================================= */
 
 @media (max-width: 800px) {
-
   .menu-button {
     display: block;
-
     margin-left: auto;
   }
 
@@ -446,6 +424,7 @@ body {
     position: absolute;
 
     top: 100px;
+
     left: 18px;
     right: 18px;
 
@@ -459,8 +438,7 @@ body {
 
     gap: 20px;
 
-    box-shadow:
-      0 8px 25px rgba(95, 40, 180, 0.15);
+    box-shadow: 0 8px 25px rgba(95, 40, 180, 0.15);
   }
 
   .navbar-links {
@@ -478,7 +456,6 @@ body {
 
     justify-content: center;
   }
-
 
   /* Dashboard mobile */
 
@@ -533,13 +510,11 @@ body {
   }
 }
 
-
-/* =========================================================
+/* =========================================
    SMALL MOBILE
-========================================================= */
+========================================= */
 
 @media (max-width: 500px) {
-
   .navbar-container {
     padding: 10px;
   }
@@ -569,12 +544,8 @@ body {
   .login-button,
   .register-button {
     width: 100%;
-
     text-align: center;
   }
-
-
-  /* Dashboard */
 
   .dashboard-navbar-container {
     padding: 0;

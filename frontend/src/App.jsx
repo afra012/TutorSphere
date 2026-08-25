@@ -1,15 +1,13 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
 
 import Home from "./pages/Home/Home";
-
-import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
-import StudentProfile from "./pages/StudentDashboard/StudentProfile";
-
-import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
-
-
 import About from "./pages/About/About";
 import Help from "./pages/Help/Help";
 
@@ -17,17 +15,15 @@ import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
+import StudentProfile from "./pages/StudentDashboard/StudentProfile";
+import StudentReviews from "./pages/StudentDashboard/components/StudentReviews/StudentReviews";
+import StudentPosts from "./pages/StudentDashboard/StudentPosts";
 
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
 import TeacherRequests from "./pages/TeacherDashboard/TeacherRequests";
 import TeacherReviews from "./pages/TeacherDashboard/TeacherReviews";
 
-import Review from "./pages/Reviews/Review";
-
-/* =========================================================
-   LOGIN PAGE
-========================================================= */
 
 function HomeWithLogin() {
   const navigate = useNavigate();
@@ -49,7 +45,6 @@ function HomeWithLogin() {
   return (
     <>
       <Navbar />
-
       <Home />
 
       <Login
@@ -61,9 +56,6 @@ function HomeWithLogin() {
   );
 }
 
-/* =========================================================
-   REGISTER PAGE
-========================================================= */
 
 function HomeWithRegister() {
   const navigate = useNavigate();
@@ -83,7 +75,6 @@ function HomeWithRegister() {
   return (
     <>
       <Navbar />
-
       <Home />
 
       <Register
@@ -95,32 +86,13 @@ function HomeWithRegister() {
   );
 }
 
-/* =========================================================
-   REVIEWS PAGE
-========================================================= */
-
-function ReviewsPage() {
-  return (
-    <>
-      <Navbar />
-      <Review />
-    </>
-  );
-}
-
-/* =========================================================
-   APP
-========================================================= */
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* =================================================
-            HOME
-        ================================================= */}
-
+        {/* Home */}
         <Route
           path="/"
           element={
@@ -131,10 +103,7 @@ function App() {
           }
         />
 
-        {/* =================================================
-            ABOUT
-        ================================================= */}
-
+        {/* About */}
         <Route
           path="/about"
           element={
@@ -145,28 +114,19 @@ function App() {
           }
         />
 
-        {/* =================================================
-            LOGIN
-        ================================================= */}
-
+        {/* Login */}
         <Route
           path="/login"
           element={<HomeWithLogin />}
         />
 
-        {/* =================================================
-            REGISTER
-        ================================================= */}
-
+        {/* Register */}
         <Route
           path="/register"
           element={<HomeWithRegister />}
         />
 
-        {/* =================================================
-            HELP
-        ================================================= */}
-
+        {/* Help */}
         <Route
           path="/help"
           element={
@@ -177,10 +137,7 @@ function App() {
           }
         />
 
-        {/* =================================================
-            STUDENT DASHBOARD
-        ================================================= */}
-
+        {/* Student Dashboard */}
         <Route
           path="/student-dashboard"
           element={
@@ -189,16 +146,12 @@ function App() {
                 dashboardMode={true}
                 role="student"
               />
-
               <StudentDashboard />
             </>
           }
         />
 
-        {/* =================================================
-            STUDENT PROFILE
-        ================================================= */}
-
+        {/* Student Profile */}
         <Route
           path="/student-profile"
           element={
@@ -207,17 +160,40 @@ function App() {
                 dashboardMode={true}
                 role="student"
               />
-
               <StudentProfile />
             </>
           }
         />
 
+        {/* Student Reviews */}
+        <Route
+          path="/student-reviews"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+              <StudentReviews />
+            </>
+          }
+        />
 
-        {/* =================================================
-            TEACHER DASHBOARD
-        ================================================= */}
+        {/* Student posts */}
+        <Route
+          path="/my-post"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+              <StudentPosts />
+            </>
+          }
+        />
 
+        {/* Teacher Dashboard */}
         <Route
           path="/teacher-dashboard"
           element={
@@ -226,16 +202,12 @@ function App() {
                 dashboardMode={true}
                 role="teacher"
               />
-
               <TeacherDashboard />
             </>
           }
         />
 
-        {/* =================================================
-            TEACHER PROFILE
-        ================================================= */}
-
+        {/* Teacher Profile */}
         <Route
           path="/teacher-profile"
           element={
@@ -244,20 +216,12 @@ function App() {
                 dashboardMode={true}
                 role="teacher"
               />
-
               <TeacherProfile />
             </>
           }
         />
 
-        {/* =================================================
-
-            EXISTING PROFILE
-
-            TEACHER REQUESTS
-
-        ================================================= */}
-
+        {/* Teacher Requests */}
         <Route
           path="/teacher-requests"
           element={
@@ -266,16 +230,12 @@ function App() {
                 dashboardMode={true}
                 role="teacher"
               />
-
               <TeacherRequests />
             </>
           }
         />
 
-        {/* =================================================
-            TEACHER REVIEWS
-        ================================================= */}
-
+        {/* Teacher Reviews */}
         <Route
           path="/teacher-reviews"
           element={
@@ -284,19 +244,9 @@ function App() {
                 dashboardMode={true}
                 role="teacher"
               />
-
               <TeacherReviews />
             </>
           }
-        />
-
-        {/* =================================================
-            GENERAL REVIEWS
-        ================================================= */}
-
-        <Route
-          path="/reviews"
-          element={<ReviewsPage />}
         />
 
       </Routes>
