@@ -2,25 +2,24 @@
 
 namespace App\Models;
 
-
+use App\Models\TeacherDashboard\TeacherProfile;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Subject extends Model
 {
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Subject extends Model
-{
     use HasFactory;
-
 
     protected $fillable = [
         'subject_name',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Student Relationship
+    |--------------------------------------------------------------------------
+    */
 
     public function students(): BelongsToMany
     {
@@ -31,14 +30,20 @@ class Subject extends Model
             'student_id'
         )->withTimestamps();
     }
-}
 
-    public function teacherProfiles()
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Profile Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function teacherProfiles(): BelongsToMany
     {
         return $this->belongsToMany(
             TeacherProfile::class,
-            'teacher_profile_subject'
-        );
+            'teacher_profile_subject',
+            'subject_id',
+            'teacher_profile_id'
+        )->withTimestamps();
     }
 }
-
