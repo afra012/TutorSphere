@@ -22,7 +22,7 @@ import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
 import TeacherRequests from "./pages/TeacherDashboard/TeacherRequests";
 import TeacherReviews from "./pages/TeacherDashboard/TeacherReviews";
-
+import FindTutor from "./pages/FindTutor/FindTutor";
 
 function HomeWithLogin() {
   const navigate = useNavigate();
@@ -230,6 +230,20 @@ function App() {
                 role="teacher"
               />
               <TeacherReviews />
+            </>
+          }
+        />
+
+        {/* Find Tutor */}
+        <Route
+          path="/find-tutor"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+              <FindTutor />
             </>
           }
         />
