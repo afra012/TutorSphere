@@ -5,25 +5,14 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
-
 use App\Http\Controllers\StudentProfileController;
-
-use App\Models\User;
-
+use App\Http\Controllers\TeacherProfileController;
 
 /*
 |--------------------------------------------------------------------------
 | Authentication
 |--------------------------------------------------------------------------
 */
-
-use App\Http\Controllers\TeacherProfileController;
-
-
-// =========================================================
-// Authentication
-// =========================================================
-
 
 Route::post('/register', [
     AuthController::class,
@@ -35,121 +24,9 @@ Route::post('/login', [
     'login'
 ]);
 
-
-Route::post('/logout', [
-    AuthController::class,
-    'logout'
-])->middleware('auth:sanctum');
-
-
 /*
 |--------------------------------------------------------------------------
-| Current User
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-
-/*
-|--------------------------------------------------------------------------
-| Users
-|--------------------------------------------------------------------------
-|
-| Both Student and Teacher will be returned.
-|
-*/
-
-Route::get('/users', function () {
-    return User::select(
-        'id',
-        'name',
-        'role'
-    )->get();
-})->middleware('auth:sanctum');
-
-
-/*
-|--------------------------------------------------------------------------
-| Student Profile
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    /*
-    |--------------------------------------------------------------------------
-    | Get logged-in student's profile
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/student/profile', [
-        StudentProfileController::class,
-        'show'
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Save / Update Student Profile
-    |--------------------------------------------------------------------------
-    */
-
-    // Normal JSON update
-    Route::put('/student/profile', [
-        StudentProfileController::class,
-        'update'
-    ]);
-
-    // FormData + Profile Image upload
-    Route::post('/student/profile', [
-        StudentProfileController::class,
-        'update'
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Get available subjects
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/subjects', [
-        StudentProfileController::class,
-        'subjects'
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | INNER JOIN
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/student/profile/inner-join', [
-        StudentProfileController::class,
-        'innerJoin'
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | RIGHT JOIN
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/student/profile/right-join', [
-        StudentProfileController::class,
-        'rightJoin'
-    ]);
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| Reviews
+| Public Reviews
 |--------------------------------------------------------------------------
 */
 
@@ -158,97 +35,154 @@ Route::get('/reviews', [
     'index'
 ]);
 
-Route::post('/reviews', [
-    ReviewController::class,
-    'store'
-])->middleware('auth:sanctum');
-
-Route::put('/reviews/{id}', [
-    ReviewController::class,
-    'update'
-])->middleware('auth:sanctum');
-
-Route::delete('/reviews/{id}', [
-    ReviewController::class,
-    'destroy'
-])->middleware('auth:sanctum');
-
-
-// =========================================================
-// Authenticated User
-// =========================================================
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // =========================================================
+    // AUTHENTICATION
+    // =========================================================
+
+    Route::post('/logout', [
+        AuthController::class,
+        'logout'
+    ]);
+
+    // =========================================================
+    // CURRENT USER
+    // =========================================================
 
     Route::get('/user', function (Request $request) {
+
         return response()->json(
             $request->user()
         );
+
     });
 
-    Route::get('/users', function (Request $request) {
+    // =========================================================
+    // USERS
+    // =========================================================
+
+    Route::get('/users', function () {
+
         return response()->json([
-            'users' => \App\Models\User::all()
+            'users' => \App\Models\User::select(
+                'id',
+                'name',
+                'role'
+            )->get()
         ]);
+
     });
 
+    // =========================================================
+    // STUDENT PROFILE
+    // =========================================================
 
-    // =====================================================
-    // Teacher Profile
-    // =====================================================
+    Route::get('/student/profile', [
+        StudentProfileController::class,
+        'show'
+    ]);
 
-    Route::get(
-        '/teacher-profile',
-        [TeacherProfileController::class, 'show']
-    );
+    Route::put('/student/profile', [
+        StudentProfileController::class,
+        'update'
+    ]);
 
-    Route::put(
-        '/teacher-profile',
-        [TeacherProfileController::class, 'update']
-    );
+    Route::post('/student/profile', [
+        StudentProfileController::class,
+        'update'
+    ]);
 
-    Route::get(
-        '/teacher-profile/subjects',
-        [TeacherProfileController::class, 'subjects']
-    );
+    // =========================================================
+    // STUDENT SUBJECTS
+    // =========================================================
 
-    Route::get(
-        '/teacher-profile/languages',
-        [TeacherProfileController::class, 'languages']
-    );
+    Route::get('/subjects', [
+        StudentProfileController::class,
+        'subjects'
+    ]);
 
-    Route::post(
-        '/teacher-profile/image',
-        [TeacherProfileController::class, 'uploadImage']
-    );
-});
+    // =========================================================
+    // INNER JOIN
+    // =========================================================
 
+    Route::get('/student/profile/inner-join', [
+        StudentProfileController::class,
+        'innerJoin'
+    ]);
 
-// =========================================================
-// Reviews
-// =========================================================
+    // =========================================================
+    // RIGHT JOIN
+    // =========================================================
 
-Route::get(
-    '/reviews',
-    [ReviewController::class, 'index']
-);
+    Route::get('/student/profile/right-join', [
+        StudentProfileController::class,
+        'rightJoin'
+    ]);
 
-Route::middleware('auth:sanctum')->group(function () {
+    // =========================================================
+    // TEACHER PROFILE
+    // =========================================================
 
-    Route::post(
-        '/reviews',
-        [ReviewController::class, 'store']
-    );
+    Route::get('/teacher-profile', [
+        TeacherProfileController::class,
+        'show'
+    ]);
 
-    Route::put(
-        '/reviews/{id}',
-        [ReviewController::class, 'update']
-    );
+    Route::put('/teacher-profile', [
+        TeacherProfileController::class,
+        'update'
+    ]);
 
-    Route::delete(
-        '/reviews/{id}',
-        [ReviewController::class, 'destroy']
-    );
+    // =========================================================
+    // TEACHER SUBJECTS
+    // =========================================================
+
+    Route::get('/teacher-profile/subjects', [
+        TeacherProfileController::class,
+        'subjects'
+    ]);
+
+    // =========================================================
+    // TEACHER LANGUAGES
+    // =========================================================
+
+    Route::get('/teacher-profile/languages', [
+        TeacherProfileController::class,
+        'languages'
+    ]);
+
+    // =========================================================
+    // TEACHER PROFILE IMAGE
+    // =========================================================
+
+    Route::post('/teacher-profile/image', [
+        TeacherProfileController::class,
+        'uploadImage'
+    ]);
+
+    // =========================================================
+    // REVIEWS CRUD
+    // =========================================================
+
+    Route::post('/reviews', [
+        ReviewController::class,
+        'store'
+    ]);
+
+    Route::put('/reviews/{id}', [
+        ReviewController::class,
+        'update'
+    ]);
+
+    Route::delete('/reviews/{id}', [
+        ReviewController::class,
+        'destroy'
+    ]);
 });
