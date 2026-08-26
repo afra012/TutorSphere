@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 import "./StudentPosts.css";
 
+const API_URL = "http://127.0.0.1:8000/api";
+
+const getToken = () =>
+  localStorage.getItem("token") ||
+  localStorage.getItem("access_token") ||
+  localStorage.getItem("authToken") ||
+  localStorage.getItem("auth_token") ||
+  "";
+
 const initialForm = {
+  subject: "",
   location: "",
   contactNumber: "",
   tutoringMode: "",
@@ -35,7 +46,56 @@ function SvgIcon({ name }) {
 export default function StudentPosts() {
   const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
+  const [subjects, setSubjects] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const loadSubjects = async () => {
+      const token = getToken();
+
+      if (!token) {
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${API_URL}/subjects`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const subjectList = Array.isArray(response.data?.subjects)
+          ? response.data.subjects
+          : [];
+
+        setSubjects(subjectList);
+      } catch (error) {
+        console.error("Failed to load subjects:", error);
+      }
+    };
+
+    loadSubjects();
+  }, []);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      const token = getToken();
+      if (!token) return;
+
+      try {
+        const response = await axios.get(`${API_URL}/tutor-posts`, {
+          headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+        });
+        setPosts(Array.isArray(response.data?.posts) ? response.data.posts : []);
+      } catch (error) {
+        console.error("Failed to load posts:", error);
+      }
+    };
+
+    loadPosts();
+  }, []);
 
   const updateField = (event) => {
     const { name, value } = event.target;
@@ -43,13 +103,35 @@ export default function StudentPosts() {
     setSubmitted(false);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!event.currentTarget.checkValidity()) {
       event.currentTarget.reportValidity();
       return;
     }
-    setSubmitted(true);
+    const selectedSubject = subjects.find((subject) => String(subject.id) === String(form.subject));
+
+    try {
+      const response = await axios.post(`${API_URL}/tutor-posts`, {
+        subject_id: Number(form.subject),
+        location: form.location,
+        contact_number: `+880${form.contactNumber.replace(/^0/, "")}`,
+        tutoring_mode: form.tutoringMode,
+        salary_amount: Number(form.salary),
+        salary_period: form.salaryPeriod,
+        description: form.description,
+      }, {
+        headers: { Accept: "application/json", Authorization: `Bearer ${getToken()}` },
+      });
+
+      setPosts((current) => [{ ...response.data.post, subject: selectedSubject }, ...current]);
+      setForm(initialForm);
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Failed to submit post:", error);
+      setSubmitted(false);
+      window.alert(error.response?.data?.message || "Post could not be submitted. Please try again.");
+    }
   };
 
   const handleCancel = () => {
@@ -70,6 +152,21 @@ export default function StudentPosts() {
 
         <form className="create-post-card" onSubmit={handleSubmit}>
           <div className="create-post-fields">
+            <label className="post-form-row">
+              <FieldIcon><SvgIcon name="briefcase" /></FieldIcon>
+              <span className="post-field-content">
+                <span className="post-label">Subject <b>*</b></span>
+                <select name="subject" value={form.subject} onChange={updateField} required>
+                  <option value="" disabled>Select subject</option>
+                  {subjects.map((subject) => (
+                    <option key={subject.id} value={subject.id}>
+                      {subject.subject_name}
+                    </option>
+                  ))}
+                </select>
+              </span>
+            </label>
+
             <label className="post-form-row">
               <FieldIcon><SvgIcon name="location" /></FieldIcon>
               <span className="post-field-content">
@@ -123,8 +220,27 @@ export default function StudentPosts() {
 
           <aside className="post-preview" aria-label="Post preview information">
             <span className="preview-icon"><SvgIcon name="briefcase" /></span>
-            <h2>Your post preview will appear here</h2>
-            <p>Once you fill in the details, a preview of your post will be shown here.</p>
+            {posts.length ? (
+              <>
+                <h2>Your submitted posts</h2>
+                <div className="post-preview-list">
+                  {posts.map((post) => (
+                    <article className="post-preview-card" key={post.id}>
+                      <strong>{post.subject?.subject_name || post.subject_name || "Subject not selected"}</strong>
+                      <span>{post.location}</span>
+                      <span>{(post.tutoring_mode || post.tutoringMode) === "in-person" ? "In-Person" : (post.tutoring_mode || post.tutoringMode)}</span>
+                      <span>৳{post.salary_amount || post.salary} / {post.salary_period || post.salaryPeriod}</span>
+                      <p>{post.description}</p>
+                    </article>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>Your post preview will appear here</h2>
+                <p>Once you fill in the details, a preview of your post will be shown here.</p>
+              </>
+            )}
             <div className="post-tip"><strong>☼ &nbsp; Tip</strong><p>Provide clear details to attract the right students. Include your teaching style, experience and availability.</p></div>
           </aside>
 

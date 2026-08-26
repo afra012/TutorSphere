@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\TeacherDashboard\Subject;
-use App\Models\TeacherDashboard\Language;
+use App\Models\Subject;
+use App\Models\Language;
 
 class TeacherDashboardSeeder extends Seeder
 {

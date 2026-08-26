@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\TeacherProfileController;
+use App\Http\Controllers\TutorPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,6 +167,16 @@ Route::middleware('auth:sanctum')->group(function () {
         TeacherProfileController::class,
         'uploadImage'
     ]);
+
+    // =========================================================
+    // TUTOR POSTS (students create/manage; teachers view active posts)
+    // =========================================================
+
+    Route::get('/tutor-posts', [TutorPostController::class, 'index']);
+    Route::post('/tutor-posts', [TutorPostController::class, 'store']);
+    Route::get('/tutor-posts/{tutorPost}', [TutorPostController::class, 'show']);
+    Route::put('/tutor-posts/{tutorPost}', [TutorPostController::class, 'update']);
+    Route::delete('/tutor-posts/{tutorPost}', [TutorPostController::class, 'destroy']);
 
     // =========================================================
     // REVIEWS CRUD

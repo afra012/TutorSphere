@@ -8,6 +8,7 @@ use App\Models\TeacherDashboard\TeacherProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -75,6 +76,12 @@ class User extends Authenticatable
             TeacherProfile::class,
             'user_id'
         );
+    }
+
+    /** Tutor requests created by this student. */
+    public function tutorPosts(): HasMany
+    {
+        return $this->hasMany(TutorPost::class, 'student_id');
     }
 
     /*
