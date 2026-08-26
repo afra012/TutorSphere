@@ -18,6 +18,7 @@ import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import StudentReviews from "./pages/StudentDashboard/components/StudentReviews/StudentReviews";
 import StudentPosts from "./pages/StudentDashboard/StudentPosts";
+import FindTutor from "./pages/StudentDashboard/FindTutor";
 
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
@@ -189,6 +190,20 @@ function App() {
                 role="student"
               />
               <StudentPosts />
+            </>
+          }
+        />
+
+        {/* Find Tutor */}
+        <Route
+          path="/find-tutor"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
+              <FindTutor />
             </>
           }
         />
