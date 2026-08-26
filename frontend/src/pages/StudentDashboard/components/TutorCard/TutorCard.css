@@ -1,0 +1,40 @@
+.tutor-card { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 22px; background: #fff; border: 1px solid #eee9f5; border-radius: 14px; box-shadow: 0 4px 14px rgba(57, 26, 118, .05); transition: box-shadow .2s ease, transform .2s ease; }
+.tutor-card:hover { box-shadow: 0 8px 22px rgba(57, 26, 118, .1); transform: translateY(-1px); }
+.tutor-card-main { display: flex; align-items: flex-start; gap: 16px; min-width: 0; flex: 1; }
+.tutor-avatar { width: 64px; height: 64px; flex: 0 0 64px; display: grid; place-items: center; border-radius: 50%; background: #f1e9ff; color: #7332e6; overflow: hidden; }
+.tutor-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.tutor-avatar svg { width: 30px; height: 30px; }
+.tutor-info { min-width: 0; }
+.tutor-name-row { display: flex; align-items: center; gap: 6px; }
+.tutor-name-row h3 { margin: 0; color: #211736; font-size: 16px; font-weight: 700; }
+.tutor-verified { display: inline-flex; color: #7332e6; }
+.tutor-verified svg { width: 16px; height: 16px; }
+.tutor-subject { margin: 3px 0 0; color: #6b6279; font-size: 13px; font-weight: 600; }
+.tutor-location { display: flex; align-items: center; gap: 5px; margin: 6px 0 0; color: #857d92; font-size: 12.5px; }
+.tutor-location svg { width: 14px; height: 14px; flex: none; }
+.tutor-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 8px 0 0; color: #5b5468; font-size: 12.5px; }
+.tutor-rating, .tutor-experience { display: inline-flex; align-items: center; gap: 5px; }
+.tutor-rating svg { width: 14px; height: 14px; color: #f5a623; fill: #f5a623; }
+.tutor-rating span { color: #928a9d; font-weight: 500; }
+.tutor-experience svg { width: 14px; height: 14px; color: #7332e6; }
+.tutor-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.tutor-tag { padding: 5px 12px; border-radius: 20px; background: #f4eeff; color: #6a2fd6; font-size: 11.5px; font-weight: 600; }
+.tutor-card-side { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex: 0 0 auto; position: relative; min-width: 140px; }
+.tutor-favorite { position: absolute; top: -6px; right: 0; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #b7afc4; cursor: pointer; transition: color .2s ease, transform .15s ease; }
+.tutor-favorite:hover { transform: scale(1.08); }
+.tutor-favorite svg { width: 19px; height: 19px; }
+.tutor-favorite.is-active { color: #e5426a; }
+.tutor-favorite.is-active svg { fill: #e5426a; }
+.tutor-price-block { margin-top: 22px; text-align: right; display: grid; gap: 8px; justify-items: end; }
+.tutor-price { margin: 0; color: #6a2fd6; font-size: 20px; font-weight: 800; }
+.tutor-price span { color: #928a9d; font-size: 12px; font-weight: 500; }
+.tutor-mode-badge { padding: 4px 12px; border-radius: 20px; background: #e6f8ef; color: #1f9d5c; font-size: 11px; font-weight: 700; }
+.tutor-view-profile { height: 36px; padding: 0 20px; border: 1.5px solid #7332e6; border-radius: 8px; background: #fff; color: #6a2fd6; font: 700 12.5px Arial, sans-serif; cursor: pointer; transition: background .2s ease, color .2s ease; white-space: nowrap; }
+.tutor-view-profile:hover { background: #7332e6; color: #fff; }
+
+@media (max-width: 720px) {
+  .tutor-card { flex-direction: column; align-items: stretch; }
+  .tutor-card-side { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; min-width: 0; }
+  .tutor-favorite { position: static; }
+  .tutor-price-block { margin-top: 0; text-align: left; justify-items: start; }
+}
