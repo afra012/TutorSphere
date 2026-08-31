@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\TeacherDashboard\Language;
-use App\Models\TeacherDashboard\Subject;
-use App\Models\TeacherDashboard\TeacherProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -78,10 +75,18 @@ class User extends Authenticatable
         );
     }
 
-    /** Tutor requests created by this student. */
+    /*
+    |--------------------------------------------------------------------------
+    | Tutor Posts Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function tutorPosts(): HasMany
     {
-        return $this->hasMany(TutorPost::class, 'student_id');
+        return $this->hasMany(
+            TutorPost::class,
+            'student_id'
+        );
     }
 
     /*
@@ -116,5 +121,19 @@ class User extends Authenticatable
             'teacher_id',
             'language_id'
         )->withTimestamps();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reviews Received (as Teacher) Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(
+            Review::class,
+            'teacher_id'
+        );
     }
 }
