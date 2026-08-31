@@ -1,0 +1,12 @@
+.teacher-posts-layout { min-height: 100vh; display: grid; grid-template-columns: 260px 1fr; background: #faf8ff; }
+.teacher-posts-content { padding: 42px 52px; color: #252035; }
+.teacher-posts-content header { max-width: 1100px; margin: 0 auto 30px; }
+.teacher-posts-label { margin: 0 0 6px; color: #6336c8; font-weight: 700; }
+.teacher-posts-content h1 { margin: 0 0 8px; font-size: 31px; }
+.teacher-posts-content header > p:last-child { margin: 0; color: #6b6577; }
+.teacher-posts-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)); gap: 18px; }
+.teacher-post-card { padding: 22px; border: 1px solid #e9e1f5; border-radius: 14px; background: #fff; box-shadow: 0 7px 22px rgba(77, 42, 135, .06); }
+.teacher-post-card-head { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+.teacher-post-card h2 { margin: 0; font-size: 19px; }.teacher-post-card-head span { padding: 5px 8px; border-radius: 7px; background: #f1eafd; color: #5d2bc3; font-size: 12px; }
+.teacher-post-card > p { color: #696276; line-height: 1.55; }.teacher-post-card dl { margin: 18px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }.teacher-post-card dl div { min-width: 0; }.teacher-post-card dt { color: #81798d; font-size: 12px; }.teacher-post-card dd { margin: 3px 0 0; font-size: 14px; overflow-wrap: anywhere; }.teacher-posts-empty { max-width: 1100px; margin: 40px auto; padding: 36px; text-align: center; border: 1px solid #e9e1f5; border-radius: 14px; background: #fff; color: #6b6577; }
+@media (max-width: 820px) { .teacher-posts-layout { display: block; padding-top: 64px; }.teacher-posts-content { padding: 30px 20px; } }

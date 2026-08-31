@@ -24,6 +24,7 @@ import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
 import TeacherRequests from "./pages/TeacherDashboard/TeacherRequests";
 import TeacherReviews from "./pages/TeacherDashboard/TeacherReviews";
+import TeacherPosts from "./pages/TeacherDashboard/TeacherPosts";
 
 
 function HomeWithLogin() {
@@ -260,6 +261,16 @@ function App() {
                 role="teacher"
               />
               <TeacherReviews />
+            </>
+          }
+        />
+
+        <Route
+          path="/teacher-post"
+          element={
+            <>
+              <Navbar dashboardMode={true} role="teacher" />
+              <TeacherPosts />
             </>
           }
         />
