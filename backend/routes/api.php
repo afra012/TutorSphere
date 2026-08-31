@@ -1,9 +1,11 @@
+```php
 <?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FindTutorController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\TeacherProfileController;
@@ -58,11 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // =========================================================
 
     Route::get('/user', function (Request $request) {
-
         return response()->json(
             $request->user()
         );
-
     });
 
     // =========================================================
@@ -70,7 +70,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // =========================================================
 
     Route::get('/users', function () {
-
         return response()->json([
             'users' => \App\Models\User::select(
                 'id',
@@ -78,7 +77,6 @@ Route::middleware('auth:sanctum')->group(function () {
                 'role'
             )->get()
         ]);
-
     });
 
     // =========================================================
@@ -169,14 +167,48 @@ Route::middleware('auth:sanctum')->group(function () {
     ]);
 
     // =========================================================
-    // TUTOR POSTS (students create/manage; teachers view active posts)
+    // TUTOR POSTS
+    // (students create/manage; teachers view active posts)
     // =========================================================
 
-    Route::get('/tutor-posts', [TutorPostController::class, 'index']);
-    Route::post('/tutor-posts', [TutorPostController::class, 'store']);
-    Route::get('/tutor-posts/{tutorPost}', [TutorPostController::class, 'show']);
-    Route::put('/tutor-posts/{tutorPost}', [TutorPostController::class, 'update']);
-    Route::delete('/tutor-posts/{tutorPost}', [TutorPostController::class, 'destroy']);
+    Route::get('/tutor-posts', [
+        TutorPostController::class,
+        'index'
+    ]);
+
+    Route::post('/tutor-posts', [
+        TutorPostController::class,
+        'store'
+    ]);
+
+    Route::get('/tutor-posts/{tutorPost}', [
+        TutorPostController::class,
+        'show'
+    ]);
+
+    Route::put('/tutor-posts/{tutorPost}', [
+        TutorPostController::class,
+        'update'
+    ]);
+
+    Route::delete('/tutor-posts/{tutorPost}', [
+        TutorPostController::class,
+        'destroy'
+    ]);
+
+    // =========================================================
+    // FIND TUTOR (STUDENT)
+    // =========================================================
+
+    Route::get('/find-tutor', [
+        FindTutorController::class,
+        'index'
+    ]);
+
+    Route::get('/find-tutor/{id}', [
+        FindTutorController::class,
+        'show'
+    ]);
 
     // =========================================================
     // REVIEWS CRUD
@@ -196,4 +228,6 @@ Route::middleware('auth:sanctum')->group(function () {
         ReviewController::class,
         'destroy'
     ]);
+
 });
+```

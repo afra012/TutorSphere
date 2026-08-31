@@ -6,10 +6,54 @@ import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 import TutorCard from "./components/TutorCard/TutorCard";
 import "./FindTutor.css";
 
-// Base API URL — backend team will implement GET /tutors (with optional
-// query params: subject, location, mode, price, sort) once the
-// corresponding issue is picked up.
+// Base API URL — backend exposes tutor search at GET /api/find-tutor
+// (auth:sanctum protected, so the request needs the logged-in
+// student's token).
 const API_BASE_URL = "http://127.0.0.1:8000/api";
+
+const getToken = () =>
+  localStorage.getItem("token") ||
+  localStorage.getItem("access_token") ||
+  localStorage.getItem("authToken") ||
+  localStorage.getItem("auth_token") ||
+  "";
+
+const getAuthConfig = () => {
+  const token = getToken();
+  return {
+    headers: {
+      Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  };
+};
+
+// Backend sends: teacher_id, name, profile_picture, location,
+// subjects (array), qualification, teaching_experience,
+// tutoring_mode, hourly_rate, availability, bio, languages (array),
+// rating, review_count.
+// TutorCard / this page expect: id, name, avatarUrl, subject,
+// location, mode, price, rating, reviewsCount, experienceYears, tags.
+function normalizeTutor(raw) {
+  const subjects = Array.isArray(raw.subjects) ? raw.subjects : [];
+
+  return {
+    id: raw.teacher_id,
+    name: raw.name,
+    avatarUrl: raw.profile_picture,
+    subject: subjects[0] || "",
+    subjects,
+    tags: subjects,
+    location: raw.location,
+    mode: raw.tutoring_mode,
+    price: raw.hourly_rate != null ? Number(raw.hourly_rate) : null,
+    priceUnit: "hour",
+    rating: raw.rating,
+    reviewsCount: raw.review_count,
+    experienceYears: raw.teaching_experience,
+    verified: false,
+  };
+}
 
 const initialFilters = {
   subject: "",
@@ -63,18 +107,48 @@ export default function FindTutor() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [allSubjects, setAllSubjects] = useState([]);
+
   const [filters, setFilters] = useState(initialFilters);
   const [appliedFilters, setAppliedFilters] = useState(initialFilters);
   const [sortBy, setSortBy] = useState("recommended");
   const [favorites, setFavorites] = useState([]);
+
+  const fetchSubjects = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/subjects`,
+        getAuthConfig()
+      );
+
+      const subjectList = Array.isArray(response.data?.subjects)
+        ? response.data.subjects
+        : [];
+
+      setAllSubjects(
+        subjectList.map((s) => s.subject_name).filter(Boolean)
+      );
+    } catch (err) {
+      console.error("Failed to load subjects:", err);
+      setAllSubjects([]);
+    }
+  };
 
   const fetchTutors = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await axios.get(`${API_BASE_URL}/tutors`);
-      setTutors(Array.isArray(response.data) ? response.data : response.data?.data || []);
+      const response = await axios.get(
+        `${API_BASE_URL}/find-tutor`,
+        getAuthConfig()
+      );
+
+      const rawTutors = Array.isArray(response.data?.tutors)
+        ? response.data.tutors
+        : [];
+
+      setTutors(rawTutors.map(normalizeTutor));
     } catch (err) {
       console.error(err);
       setTutors([]);
@@ -86,16 +160,12 @@ export default function FindTutor() {
 
   useEffect(() => {
     fetchTutors();
+    fetchSubjects();
   }, []);
 
-  // Subject options are derived from whatever tutor data is available —
-  // never hardcoded.
-  const subjectOptions = useMemo(() => {
-    const unique = new Set(
-      tutors.map((tutor) => tutor.subject).filter(Boolean)
-    );
-    return Array.from(unique);
-  }, [tutors]);
+  // Subject dropdown always shows the full subject list from the
+  // backend (/api/subjects) — not just subjects among loaded tutors.
+  const subjectOptions = allSubjects;
 
   const updateFilter = (event) => {
     const { name, value } = event.target;
@@ -116,7 +186,9 @@ export default function FindTutor() {
     return tutors.filter((tutor) => {
       const matchesSubject =
         !appliedFilters.subject ||
-        tutor.subject?.toLowerCase() === appliedFilters.subject.toLowerCase();
+        (tutor.subjects || []).some(
+          (s) => s?.toLowerCase() === appliedFilters.subject.toLowerCase()
+        );
 
       const matchesLocation =
         !appliedFilters.location ||
@@ -222,7 +294,7 @@ export default function FindTutor() {
               <select name="mode" value={filters.mode} onChange={updateFilter}>
                 <option value="">Any mode</option>
                 <option value="online">Online</option>
-                <option value="in-person">In-Person</option>
+                <option value="In-Person">In-Person</option>
                 <option value="both">Both</option>
               </select>
             </span>
