@@ -3,14 +3,30 @@ import axios from "axios";
 import DashboardSidebar from "../../../../components/Dashboard/DashboardSidebar";
 import "./StudentReviews.css";
 
+const API_URL = "http://127.0.0.1:8000/api";
+
+const getToken = () => {
+  return (
+    localStorage.getItem("token") ||
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("authToken") ||
+    localStorage.getItem("auth_token") ||
+    ""
+  );
+};
+
 function StudentReviews() {
   const [users, setUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
+
   const [teacherId, setTeacherId] = useState("");
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+
   const [loading, setLoading] = useState(true);
+  const [teachersLoading, setTeachersLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -22,55 +38,99 @@ function StudentReviews() {
     JSON.parse(localStorage.getItem("currentUser")) ||
     JSON.parse(localStorage.getItem("user"));
 
-  const getToken = () =>
-    localStorage.getItem("authToken") ||
-    localStorage.getItem("token");
-
+  // =========================================================
+  // FETCH TEACHERS
+  // =========================================================
   const fetchTeachers = async () => {
     try {
+      setTeachersLoading(true);
+
       const token = getToken();
 
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/users",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      if (!token) {
+        setError("Please login first.");
+        return;
+      }
 
-      const teachers = response.data.filter(
+      const response = await axios.get(`${API_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      console.log("Users API response:", response.data);
+
+      // Backend returns:
+      // { users: [...] }
+      const allUsers = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.users)
+        ? response.data.users
+        : [];
+
+      const teachers = allUsers.filter(
         (user) => user.role?.toLowerCase() === "teacher"
       );
 
+      console.log("Teachers:", teachers);
+
       setUsers(teachers);
+
+      if (teachers.length === 0) {
+        setError("No teachers found.");
+      }
     } catch (err) {
-      console.error(err);
-      setError("Failed to load teachers.");
+      console.error("Failed to load teachers:", err);
+
+      setError(
+        err.response?.data?.message || "Failed to load teachers."
+      );
+    } finally {
+      setTeachersLoading(false);
     }
   };
 
+  // =========================================================
+  // FETCH REVIEWS
+  // =========================================================
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/reviews"
-      );
+      setLoading(true);
 
-      setReviews(response.data);
+      const response = await axios.get(`${API_URL}/reviews`);
+
+      console.log("Reviews API response:", response.data);
+
+      const reviewData = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.reviews)
+        ? response.data.reviews
+        : [];
+
+      setReviews(reviewData);
     } catch (err) {
-      console.error(err);
-      setError("Failed to load reviews.");
+      console.error("Failed to load reviews:", err);
+
+      setError(
+        err.response?.data?.message || "Failed to load reviews."
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  // =========================================================
+  // LOAD DATA
+  // =========================================================
   useEffect(() => {
     fetchTeachers();
     fetchReviews();
   }, []);
 
+  // =========================================================
+  // SUBMIT REVIEW
+  // =========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,35 +165,43 @@ function StudentReviews() {
     try {
       setSubmitting(true);
 
+      const token = getToken();
+
       await axios.post(
-        "http://127.0.0.1:8000/api/reviews",
+        `${API_URL}/reviews`,
         {
-          teacher_id: teacherId,
-          rating: rating,
+          teacher_id: Number(teacherId),
+          rating: Number(rating),
           review_text: reviewText.trim(),
         },
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
 
       setSuccess("Review submitted successfully!");
+
       setTeacherId("");
       setRating(0);
       setReviewText("");
 
       await fetchReviews();
     } catch (err) {
-      console.error(err);
+      console.error("Submit review error:", err);
 
       if (err.response?.data?.errors) {
         const errors = err.response.data.errors;
+
+        const firstError = Object.values(errors)[0];
+
         setError(
-          Object.values(errors)[0]?.[0] ||
-            "Validation failed."
+          Array.isArray(firstError)
+            ? firstError[0]
+            : "Validation failed."
         );
       } else {
         setError(
@@ -146,8 +214,12 @@ function StudentReviews() {
     }
   };
 
+  // =========================================================
+  // START EDITING
+  // =========================================================
   const startEditing = (review) => {
     setEditingReview(review);
+
     setEditRating(Number(review.rating));
     setEditText(review.review_text || "");
 
@@ -160,6 +232,9 @@ function StudentReviews() {
     });
   };
 
+  // =========================================================
+  // CANCEL EDIT
+  // =========================================================
   const cancelEditing = () => {
     setEditingReview(null);
     setEditRating(0);
@@ -167,6 +242,9 @@ function StudentReviews() {
     setError("");
   };
 
+  // =========================================================
+  // UPDATE REVIEW
+  // =========================================================
   const handleUpdate = async (e) => {
     e.preventDefault();
 
@@ -184,27 +262,32 @@ function StudentReviews() {
     }
 
     try {
+      const token = getToken();
+
       await axios.put(
-        `http://127.0.0.1:8000/api/reviews/${editingReview.id}`,
+        `${API_URL}/reviews/${editingReview.id}`,
         {
-          rating: editRating,
+          rating: Number(editRating),
           review_text: editText.trim(),
         },
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
 
       setSuccess("Review updated successfully!");
 
-      cancelEditing();
+      setEditingReview(null);
+      setEditRating(0);
+      setEditText("");
 
       await fetchReviews();
     } catch (err) {
-      console.error(err);
+      console.error("Update review error:", err);
 
       setError(
         err.response?.data?.message ||
@@ -213,22 +296,29 @@ function StudentReviews() {
     }
   };
 
+  // =========================================================
+  // DELETE REVIEW
+  // =========================================================
   const handleDelete = async (reviewId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this review?"
     );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     setError("");
     setSuccess("");
 
     try {
+      const token = getToken();
+
       await axios.delete(
-        `http://127.0.0.1:8000/api/reviews/${reviewId}`,
+        `${API_URL}/reviews/${reviewId}`,
         {
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
         }
@@ -238,7 +328,7 @@ function StudentReviews() {
 
       await fetchReviews();
     } catch (err) {
-      console.error(err);
+      console.error("Delete review error:", err);
 
       setError(
         err.response?.data?.message ||
@@ -247,6 +337,9 @@ function StudentReviews() {
     }
   };
 
+  // =========================================================
+  // RATING LABEL
+  // =========================================================
   const ratingLabel = (value) => {
     if (value === 1) return "Poor";
     if (value === 2) return "Fair";
@@ -257,16 +350,20 @@ function StudentReviews() {
     return "";
   };
 
+  // =========================================================
+  // RENDER
+  // =========================================================
   return (
     <div className="student-reviews-layout">
 
-      {/* LEFT SIDEBAR */}
+      {/* SIDEBAR */}
       <DashboardSidebar />
 
-      {/* RIGHT CONTENT */}
+      {/* MAIN CONTENT */}
       <main className="student-reviews-main">
         <div className="student-reviews-content">
 
+          {/* HEADER */}
           <div className="review-header">
             <span className="review-badge">
               ⭐ Student Feedback
@@ -280,13 +377,16 @@ function StudentReviews() {
             </p>
           </div>
 
-          {/* EDIT REVIEW */}
+          {/* =================================================
+              EDIT REVIEW
+          ================================================= */}
           {editingReview && (
             <div className="create-review-card">
 
               <div className="create-review-heading">
                 <div>
                   <h2>Edit Your Review</h2>
+
                   <p>
                     Update your experience with this teacher.
                   </p>
@@ -299,6 +399,7 @@ function StudentReviews() {
 
               <form onSubmit={handleUpdate}>
 
+                {/* RATING */}
                 <div className="review-form-group">
                   <label>Rating</label>
 
@@ -312,9 +413,11 @@ function StudentReviews() {
                             ? "star active"
                             : "star"
                         }
-                        onClick={() =>
-                          setEditRating(star)
-                        }
+                        onClick={() => {
+                          setEditRating(star);
+                          setError("");
+                          setSuccess("");
+                        }}
                       >
                         ★
                       </button>
@@ -328,6 +431,7 @@ function StudentReviews() {
                   )}
                 </div>
 
+                {/* REVIEW TEXT */}
                 <div className="review-form-group">
                   <label htmlFor="edit-review">
                     Your Review
@@ -337,19 +441,30 @@ function StudentReviews() {
                     id="edit-review"
                     rows="5"
                     value={editText}
-                    onChange={(e) =>
-                      setEditText(e.target.value)
-                    }
+                    onChange={(e) => {
+                      setEditText(e.target.value);
+                      setError("");
+                      setSuccess("");
+                    }}
                     placeholder="Update your experience..."
                   />
                 </div>
 
+                {/* ERROR */}
                 {error && (
                   <div className="review-error">
                     {error}
                   </div>
                 )}
 
+                {/* SUCCESS */}
+                {success && (
+                  <div className="review-success">
+                    {success}
+                  </div>
+                )}
+
+                {/* BUTTONS */}
                 <button
                   type="submit"
                   className="review-submit"
@@ -369,7 +484,9 @@ function StudentReviews() {
             </div>
           )}
 
-          {/* CREATE REVIEW */}
+          {/* =================================================
+              CREATE REVIEW
+          ================================================= */}
           {!editingReview &&
             currentUser?.role?.toLowerCase() === "student" && (
               <div className="create-review-card">
@@ -377,6 +494,7 @@ function StudentReviews() {
                 <div className="create-review-heading">
                   <div>
                     <h2>Leave a Review</h2>
+
                     <p>
                       Share your experience with a teacher.
                     </p>
@@ -389,6 +507,7 @@ function StudentReviews() {
 
                 <form onSubmit={handleSubmit}>
 
+                  {/* TEACHER SELECT */}
                   <div className="review-form-group">
                     <label htmlFor="teacher">
                       Select Teacher
@@ -402,9 +521,14 @@ function StudentReviews() {
                         setError("");
                         setSuccess("");
                       }}
+                      disabled={teachersLoading}
                     >
                       <option value="">
-                        Select a teacher
+                        {teachersLoading
+                          ? "Loading teachers..."
+                          : users.length === 0
+                          ? "No teachers available"
+                          : "Select a teacher"}
                       </option>
 
                       {users.map((user) => (
@@ -418,6 +542,7 @@ function StudentReviews() {
                     </select>
                   </div>
 
+                  {/* RATING */}
                   <div className="review-form-group">
                     <label>Rating</label>
 
@@ -449,6 +574,7 @@ function StudentReviews() {
                     )}
                   </div>
 
+                  {/* REVIEW */}
                   <div className="review-form-group">
                     <label htmlFor="review">
                       Your Review
@@ -467,18 +593,21 @@ function StudentReviews() {
                     />
                   </div>
 
+                  {/* ERROR */}
                   {error && (
                     <div className="review-error">
                       {error}
                     </div>
                   )}
 
+                  {/* SUCCESS */}
                   {success && (
                     <div className="review-success">
                       {success}
                     </div>
                   )}
 
+                  {/* SUBMIT */}
                   <button
                     type="submit"
                     className="review-submit"
@@ -493,12 +622,15 @@ function StudentReviews() {
               </div>
             )}
 
-          {/* REVIEWS */}
+          {/* =================================================
+              REVIEWS
+          ================================================= */}
           <div className="existing-reviews">
 
             <div className="section-heading">
               <div>
                 <h2>Student Reviews</h2>
+
                 <p>
                   Real experiences from our students.
                 </p>
@@ -512,12 +644,28 @@ function StudentReviews() {
               </span>
             </div>
 
+            {/* GLOBAL ERROR */}
+            {error && !editingReview && (
+              <div className="review-error">
+                {error}
+              </div>
+            )}
+
+            {/* GLOBAL SUCCESS */}
+            {success && !editingReview && (
+              <div className="review-success">
+                {success}
+              </div>
+            )}
+
+            {/* LOADING */}
             {loading && (
               <div className="review-message">
                 Loading reviews...
               </div>
             )}
 
+            {/* EMPTY */}
             {!loading && reviews.length === 0 && (
               <div className="no-reviews">
                 <div className="empty-icon">
@@ -532,6 +680,7 @@ function StudentReviews() {
               </div>
             )}
 
+            {/* REVIEW LIST */}
             {!loading && reviews.length > 0 && (
               <div className="reviews-list">
 
@@ -541,6 +690,7 @@ function StudentReviews() {
                     key={review.id}
                   >
 
+                    {/* CARD TOP */}
                     <div className="review-card-top">
 
                       <div className="teacher-info">
@@ -578,11 +728,14 @@ function StudentReviews() {
 
                     <div className="review-divider" />
 
+                    {/* REVIEW TEXT */}
                     <p className="review-text">
                       "{review.review_text}"
                     </p>
 
+                    {/* FOOTER */}
                     <div className="review-footer">
+
                       <span>
                         Reviewed by{" "}
                         <strong>
@@ -598,8 +751,10 @@ function StudentReviews() {
                             ).toLocaleDateString()
                           : ""}
                       </span>
+
                     </div>
 
+                    {/* ACTIONS */}
                     {currentUser?.id ===
                       review.student_id && (
                       <div className="review-actions">
@@ -632,7 +787,6 @@ function StudentReviews() {
             )}
 
           </div>
-
         </div>
       </main>
     </div>
