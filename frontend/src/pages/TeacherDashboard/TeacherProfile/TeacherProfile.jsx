@@ -6,23 +6,12 @@ import "./TeacherProfile.css";
 const API_URL = "http://127.0.0.1:8000/api";
 const BACKEND_URL = "http://127.0.0.1:8000";
 
-/* =========================================================
-   Get Token
-========================================================= */
-
-const getToken = () => {
-  return (
-    localStorage.getItem("token") ||
-    localStorage.getItem("access_token") ||
-    localStorage.getItem("authToken") ||
-    localStorage.getItem("auth_token") ||
-    ""
-  );
-};
-
-/* =========================================================
-   Auth Config
-========================================================= */
+const getToken = () =>
+  localStorage.getItem("token") ||
+  localStorage.getItem("access_token") ||
+  localStorage.getItem("authToken") ||
+  localStorage.getItem("auth_token") ||
+  "";
 
 const getAuthConfig = () => {
   const token = getToken();
@@ -30,34 +19,16 @@ const getAuthConfig = () => {
   return {
     headers: {
       Accept: "application/json",
-      ...(token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   };
 };
 
-/* =========================================================
-   Image URL
-========================================================= */
-
-function getImageUrl(imagePath) {
-  if (!imagePath) {
-    return null;
-  }
-
-  if (imagePath.startsWith("http")) {
-    return imagePath;
-  }
-
-  return `${BACKEND_URL}/${imagePath}`;
-}
-
-/* =========================================================
-   Icon
-========================================================= */
+const getImageUrl = (path) => {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  return `${BACKEND_URL}/${path}`;
+};
 
 function Icon({ name }) {
   const icons = {
@@ -80,6 +51,13 @@ function Icon({ name }) {
       <>
         <circle cx="12" cy="7" r="4" />
         <path d="M4 21c.8-4.2 3.5-6 8-6s7.2 1.8 8 6" />
+      </>
+    ),
+
+    posts: (
+      <>
+        <rect x="4" y="4" width="16" height="16" rx="2" />
+        <path d="M8 8h8M8 12h6M8 16h4" />
       </>
     ),
 
@@ -106,32 +84,20 @@ function Icon({ name }) {
   );
 }
 
-/* =========================================================
-   Teacher Profile
-========================================================= */
-
 export default function TeacherProfile() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* =======================================================
-     States
-  ======================================================= */
-
   const [profileImage, setProfileImage] = useState(null);
-
   const [subjects, setSubjects] = useState([]);
   const [languages, setLanguages] = useState([]);
 
-  const [loadingOptions, setLoadingOptions] = useState(true);
-  const [loadingProfile, setLoadingProfile] = useState(true);
-
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState("");
 
   const [formData, setFormData] = useState({
@@ -141,30 +107,21 @@ export default function TeacherProfile() {
     location: "",
     birthDate: "",
     gender: "",
-
     subjects: [],
-
     qualification: "",
     experience: "",
     hourlyRate: "",
     institution: "",
     certification: "",
     bio: "",
-
     languages: [],
-
     availability: "",
     tutoringMode: "",
     timeZone: "",
-
     online: false,
     inPerson: false,
     both: false,
   });
-
-  /* =======================================================
-     Sidebar Items
-  ======================================================= */
 
   const sidebarItems = [
     {
@@ -187,88 +144,47 @@ export default function TeacherProfile() {
       icon: "profile",
       path: "/teacher-profile",
     },
+    {
+      label: "View Posts",
+      icon: "posts",
+      path: "/teacher-posts",
+    },
   ];
 
-  /* =========================================================
-     Load Subjects + Languages
-  ========================================================= */
+  /* =========================
+     Load Subjects & Languages
+  ========================= */
 
   useEffect(() => {
     const loadOptions = async () => {
-      const token = getToken();
-
-      if (!token) {
-        setErrorMessage(
-          "You are not logged in. Please login again."
-        );
-        setShowError(true);
-        setLoadingOptions(false);
-        return;
-      }
-
       try {
-        setLoadingOptions(true);
+        const [subjectRes, languageRes] = await Promise.all([
+          axios.get(
+            `${API_URL}/teacher-profile/subjects`,
+            getAuthConfig()
+          ),
+          axios.get(
+            `${API_URL}/teacher-profile/languages`,
+            getAuthConfig()
+          ),
+        ]);
 
-        /*
-         * IMPORTANT:
-         * Subjects and languages routes are inside
-         * auth:sanctum middleware.
-         *
-         * Therefore getAuthConfig() is required.
-         */
-
-        const [subjectResponse, languageResponse] =
-          await Promise.all([
-            axios.get(
-              `${API_URL}/teacher-profile/subjects`,
-              getAuthConfig()
-            ),
-
-            axios.get(
-              `${API_URL}/teacher-profile/languages`,
-              getAuthConfig()
-            ),
-          ]);
-
-        console.log(
-          "SUBJECT RESPONSE:",
-          subjectResponse.data
+        setSubjects(
+          Array.isArray(subjectRes.data?.subjects)
+            ? subjectRes.data.subjects
+            : []
         );
 
-        console.log(
-          "LANGUAGE RESPONSE:",
-          languageResponse.data
+        setLanguages(
+          Array.isArray(languageRes.data?.languages)
+            ? languageRes.data.languages
+            : []
         );
-
-        const subjectData = Array.isArray(
-          subjectResponse.data?.subjects
-        )
-          ? subjectResponse.data.subjects
-          : [];
-
-        const languageData = Array.isArray(
-          languageResponse.data?.languages
-        )
-          ? languageResponse.data.languages
-          : [];
-
-        setSubjects(subjectData);
-        setLanguages(languageData);
       } catch (error) {
-        console.error(
-          "Dropdown API error:",
-          error
-        );
-
-        console.error(
-          "Backend:",
-          error.response?.data
-        );
+        console.error("Options load error:", error);
 
         if (error.response?.status === 401) {
-          setErrorMessage(
-            "Your login session has expired. Please login again."
-          );
+          setErrorMessage("Your login session has expired.");
         } else {
           setErrorMessage(
             error.response?.data?.message ||
@@ -277,122 +193,92 @@ export default function TeacherProfile() {
         }
 
         setShowError(true);
-      } finally {
-        setLoadingOptions(false);
       }
     };
 
     loadOptions();
   }, []);
 
-  /* =========================================================
-     Load Existing Teacher Profile
-  ========================================================= */
+  /* =========================
+     Load Existing Profile
+  ========================= */
 
   useEffect(() => {
     const loadProfile = async () => {
       const token = getToken();
 
       if (!token) {
-        setErrorMessage(
-          "You are not logged in. Please login again."
-        );
-
+        setErrorMessage("You are not logged in. Please login again.");
         setShowError(true);
-        setLoadingProfile(false);
-
+        setLoading(false);
         return;
       }
 
       try {
-        setLoadingProfile(true);
-
         const response = await axios.get(
           `${API_URL}/teacher-profile`,
           getAuthConfig()
         );
 
-        console.log(
-          "PROFILE RESPONSE:",
-          response.data
-        );
-
         const profile = response.data?.profile;
 
-        /*
-         * Profile may not exist yet.
-         * Controller returns 404 with profile null.
-         */
-
         if (!profile) {
-          setLoadingProfile(false);
+          setLoading(false);
           return;
         }
 
-        /* ===================================================
-           Subjects
-        =================================================== */
+        /*
+         * Backend may return:
+         * profile.name / profile.email
+         * OR
+         * profile.user.name / profile.user.email
+         */
+
+        const fullName =
+          profile.name ||
+          profile.user?.name ||
+          "";
+
+        const email =
+          profile.email ||
+          profile.user?.email ||
+          "";
 
         const profileSubjects = Array.isArray(
-          profile.subjects
+          response.data?.subjects
         )
-          ? profile.subjects.map((subject) =>
-              Number(subject.id)
-            )
+          ? response.data.subjects.map((item) => Number(item.id))
+          : Array.isArray(profile.subjects)
+          ? profile.subjects.map((item) => Number(item.id))
           : [];
-
-        /* ===================================================
-           Languages
-        =================================================== */
 
         const profileLanguages = Array.isArray(
-          profile.languages
+          response.data?.languages
         )
-          ? profile.languages.map((language) =>
-              Number(language.id)
-            )
+          ? response.data.languages.map((item) => Number(item.id))
+          : Array.isArray(profile.languages)
+          ? profile.languages.map((item) => Number(item.id))
           : [];
-
-        /* ===================================================
-           Profile Image
-        =================================================== */
-
-        setProfileImage(
-          getImageUrl(profile.profile_image)
-        );
-
-        /* ===================================================
-           Tutoring Mode
-        =================================================== */
 
         const tutoringMode =
           profile.tutoring_mode || "";
 
-        /* ===================================================
-           Form Data
-        =================================================== */
+        setProfileImage(
+          getImageUrl(
+            profile.profile_image_url ||
+              profile.profile_image
+          )
+        );
 
         setFormData({
-          fullName:
-            profile.user?.name || "",
+          fullName,
+          email,
+          phone: profile.phone || "",
+          location: profile.location || "",
+          birthDate: profile.date_of_birth || "",
+          gender: profile.gender || "",
 
-          email:
-            profile.user?.email || "",
-
-          phone:
-            profile.phone || "",
-
-          location:
-            profile.location || "",
-
-          birthDate:
-            profile.date_of_birth || "",
-
-          gender:
-            profile.gender || "",
-
-          subjects:
-            profileSubjects,
+          subjects: profileSubjects,
 
           qualification:
             profile.qualification || "",
@@ -409,11 +295,9 @@ export default function TeacherProfile() {
           certification:
             profile.certification || "",
 
-          bio:
-            profile.bio || "",
+          bio: profile.bio || "",
 
-          languages:
-            profileLanguages,
+          languages: profileLanguages,
 
           availability:
             profile.availability || "",
@@ -433,43 +317,32 @@ export default function TeacherProfile() {
             tutoringMode === "Both",
         });
       } catch (error) {
-        console.error(
-          "Profile load error:",
-          error
-        );
-
-        console.error(
-          "Backend:",
-          error.response?.data
-        );
+        console.error("Profile load error:", error);
+        console.error("Backend:", error.response?.data);
 
         if (error.response?.status === 401) {
           setErrorMessage(
             "Your login session has expired. Please login again."
           );
-
           setShowError(true);
-        } else if (
-          error.response?.status !== 404
-        ) {
+        } else if (error.response?.status !== 404) {
           setErrorMessage(
             error.response?.data?.message ||
               "Failed to load teacher profile."
           );
-
           setShowError(true);
         }
       } finally {
-        setLoadingProfile(false);
+        setLoading(false);
       }
     };
 
     loadProfile();
   }, []);
 
-  /* =========================================================
-     Normal Input Change
-  ========================================================= */
+  /* =========================
+     Input Change
+  ========================= */
 
   const handleChange = (e) => {
     const {
@@ -481,7 +354,6 @@ export default function TeacherProfile() {
 
     setFormData((prev) => ({
       ...prev,
-
       [name]:
         type === "checkbox"
           ? checked
@@ -492,75 +364,74 @@ export default function TeacherProfile() {
     setShowError(false);
   };
 
-  /* =========================================================
-     Subject Change
-  ========================================================= */
+  /* =========================
+     Subject
+  ========================= */
 
   const handleSubjectChange = (e) => {
     const value = e.target.value;
 
     setFormData((prev) => ({
       ...prev,
-
-      subjects: value
-        ? [Number(value)]
-        : [],
+      subjects: value ? [Number(value)] : [],
     }));
 
     setShowSuccess(false);
     setShowError(false);
   };
 
-  /* =========================================================
-     Language Change
-  ========================================================= */
+  /* =========================
+     Language
+  ========================= */
 
   const handleLanguageChange = (e) => {
     const value = e.target.value;
 
     setFormData((prev) => ({
       ...prev,
-
-      languages: value
-        ? [Number(value)]
-        : [],
+      languages: value ? [Number(value)] : [],
     }));
 
     setShowSuccess(false);
     setShowError(false);
   };
 
-  /* =========================================================
-     Upload Profile Image
-  ========================================================= */
+  /* =========================
+     Tutoring Mode
+  ========================= */
+
+  const setTutoringMode = (mode) => {
+    setFormData((prev) => ({
+      ...prev,
+
+      tutoringMode: mode,
+
+      online: mode === "Online",
+      inPerson: mode === "In-Person",
+      both: mode === "Both",
+    }));
+
+    setShowSuccess(false);
+    setShowError(false);
+  };
+
+  /* =========================
+     Upload Image
+  ========================= */
 
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
 
-    if (!file) {
-      return;
-    }
-
-    /* =====================================================
-       Validate Size
-    ===================================================== */
+    if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
       setErrorMessage(
         "Please select an image smaller than 2MB."
       );
-
       setShowError(true);
-      setShowSuccess(false);
-
       e.target.value = "";
-
       return;
     }
-
-    /* =====================================================
-       Validate Type
-    ===================================================== */
 
     const allowedTypes = [
       "image/jpeg",
@@ -572,12 +443,8 @@ export default function TeacherProfile() {
       setErrorMessage(
         "Please select a JPG, PNG or GIF image."
       );
-
       setShowError(true);
-      setShowSuccess(false);
-
       e.target.value = "";
-
       return;
     }
 
@@ -587,34 +454,20 @@ export default function TeacherProfile() {
       setErrorMessage(
         "You are not logged in. Please login again."
       );
-
       setShowError(true);
-
       e.target.value = "";
-
       return;
     }
 
-    /* =====================================================
-       Preview
-    ===================================================== */
-
-    const previewUrl =
-      URL.createObjectURL(file);
+    const previewUrl = URL.createObjectURL(file);
 
     setProfileImage(previewUrl);
 
-    /* =====================================================
-       Upload
-    ===================================================== */
-
     const uploadData = new FormData();
-
     uploadData.append("image", file);
 
     try {
       setUploadingImage(true);
-
       setShowError(false);
       setShowSuccess(false);
 
@@ -624,35 +477,14 @@ export default function TeacherProfile() {
         {
           headers: {
             Accept: "application/json",
-
-            Authorization:
-              `Bearer ${token}`,
-
-            /*
-             * Do NOT manually set
-             * Content-Type.
-             *
-             * Axios will set multipart/form-data
-             * with the correct boundary.
-             */
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      console.log(
-        "IMAGE UPLOAD RESPONSE:",
-        response.data
-      );
-
-      /* ===================================================
-         Use Backend Image URL
-      =================================================== */
-
       if (response.data?.image) {
         setProfileImage(
-          getImageUrl(
-            response.data.image
-          )
+          getImageUrl(response.data.image)
         );
       }
 
@@ -662,33 +494,15 @@ export default function TeacherProfile() {
         setShowSuccess(false);
       }, 4000);
     } catch (error) {
-      console.error(
-        "IMAGE UPLOAD ERROR:",
-        error
-      );
+      console.error("Image upload error:", error);
 
-      console.error(
-        "BACKEND RESPONSE:",
-        error.response?.data
+      setErrorMessage(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Failed to upload profile picture."
       );
-
-      if (error.response?.status === 401) {
-        setErrorMessage(
-          "Your login session has expired. Please login again."
-        );
-      } else {
-        setErrorMessage(
-          error.response?.data?.message ||
-            error.response?.data?.error ||
-            "Failed to upload profile picture."
-        );
-      }
 
       setShowError(true);
-
-      /* ===================================================
-         Restore Previous Image
-      =================================================== */
 
       try {
         const response = await axios.get(
@@ -696,50 +510,23 @@ export default function TeacherProfile() {
           getAuthConfig()
         );
 
-        const savedImage =
-          response.data?.profile?.profile_image;
-
         setProfileImage(
-          getImageUrl(savedImage)
+          getImageUrl(
+            response.data?.profile?.profile_image
+          )
         );
       } catch {
         setProfileImage(null);
       }
     } finally {
       setUploadingImage(false);
-
       e.target.value = "";
     }
   };
 
-  /* =========================================================
-     Tutoring Mode
-  ========================================================= */
-
-  const setTutoringMode = (mode) => {
-    setFormData((prev) => ({
-      ...prev,
-
-      online:
-        mode === "Online",
-
-      inPerson:
-        mode === "In-Person",
-
-      both:
-        mode === "Both",
-
-      tutoringMode:
-        mode,
-    }));
-
-    setShowSuccess(false);
-    setShowError(false);
-  };
-
-  /* =========================================================
+  /* =========================
      Save Profile
-  ========================================================= */
+  ========================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -750,40 +537,24 @@ export default function TeacherProfile() {
       setErrorMessage(
         "You are not logged in. Please login again."
       );
-
       setShowError(true);
-
       return;
     }
 
-    /* =====================================================
-       Subject Validation
-    ===================================================== */
-
-    if (
-      !formData.subjects ||
-      formData.subjects.length === 0
-    ) {
+    if (!formData.subjects.length) {
       setErrorMessage(
         "Please select the subject you teach."
       );
-
       setShowError(true);
-
       return;
     }
 
     setSaving(true);
-
     setShowSuccess(false);
     setShowError(false);
 
     try {
-      /* ===================================================
-         Tutoring Mode
-      =================================================== */
-
-      let tutoringMode = "";
+      let tutoringMode = formData.tutoringMode;
 
       if (formData.both) {
         tutoringMode = "Both";
@@ -791,27 +562,16 @@ export default function TeacherProfile() {
         tutoringMode = "Online";
       } else if (formData.inPerson) {
         tutoringMode = "In-Person";
-      } else {
-        tutoringMode =
-          formData.tutoringMode || "";
       }
 
-      /* ===================================================
-         Payload
-      =================================================== */
-
       const payload = {
-        fullName:
-          formData.fullName,
+        fullName: formData.fullName.trim(),
 
-        email:
-          formData.email,
+        email: formData.email.trim(),
 
-        phone:
-          formData.phone || null,
+        phone: formData.phone || null,
 
-        location:
-          formData.location || null,
+        location: formData.location || null,
 
         birthDate:
           formData.birthDate || null,
@@ -855,14 +615,7 @@ export default function TeacherProfile() {
           formData.timeZone || null,
       };
 
-      console.log(
-        "SENDING PROFILE:",
-        payload
-      );
-
-      /* ===================================================
-         Update Profile
-      =================================================== */
+      console.log("SENDING PROFILE:", payload);
 
       const response = await axios.put(
         `${API_URL}/teacher-profile`,
@@ -870,28 +623,42 @@ export default function TeacherProfile() {
         getAuthConfig()
       );
 
-      console.log(
-        "SAVE RESPONSE:",
-        response.data
-      );
+      console.log("SAVE RESPONSE:", response.data);
 
-      /* ===================================================
-         Update Image From Backend
-      =================================================== */
+      const savedProfile = response.data?.profile;
 
-      if (
-        response.data?.profile?.profile_image
-      ) {
+      if (savedProfile?.profile_image) {
         setProfileImage(
           getImageUrl(
-            response.data.profile.profile_image
+            savedProfile.profile_image
           )
         );
       }
 
-      /* ===================================================
-         Success
-      =================================================== */
+      /*
+       * Immediately update form using saved response.
+       * This prevents fields from becoming blank.
+       */
+
+      if (savedProfile) {
+        setFormData((prev) => ({
+          ...prev,
+
+          fullName:
+            savedProfile.name ||
+            savedProfile.user?.name ||
+            prev.fullName,
+
+          email:
+            savedProfile.email ||
+            savedProfile.user?.email ||
+            prev.email,
+
+          gender:
+            savedProfile.gender ??
+            prev.gender,
+        }));
+      }
 
       setShowSuccess(true);
       setShowError(false);
@@ -905,13 +672,9 @@ export default function TeacherProfile() {
         setShowSuccess(false);
       }, 4000);
     } catch (error) {
+      console.error("Profile save error:", error);
       console.error(
-        "PROFILE SAVE ERROR:",
-        error
-      );
-
-      console.error(
-        "BACKEND RESPONSE:",
+        "Backend response:",
         error.response?.data
       );
 
@@ -929,9 +692,7 @@ export default function TeacherProfile() {
           "Failed to save teacher profile.";
 
         if (backendErrors) {
-          message = Object.values(
-            backendErrors
-          )
+          message = Object.values(backendErrors)
             .flat()
             .join(" ");
         }
@@ -945,9 +706,9 @@ export default function TeacherProfile() {
     }
   };
 
-  /* =========================================================
+  /* =========================
      Logout
-  ========================================================= */
+  ========================= */
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -964,22 +725,15 @@ export default function TeacherProfile() {
     });
   };
 
-  /* =========================================================
-     Loading Screen
-  ========================================================= */
+  /* =========================
+     Loading
+  ========================= */
 
-  if (
-    loadingProfile ||
-    loadingOptions
-  ) {
+  if (loading) {
     return (
       <main className="teacher-profile-page">
-
-        {/* Sidebar */}
-
         <aside className="teacher-profile-sidebar">
           <nav className="teacher-sidebar-nav">
-
             {sidebarItems.map((item) => (
               <button
                 key={item.label}
@@ -994,10 +748,7 @@ export default function TeacherProfile() {
                 }
               >
                 <Icon name={item.icon} />
-
-                <span>
-                  {item.label}
-                </span>
+                <span>{item.label}</span>
               </button>
             ))}
 
@@ -1009,50 +760,31 @@ export default function TeacherProfile() {
               onClick={handleLogout}
             >
               <Icon name="logout" />
-
-              <span>
-                Logout
-              </span>
+              <span>Logout</span>
             </button>
-
           </nav>
         </aside>
 
-        {/* Loading Content */}
-
         <section className="teacher-profile-content">
-
           <div className="teacher-profile-heading">
-
-            <h1>
-              Teacher Profile
-            </h1>
-
-            <p>
-              Loading your profile...
-            </p>
-
+            <h1>Teacher Profile</h1>
+            <p>Loading your profile...</p>
           </div>
-
         </section>
-
       </main>
     );
   }
 
-  /* =========================================================
+  /* =========================
      Main UI
-  ========================================================= */
+  ========================= */
 
   return (
     <main className="teacher-profile-page">
 
-      {/* =====================================================
-          SIDEBAR
-      ===================================================== */}
+      {/* Sidebar */}
 
       <aside className="teacher-profile-sidebar">
-
         <nav className="teacher-sidebar-nav">
 
           {sidebarItems.map((item) => (
@@ -1068,13 +800,8 @@ export default function TeacherProfile() {
                 navigate(item.path)
               }
             >
-
               <Icon name={item.icon} />
-
-              <span>
-                {item.label}
-              </span>
-
+              <span>{item.label}</span>
             </button>
           ))}
 
@@ -1085,52 +812,33 @@ export default function TeacherProfile() {
             className="teacher-sidebar-link teacher-logout"
             onClick={handleLogout}
           >
-
             <Icon name="logout" />
-
-            <span>
-              Logout
-            </span>
-
+            <span>Logout</span>
           </button>
 
         </nav>
-
       </aside>
 
-      {/* =====================================================
-          CONTENT
-      ===================================================== */}
+      {/* Content */}
 
       <section className="teacher-profile-content">
 
-        {/* Heading */}
-
         <div className="teacher-profile-heading">
-
-          <h1>
-            Teacher Profile
-          </h1>
-
+          <h1>Teacher Profile</h1>
           <p>
             Update your profile information and preferences.
           </p>
-
         </div>
 
-        {/* ===================================================
-            SUCCESS MESSAGE
-        =================================================== */}
+        {/* Success */}
 
         {showSuccess && (
           <div className="teacher-profile-success">
-
             <div className="teacher-success-icon">
               ✓
             </div>
 
             <div className="teacher-success-content">
-
               <strong>
                 Profile Updated Successfully
               </strong>
@@ -1138,7 +846,6 @@ export default function TeacherProfile() {
               <span>
                 Your teacher profile information has been saved.
               </span>
-
             </div>
 
             <button
@@ -1150,23 +857,18 @@ export default function TeacherProfile() {
             >
               ×
             </button>
-
           </div>
         )}
 
-        {/* ===================================================
-            ERROR MESSAGE
-        =================================================== */}
+        {/* Error */}
 
         {showError && (
           <div className="teacher-profile-error">
-
             <div className="teacher-error-icon">
               !
             </div>
 
             <div className="teacher-error-content">
-
               <strong>
                 Unable to Save Profile
               </strong>
@@ -1174,7 +876,6 @@ export default function TeacherProfile() {
               <span>
                 {errorMessage}
               </span>
-
             </div>
 
             <button
@@ -1186,35 +887,22 @@ export default function TeacherProfile() {
             >
               ×
             </button>
-
           </div>
         )}
-
-        {/* ===================================================
-            FORM
-        =================================================== */}
 
         <form
           className="teacher-profile-card"
           onSubmit={handleSubmit}
         >
 
-          {/* =================================================
-              PERSONAL INFORMATION
-          ================================================= */}
+          {/* Personal Information */}
 
           <section className="teacher-top-section">
 
-            {/* Profile Picture */}
-
             <div className="teacher-picture-column">
-
-              <h3>
-                Profile Picture
-              </h3>
+              <h3>Profile Picture</h3>
 
               <div className="teacher-picture-wrapper">
-
                 {profileImage ? (
                   <img
                     src={profileImage}
@@ -1222,18 +910,14 @@ export default function TeacherProfile() {
                   />
                 ) : (
                   <div className="teacher-default-avatar">
-
                     <div className="teacher-avatar-head" />
-
                     <div className="teacher-avatar-body" />
-
                   </div>
                 )}
 
                 <span className="teacher-camera-icon">
                   📷
                 </span>
-
               </div>
 
               <p>
@@ -1241,7 +925,6 @@ export default function TeacherProfile() {
               </p>
 
               <label className="teacher-upload-button">
-
                 {uploadingImage
                   ? "Uploading..."
                   : "Upload Photo"}
@@ -1252,12 +935,8 @@ export default function TeacherProfile() {
                   onChange={handleImageChange}
                   disabled={uploadingImage}
                 />
-
               </label>
-
             </div>
-
-            {/* Personal Information */}
 
             <div className="teacher-personal-section">
 
@@ -1267,10 +946,7 @@ export default function TeacherProfile() {
 
               <div className="teacher-form-grid">
 
-                {/* Full Name */}
-
                 <div className="teacher-field">
-
                   <label>
                     Full Name <span>*</span>
                   </label>
@@ -1283,13 +959,9 @@ export default function TeacherProfile() {
                     placeholder="Enter your full name"
                     required
                   />
-
                 </div>
 
-                {/* Email */}
-
                 <div className="teacher-field">
-
                   <label>
                     Email Address <span>*</span>
                   </label>
@@ -1302,16 +974,10 @@ export default function TeacherProfile() {
                     placeholder="Enter your email"
                     required
                   />
-
                 </div>
 
-                {/* Phone */}
-
                 <div className="teacher-field">
-
-                  <label>
-                    Phone Number
-                  </label>
+                  <label>Phone Number</label>
 
                   <input
                     type="tel"
@@ -1320,16 +986,10 @@ export default function TeacherProfile() {
                     onChange={handleChange}
                     placeholder="Enter your phone number"
                   />
-
                 </div>
 
-                {/* Location */}
-
                 <div className="teacher-field">
-
-                  <label>
-                    Location
-                  </label>
+                  <label>Location</label>
 
                   <input
                     type="text"
@@ -1338,16 +998,10 @@ export default function TeacherProfile() {
                     onChange={handleChange}
                     placeholder="Enter your location"
                   />
-
                 </div>
 
-                {/* Birth Date */}
-
                 <div className="teacher-field">
-
-                  <label>
-                    Date of Birth
-                  </label>
+                  <label>Date of Birth</label>
 
                   <input
                     type="date"
@@ -1355,23 +1009,16 @@ export default function TeacherProfile() {
                     value={formData.birthDate}
                     onChange={handleChange}
                   />
-
                 </div>
 
-                {/* Gender */}
-
                 <div className="teacher-field">
-
-                  <label>
-                    Gender
-                  </label>
+                  <label>Gender</label>
 
                   <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
                   >
-
                     <option value="">
                       Select gender
                     </option>
@@ -1387,22 +1034,16 @@ export default function TeacherProfile() {
                     <option value="Other">
                       Other
                     </option>
-
                   </select>
-
                 </div>
 
               </div>
-
             </div>
-
           </section>
 
           <div className="teacher-divider" />
 
-          {/* =================================================
-              PROFESSIONAL INFORMATION
-          ================================================= */}
+          {/* Professional Information */}
 
           <section className="teacher-form-section">
 
@@ -1412,10 +1053,7 @@ export default function TeacherProfile() {
 
             <div className="teacher-form-grid">
 
-              {/* Subject */}
-
               <div className="teacher-field">
-
                 <label>
                   Subject You Teach <span>*</span>
                 </label>
@@ -1428,7 +1066,6 @@ export default function TeacherProfile() {
                   onChange={handleSubjectChange}
                   required
                 >
-
                   <option value="">
                     Select subject
                   </option>
@@ -1441,47 +1078,29 @@ export default function TeacherProfile() {
                       {subject.subject_name}
                     </option>
                   ))}
-
                 </select>
-
               </div>
 
-              {/* Qualification */}
-
               <div className="teacher-field">
-
-                <label>
-                  Qualification
-                </label>
+                <label>Qualification</label>
 
                 <input
                   type="text"
                   name="qualification"
-                  value={
-                    formData.qualification
-                  }
+                  value={formData.qualification}
                   onChange={handleChange}
                   placeholder="Enter highest qualification"
                 />
-
               </div>
 
-              {/* Experience */}
-
               <div className="teacher-field">
-
-                <label>
-                  Teaching Experience
-                </label>
+                <label>Teaching Experience</label>
 
                 <select
                   name="experience"
-                  value={
-                    formData.experience
-                  }
+                  value={formData.experience}
                   onChange={handleChange}
                 >
-
                   <option value="">
                     Select experience
                   </option>
@@ -1505,36 +1124,23 @@ export default function TeacherProfile() {
                   <option value="10+ years">
                     10+ years
                   </option>
-
                 </select>
-
               </div>
 
-              {/* Hourly Rate */}
-
               <div className="teacher-field">
-
-                <label>
-                  Hourly Rate (USD)
-                </label>
+                <label>Hourly Rate (USD)</label>
 
                 <input
                   type="number"
                   name="hourlyRate"
-                  value={
-                    formData.hourlyRate
-                  }
+                  value={formData.hourlyRate}
                   onChange={handleChange}
                   placeholder="Enter hourly rate"
                   min="0"
                 />
-
               </div>
 
-              {/* Institution */}
-
               <div className="teacher-field">
-
                 <label>
                   Institution / University
                 </label>
@@ -1542,44 +1148,28 @@ export default function TeacherProfile() {
                 <input
                   type="text"
                   name="institution"
-                  value={
-                    formData.institution
-                  }
+                  value={formData.institution}
                   onChange={handleChange}
                   placeholder="Enter your institution"
                 />
-
               </div>
 
-              {/* Certification */}
-
               <div className="teacher-field">
-
-                <label>
-                  Certification
-                </label>
+                <label>Certification</label>
 
                 <input
                   type="text"
                   name="certification"
-                  value={
-                    formData.certification
-                  }
+                  value={formData.certification}
                   onChange={handleChange}
                   placeholder="Enter certification"
                 />
-
               </div>
 
             </div>
 
-            {/* Bio */}
-
             <div className="teacher-field teacher-full-field">
-
-              <label>
-                Bio / About Me
-              </label>
+              <label>Bio / About Me</label>
 
               <div className="teacher-textarea-wrapper">
 
@@ -1596,16 +1186,13 @@ export default function TeacherProfile() {
                 </small>
 
               </div>
-
             </div>
 
           </section>
 
           <div className="teacher-divider" />
 
-          {/* =================================================
-              ADDITIONAL INFORMATION
-          ================================================= */}
+          {/* Additional Information */}
 
           <section className="teacher-form-section">
 
@@ -1615,13 +1202,8 @@ export default function TeacherProfile() {
 
             <div className="teacher-form-grid">
 
-              {/* Language */}
-
               <div className="teacher-field">
-
-                <label>
-                  Language
-                </label>
+                <label>Language</label>
 
                 <select
                   name="languages"
@@ -1630,7 +1212,6 @@ export default function TeacherProfile() {
                   }
                   onChange={handleLanguageChange}
                 >
-
                   <option value="">
                     Select language
                   </option>
@@ -1643,107 +1224,70 @@ export default function TeacherProfile() {
                       {language.language_name}
                     </option>
                   ))}
-
                 </select>
-
               </div>
 
-              {/* Available For */}
-
               <div className="teacher-field">
-
-                <label>
-                  Available For
-                </label>
+                <label>Available For</label>
 
                 <div className="teacher-checkbox-row">
 
-                  {/* Online */}
-
                   <label>
-
                     <input
                       type="checkbox"
                       checked={formData.online}
                       onChange={(e) => {
-                        if (e.target.checked) {
-                          setTutoringMode(
-                            "Online"
-                          );
-                        } else {
-                          setTutoringMode("");
-                        }
+                        setTutoringMode(
+                          e.target.checked
+                            ? "Online"
+                            : ""
+                        );
                       }}
                     />
-
                     Online Tutoring
-
                   </label>
 
-                  {/* In Person */}
-
                   <label>
-
                     <input
                       type="checkbox"
                       checked={formData.inPerson}
                       onChange={(e) => {
-                        if (e.target.checked) {
-                          setTutoringMode(
-                            "In-Person"
-                          );
-                        } else {
-                          setTutoringMode("");
-                        }
+                        setTutoringMode(
+                          e.target.checked
+                            ? "In-Person"
+                            : ""
+                        );
                       }}
                     />
-
                     In-Person Tutoring
-
                   </label>
 
-                  {/* Both */}
-
                   <label>
-
                     <input
                       type="checkbox"
                       checked={formData.both}
                       onChange={(e) => {
-                        if (e.target.checked) {
-                          setTutoringMode(
-                            "Both"
-                          );
-                        } else {
-                          setTutoringMode("");
-                        }
+                        setTutoringMode(
+                          e.target.checked
+                            ? "Both"
+                            : ""
+                        );
                       }}
                     />
-
                     Both
-
                   </label>
 
                 </div>
-
               </div>
 
-              {/* Availability */}
-
               <div className="teacher-field">
-
-                <label>
-                  Availability
-                </label>
+                <label>Availability</label>
 
                 <select
                   name="availability"
-                  value={
-                    formData.availability
-                  }
+                  value={formData.availability}
                   onChange={handleChange}
                 >
-
                   <option value="">
                     Select availability
                   </option>
@@ -1763,27 +1307,17 @@ export default function TeacherProfile() {
                   <option value="Flexible">
                     Flexible
                   </option>
-
                 </select>
-
               </div>
 
-              {/* Time Zone */}
-
               <div className="teacher-field">
-
-                <label>
-                  Time Zone
-                </label>
+                <label>Time Zone</label>
 
                 <select
                   name="timeZone"
-                  value={
-                    formData.timeZone
-                  }
+                  value={formData.timeZone}
                   onChange={handleChange}
                 >
-
                   <option value="">
                     Select time zone
                   </option>
@@ -1803,18 +1337,13 @@ export default function TeacherProfile() {
                   <option value="BST">
                     Bangladesh Standard Time
                   </option>
-
                 </select>
-
               </div>
 
             </div>
-
           </section>
 
-          {/* =================================================
-              FORM BUTTONS
-          ================================================= */}
+          {/* Buttons */}
 
           <div className="teacher-form-actions">
 
@@ -1825,8 +1354,7 @@ export default function TeacherProfile() {
                 navigate("/teacher-dashboard")
               }
               disabled={
-                saving ||
-                uploadingImage
+                saving || uploadingImage
               }
             >
               Cancel
@@ -1836,8 +1364,7 @@ export default function TeacherProfile() {
               type="submit"
               className="teacher-save-button"
               disabled={
-                saving ||
-                uploadingImage
+                saving || uploadingImage
               }
             >
               {saving
@@ -1848,9 +1375,7 @@ export default function TeacherProfile() {
           </div>
 
         </form>
-
       </section>
-
     </main>
   );
 }
