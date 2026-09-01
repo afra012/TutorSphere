@@ -1,12 +1,1060 @@
-.teacher-posts-layout { min-height: 100vh; display: grid; grid-template-columns: 260px 1fr; background: #faf8ff; }
-.teacher-posts-content { padding: 42px 52px; color: #252035; }
-.teacher-posts-content header { max-width: 1100px; margin: 0 auto 30px; }
-.teacher-posts-label { margin: 0 0 6px; color: #6336c8; font-weight: 700; }
-.teacher-posts-content h1 { margin: 0 0 8px; font-size: 31px; }
-.teacher-posts-content header > p:last-child { margin: 0; color: #6b6577; }
-.teacher-posts-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)); gap: 18px; }
-.teacher-post-card { padding: 22px; border: 1px solid #e9e1f5; border-radius: 14px; background: #fff; box-shadow: 0 7px 22px rgba(77, 42, 135, .06); }
-.teacher-post-card-head { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
-.teacher-post-card h2 { margin: 0; font-size: 19px; }.teacher-post-card-head span { padding: 5px 8px; border-radius: 7px; background: #f1eafd; color: #5d2bc3; font-size: 12px; }
-.teacher-post-card > p { color: #696276; line-height: 1.55; }.teacher-post-card dl { margin: 18px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }.teacher-post-card dl div { min-width: 0; }.teacher-post-card dt { color: #81798d; font-size: 12px; }.teacher-post-card dd { margin: 3px 0 0; font-size: 14px; overflow-wrap: anywhere; }.teacher-posts-empty { max-width: 1100px; margin: 40px auto; padding: 36px; text-align: center; border: 1px solid #e9e1f5; border-radius: 14px; background: #fff; color: #6b6577; }
-@media (max-width: 820px) { .teacher-posts-layout { display: block; padding-top: 64px; }.teacher-posts-content { padding: 30px 20px; } }
+/* =========================================================
+   TEACHER POSTS PAGE
+   ========================================================= */
+
+.teacher-posts-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  background: #faf8ff;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.teacher-posts-content {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  /*
+    IMPORTANT:
+    Fixed top navbar-এর জন্য extra top space রাখা হয়েছে.
+  */
+  padding: 125px 52px 60px;
+
+  color: #252035;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.teacher-posts-header {
+  width: 100%;
+  max-width: 1180px;
+
+  margin: 0 auto 32px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  gap: 30px;
+}
+
+.teacher-posts-label {
+  margin: 0 0 7px;
+
+  color: #6336c8;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.teacher-posts-header h1 {
+  margin: 0 0 9px;
+
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 800;
+
+  color: #241b38;
+}
+
+.teacher-posts-subtitle {
+  margin: 0;
+
+  color: #766f82;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   POSTS COUNT
+   ========================================================= */
+
+.posts-count-box {
+  min-width: 115px;
+
+  padding: 15px 20px;
+
+  border: 1px solid #e7dcf7;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  text-align: center;
+
+  box-shadow: 0 8px 25px rgba(77, 42, 135, 0.06);
+}
+
+.posts-count-box span {
+  display: block;
+
+  color: #6336c8;
+
+  font-size: 26px;
+  font-weight: 800;
+
+  line-height: 1;
+}
+
+.posts-count-box small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #81798d;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   POSTS GRID
+   ========================================================= */
+
+.teacher-posts-grid {
+  width: 100%;
+  max-width: 1180px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(330px, 1fr)
+  );
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   POST CARD
+   ========================================================= */
+
+.teacher-post-card {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 23px;
+
+  border: 1px solid #e9e1f5;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow: 0 8px 28px rgba(77, 42, 135, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.teacher-post-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #d8c7f1;
+
+  box-shadow:
+    0 14px 35px rgba(77, 42, 135, 0.12);
+}
+
+
+/* =========================================================
+   CARD TOP
+   ========================================================= */
+
+.post-card-top {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.post-subject-icon {
+  width: 47px;
+  height: 47px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #f3edff;
+
+  font-size: 22px;
+}
+
+.post-mode {
+  padding: 7px 11px;
+
+  border-radius: 9px;
+
+  background: #f1eafd;
+
+  color: #5d2bc3;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: capitalize;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+   ========================================================= */
+
+.post-card-content h2 {
+  margin: 0 0 9px;
+
+  color: #29213c;
+
+  font-size: 20px;
+  font-weight: 750;
+
+  line-height: 1.35;
+}
+
+.post-description {
+  min-height: 48px;
+
+  margin: 0;
+
+  color: #70697c;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   POST INFORMATION
+   ========================================================= */
+
+.post-info-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 13px;
+
+  margin: 22px 0;
+
+  padding: 17px 0;
+
+  border-top: 1px solid #f0ebf6;
+  border-bottom: 1px solid #f0ebf6;
+}
+
+.post-info-item {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+.info-icon {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #faf7ff;
+
+  font-size: 14px;
+}
+
+.post-info-item div {
+  min-width: 0;
+}
+
+.post-info-item small {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #938b9e;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.post-info-item strong {
+  display: block;
+
+  overflow: hidden;
+
+  color: #393145;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.post-card-footer {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.contact-preview {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #777082;
+
+  font-size: 11px;
+}
+
+.contact-preview span:last-child {
+  max-width: 125px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   VIEW POST BUTTON
+   ========================================================= */
+
+.view-post-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 10px 14px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #6336c8;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.view-post-btn:hover {
+  background: #5125b1;
+
+  transform: translateX(2px);
+}
+
+.view-post-btn span {
+  font-size: 16px;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.teacher-posts-empty {
+  width: 100%;
+  max-width: 700px;
+
+  margin: 55px auto;
+
+  padding: 55px 30px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e9e1f5;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  text-align: center;
+
+  color: #6f687b;
+
+  box-shadow:
+    0 8px 25px rgba(77, 42, 135, 0.05);
+}
+
+.teacher-posts-empty p {
+  margin: 10px 0 0;
+}
+
+.empty-post-icon {
+  width: 64px;
+  height: 64px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background: #f3edff;
+
+  font-size: 28px;
+}
+
+.teacher-posts-empty h3 {
+  margin: 0;
+
+  color: #332b43;
+
+  font-size: 19px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+
+  margin: 0 auto;
+
+  border: 3px solid #e8def8;
+  border-top-color: #6336c8;
+
+  border-radius: 50%;
+
+  animation: teacherPostsSpin 0.8s linear infinite;
+}
+
+@keyframes teacherPostsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   VIEW POST MODAL
+   ========================================================= */
+
+.post-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background: rgba(28, 21, 43, 0.62);
+
+  backdrop-filter: blur(5px);
+}
+
+.post-modal {
+  width: min(680px, 100%);
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 25px 80px rgba(28, 18, 52, 0.28);
+
+  animation: modalAppear 0.2s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(15px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.post-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 25px 27px;
+
+  border-bottom: 1px solid #eee8f5;
+}
+
+.modal-title-area {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+.modal-subject-icon {
+  width: 51px;
+  height: 51px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #f3edff;
+
+  font-size: 23px;
+}
+
+.modal-title-area span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #8b8298;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.modal-title-area h2 {
+  margin: 0;
+
+  color: #29213b;
+
+  font-size: 23px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   MODAL CLOSE
+   ========================================================= */
+
+.modal-close-btn {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #f6f2fa;
+
+  color: #665d72;
+
+  font-size: 24px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: #eee6f8;
+
+  color: #3e334e;
+}
+
+
+/* =========================================================
+   MODAL BODY
+   ========================================================= */
+
+.post-modal-body {
+  padding: 25px 27px;
+}
+
+.modal-status-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 24px;
+}
+
+.modal-active-badge {
+  padding: 7px 11px;
+
+  border-radius: 8px;
+
+  background: #edf9f2;
+
+  color: #24834c;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.modal-mode-badge {
+  padding: 7px 11px;
+
+  border-radius: 8px;
+
+  background: #f1eafd;
+
+  color: #5d2bc3;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   MODAL SECTION
+   ========================================================= */
+
+.modal-section {
+  margin-bottom: 25px;
+}
+
+.modal-section h3 {
+  margin: 0 0 12px;
+
+  color: #332b43;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.modal-description {
+  margin: 0;
+
+  padding: 16px;
+
+  border-radius: 12px;
+
+  background: #faf8fd;
+
+  color: #625a6e;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   MODAL DETAILS
+   ========================================================= */
+
+.modal-details-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+}
+
+.modal-detail {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 13px;
+
+  border: 1px solid #eee8f5;
+
+  border-radius: 12px;
+}
+
+.modal-detail-icon {
+  width: 35px;
+  height: 35px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #f7f3fc;
+
+  font-size: 15px;
+}
+
+.modal-detail small {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #938b9e;
+
+  font-size: 10px;
+}
+
+.modal-detail strong {
+  display: block;
+
+  color: #393145;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   MODAL CONTACT
+   ========================================================= */
+
+.modal-contact-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 15px;
+
+  border: 1px solid #e4d8f5;
+
+  border-radius: 13px;
+
+  background: #f8f4ff;
+}
+
+.modal-contact-icon {
+  width: 39px;
+  height: 39px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  font-size: 17px;
+}
+
+.modal-contact-box small {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #887e95;
+
+  font-size: 10px;
+}
+
+.modal-contact-box strong {
+  color: #4d3b68;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+   ========================================================= */
+
+.post-modal-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 18px 27px;
+
+  border-top: 1px solid #eee8f5;
+}
+
+.modal-close-secondary,
+.modal-contact-btn {
+  padding: 11px 17px;
+
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.modal-close-secondary {
+  border: 1px solid #e2dbe9;
+
+  background: #ffffff;
+
+  color: #635b6e;
+}
+
+.modal-contact-btn {
+  border: 0;
+
+  background: #6336c8;
+
+  color: #ffffff;
+}
+
+.modal-contact-btn:hover {
+  background: #5125b1;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+  .teacher-posts-content {
+    padding: 120px 30px 50px;
+  }
+
+  .teacher-posts-grid {
+    grid-template-columns:
+      repeat(
+        auto-fill,
+        minmax(300px, 1fr)
+      );
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 820px) {
+
+  .teacher-posts-layout {
+    display: block;
+
+    min-height: 100vh;
+
+    /*
+      Mobile navbar height
+    */
+    padding-top: 64px;
+  }
+
+  .teacher-posts-content {
+    width: 100%;
+
+    padding: 30px 20px 45px;
+  }
+
+  .teacher-posts-header {
+    align-items: flex-start;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .teacher-posts-content {
+    padding: 28px 16px 40px;
+  }
+
+  .teacher-posts-header {
+    flex-direction: column;
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+  }
+
+  .posts-count-box {
+    min-width: 100px;
+  }
+
+  .teacher-posts-header h1 {
+    font-size: 28px;
+  }
+
+  .teacher-posts-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .teacher-post-card {
+    padding: 19px;
+  }
+
+  .post-info-grid {
+    gap: 12px 8px;
+  }
+
+  .post-card-footer {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .view-post-btn {
+    width: 100%;
+  }
+
+  .contact-preview {
+    justify-content: center;
+  }
+
+
+  /* Modal */
+
+  .post-modal-overlay {
+    padding: 12px;
+  }
+
+  .post-modal {
+    max-height: 94vh;
+
+    border-radius: 18px;
+  }
+
+  .post-modal-header,
+  .post-modal-body {
+    padding: 20px;
+  }
+
+  .post-modal-footer {
+    padding: 15px 20px;
+  }
+
+  .modal-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-title-area h2 {
+    font-size: 19px;
+  }
+
+  .post-modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-close-secondary,
+  .modal-contact-btn {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .teacher-posts-content {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .teacher-posts-header h1 {
+    font-size: 26px;
+  }
+
+  .teacher-post-card {
+    padding: 17px;
+  }
+}
