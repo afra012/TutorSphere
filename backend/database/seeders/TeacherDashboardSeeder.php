@@ -10,23 +10,21 @@ class TeacherDashboardSeeder extends Seeder
 {
     public function run(): void
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Subjects
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // Subjects
+        // ---------------------------------------------------------
 
         $subjects = [
+            'Accounting',
+            'Bangla',
+            'Biology',
+            'Chemistry',
+            'Computer Science',
+            'Economics',
+            'English',
+            'ICT',
             'Mathematics',
             'Physics',
-            'Chemistry',
-            'English',
-            'Biology',
-            'ICT',
-            'Computer Science',
-            'Bangla',
-            'Accounting',
-            'Economics',
         ];
 
         foreach ($subjects as $subject) {
@@ -35,19 +33,17 @@ class TeacherDashboardSeeder extends Seeder
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Languages
-        |--------------------------------------------------------------------------
-        */
+        // ---------------------------------------------------------
+        // Languages
+        // ---------------------------------------------------------
 
         $languages = [
-            'English',
-            'Bangla',
-            'Hindi',
             'Arabic',
-            'Spanish',
+            'Bangla',
+            'English',
             'French',
+            'Hindi',
+            'Spanish',
         ];
 
         foreach ($languages as $language) {
