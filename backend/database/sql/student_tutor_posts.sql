@@ -7,6 +7,8 @@ CREATE TABLE student_tutor_posts (
     contact_number VARCHAR(30) NOT NULL,
     tutoring_mode ENUM('online', 'in-person', 'both') NOT NULL,
     salary_amount DECIMAL(10,2) NOT NULL,
+    salary_min DECIMAL(10,2) NULL,
+    salary_max DECIMAL(10,2) NULL,
     salary_period ENUM('weekly', 'monthly') NOT NULL,
     description TEXT NOT NULL,
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
