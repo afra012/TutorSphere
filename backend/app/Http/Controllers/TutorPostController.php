@@ -26,7 +26,7 @@ class TutorPostController extends Controller
             ->join('users as u', 'u.id', '=', 'p.student_id')
             ->join('subjects as s', 's.id', '=', 'p.subject_id')
             ->leftJoin('student_profiles as sp', 'sp.user_id', '=', 'p.student_id')
-            ->where('p.status', 'active')
+            ->whereIn('p.status', ['active', 'accepted'])
             ->orderByDesc('p.created_at')
             ->select([
                 'p.*', 'u.name as student_name', 'u.email as student_email',
@@ -53,6 +53,18 @@ class TutorPostController extends Controller
     {
         $this->ensureCanView($request, $tutorPost);
         return response()->json(['post' => $tutorPost->load(['student.studentProfile', 'subject'])]);
+    }
+
+    public function accept(Request $request, TutorPost $tutorPost): JsonResponse
+    {
+        abort_unless($request->user()->role === 'teacher', 403, 'Only teachers can accept requests.');
+
+        $tutorPost->update(['status' => 'accepted']);
+
+        return response()->json([
+            'message' => 'Request accepted successfully.',
+            'post' => $tutorPost->fresh()->load(['student.studentProfile', 'subject']),
+        ]);
     }
 
     public function update(Request $request, TutorPost $tutorPost): JsonResponse
@@ -97,15 +109,27 @@ class TutorPostController extends Controller
 
     private function validatedData(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
             'location' => ['required', 'string', 'max:255'],
             'contact_number' => ['required', 'string', 'max:30'],
             'tutoring_mode' => ['required', Rule::in(['online', 'in-person', 'both'])],
-            'salary_amount' => ['required', 'numeric', 'min:0'],
+            'salary_amount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
+            'salary_min' => ['required_without:salary_amount', 'nullable', 'numeric', 'min:0', 'max:100000'],
+            'salary_max' => ['required_without:salary_amount', 'nullable', 'numeric', 'min:0', 'max:100000', 'gte:salary_min'],
             'salary_period' => ['required', Rule::in(['weekly', 'monthly'])],
             'description' => ['required', 'string', 'max:5000'],
-            'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+            'status' => ['sometimes', Rule::in(['active', 'inactive', 'accepted'])],
         ]);
+
+        if (!isset($validated['salary_min'], $validated['salary_max'])) {
+            $validated['salary_min'] = $validated['salary_amount'];
+            $validated['salary_max'] = $validated['salary_amount'];
+        }
+
+        // Keep the existing required column populated for older database rows and clients.
+        $validated['salary_amount'] = $validated['salary_max'];
+
+        return $validated;
     }
 }

@@ -6,6 +6,9 @@ import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 import "./StudentPosts.css";
 
 const API_URL = "http://127.0.0.1:8000/api";
+const SALARY_MIN = 0;
+const SALARY_MAX = 100000;
+const SALARY_STEP = 500;
 
 const getToken = () =>
   localStorage.getItem("token") ||
@@ -19,7 +22,8 @@ const initialForm = {
   location: "",
   contactNumber: "",
   tutoringMode: "",
-  salary: "",
+  salaryFrom: "",
+  salaryTo: "",
   salaryPeriod: "",
   description: "",
 };
@@ -88,9 +92,19 @@ export default function StudentPosts() {
         const response = await axios.get(`${API_URL}/tutor-posts`, {
           headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
         });
-        setPosts(Array.isArray(response.data?.posts) ? response.data.posts : []);
+        const loadedPosts = Array.isArray(response.data)
+          ? response.data
+          : response.data?.posts || response.data?.data || [];
+
+        setPosts(loadedPosts);
       } catch (error) {
         console.error("Failed to load posts:", error);
+
+        if (error.response?.status === 401) {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("currentUser");
+          navigate("/login", { replace: true });
+        }
       }
     };
 
@@ -117,7 +131,8 @@ export default function StudentPosts() {
         location: form.location,
         contact_number: `+880${form.contactNumber.replace(/^0/, "")}`,
         tutoring_mode: form.tutoringMode,
-        salary_amount: Number(form.salary),
+        salary_min: Number(form.salaryFrom),
+        salary_max: Number(form.salaryTo),
         salary_period: form.salaryPeriod,
         description: form.description,
       }, {
@@ -203,7 +218,15 @@ export default function StudentPosts() {
               <div className="post-field-content price-content">
                 <span className="post-label">Salary Offered <b>*</b></span>
                 <div className="price-inputs">
-                  <label><span>Salary Amount (BDT)</span><div className="money-input"><i>৳</i><input name="salary" value={form.salary} onChange={updateField} type="number" min="0" placeholder="Enter salary amount" required /></div></label>
+                  <label className="salary-range-field">
+                    <span>Salary Amount (BDT)</span>
+                    <div className="salary-from-to">
+                      <div className="money-input"><i>৳</i><input name="salaryFrom" value={form.salaryFrom} onChange={updateField} type="number" min={SALARY_MIN} max={SALARY_MAX} step={SALARY_STEP} placeholder="From" required /></div>
+                      <span className="salary-range-separator">to</span>
+                      <div className="money-input"><i>৳</i><input name="salaryTo" value={form.salaryTo} onChange={updateField} type="number" min={SALARY_MIN} max={SALARY_MAX} step={SALARY_STEP} placeholder="To" required /></div>
+                    </div>
+                    <span className="salary-range-limits"><span>৳{SALARY_MIN.toLocaleString("en-BD")}</span><span>৳{SALARY_MAX.toLocaleString("en-BD")}</span></span>
+                  </label>
                   <label><span>Payment Frequency</span><select name="salaryPeriod" value={form.salaryPeriod} onChange={updateField} required><option value="" disabled>Select frequency</option><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select></label>
                 </div>
               </div>
@@ -229,7 +252,7 @@ export default function StudentPosts() {
                       <strong>{post.subject?.subject_name || post.subject_name || "Subject not selected"}</strong>
                       <span>{post.location}</span>
                       <span>{(post.tutoring_mode || post.tutoringMode) === "in-person" ? "In-Person" : (post.tutoring_mode || post.tutoringMode)}</span>
-                      <span>৳{post.salary_amount || post.salary} / {post.salary_period || post.salaryPeriod}</span>
+                      <span>৳{post.salary_min ?? post.salary_amount ?? post.salary} - ৳{post.salary_max ?? post.salary_amount ?? post.salary} / {post.salary_period || post.salaryPeriod}</span>
                       <p>{post.description}</p>
                     </article>
                   ))}

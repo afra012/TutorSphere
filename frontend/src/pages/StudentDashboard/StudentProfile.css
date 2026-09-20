@@ -753,3 +753,15 @@
     align-items: flex-start;
   }
 }
+
+@media (min-width: 821px) {
+  .student-profile-content {
+    margin-left: 230px;
+  }
+}
+
+@media (max-width: 820px) {
+  .student-profile-content {
+    margin-left: 0;
+  }
+}

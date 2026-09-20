@@ -102,26 +102,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // =========================================================
 
     Route::get('/subjects', [
-        StudentProfileController::class,
+        TeacherProfileController::class,
         'subjects'
-    ]);
-
-    // =========================================================
-    // INNER JOIN
-    // =========================================================
-
-    Route::get('/student/profile/inner-join', [
-        StudentProfileController::class,
-        'innerJoin'
-    ]);
-
-    // =========================================================
-    // RIGHT JOIN
-    // =========================================================
-
-    Route::get('/student/profile/right-join', [
-        StudentProfileController::class,
-        'rightJoin'
     ]);
 
     // =========================================================
@@ -183,6 +165,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tutor-posts/{tutorPost}', [
         TutorPostController::class,
         'show'
+    ]);
+
+    Route::patch('/tutor-posts/{tutorPost}/accept', [
+        TutorPostController::class,
+        'accept'
     ]);
 
     Route::put('/tutor-posts/{tutorPost}', [

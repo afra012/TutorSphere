@@ -6,6 +6,28 @@ import "./TeacherProfile.css";
 const API_URL = "http://127.0.0.1:8000/api";
 const BACKEND_URL = "http://127.0.0.1:8000";
 
+const availabilityTimeOptions = {
+  Morning: ["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM"],
+  Afternoon: ["12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"],
+  Evening: ["6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"],
+  Night: ["10:00 PM", "11:00 PM", "12:00 AM"],
+  Flexible: ["Any Bangladesh Time"],
+};
+const getTimeOptions = (availability) =>
+  availabilityTimeOptions[availability] || [];
+
+const normalizeAvailability = (availability) => {
+  const value = availability?.toLowerCase() || "";
+
+  if (value.includes("morning")) return "Morning";
+  if (value.includes("afternoon")) return "Afternoon";
+  if (value.includes("evening")) return "Evening";
+  if (value.includes("night")) return "Night";
+  if (value.includes("flexible")) return "Flexible";
+
+  return "";
+};
+
 const getToken = () =>
   localStorage.getItem("token") ||
   localStorage.getItem("access_token") ||
@@ -130,12 +152,12 @@ export default function TeacherProfile() {
       path: "/teacher-dashboard",
     },
     {
-      label: "My Requests",
+      label: "Requests",
       icon: "requests",
       path: "/teacher-requests",
     },
     {
-      label: "My Reviews",
+      label: "Reviews",
       icon: "reviews",
       path: "/teacher-reviews",
     },
@@ -145,7 +167,7 @@ export default function TeacherProfile() {
       path: "/teacher-profile",
     },
     {
-      label: "View Posts",
+      label: "View Post",
       icon: "posts",
       path: "/teacher-posts",
     },
@@ -299,13 +321,19 @@ export default function TeacherProfile() {
 
           languages: profileLanguages,
 
-          availability:
-            profile.availability || "",
+          availability: normalizeAvailability(
+            profile.availability
+          ),
 
           tutoringMode,
 
-          timeZone:
-            profile.time_zone || "",
+          timeZone: getTimeOptions(
+            normalizeAvailability(profile.availability)
+          ).includes(profile.time_zone)
+            ? profile.time_zone
+            : getTimeOptions(
+                normalizeAvailability(profile.availability)
+              )[0] || "",
 
           online:
             tutoringMode === "Online",
@@ -352,13 +380,20 @@ export default function TeacherProfile() {
       checked,
     } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value,
-    }));
+    setFormData((prev) => {
+      if (name === "availability") {
+        return {
+          ...prev,
+          availability: value,
+          timeZone: getTimeOptions(value)[0] || "",
+        };
+      }
+
+      return {
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      };
+    });
 
     setShowSuccess(false);
     setShowError(false);
@@ -1027,25 +1062,18 @@ export default function TeacherProfile() {
                       Female
                     </option>
 
-                    <option value="Male">
-                      Male
-                    </option>
-
                     <option value="Other">
                       Other
                     </option>
+
                   </select>
                 </div>
 
               </div>
-            </div>
-          </section>
 
-          <div className="teacher-divider" />
+              <div className="teacher-divider" />
 
-          {/* Professional Information */}
-
-          <section className="teacher-form-section">
+              {/* Professional Information */}
 
             <h3>
               ▣ Professional Information
@@ -1188,6 +1216,7 @@ export default function TeacherProfile() {
               </div>
             </div>
 
+          </div>
           </section>
 
           <div className="teacher-divider" />
@@ -1292,16 +1321,20 @@ export default function TeacherProfile() {
                     Select availability
                   </option>
 
-                  <option value="Weekday Mornings">
-                    Weekday Mornings
+                  <option value="Morning">
+                    Morning
                   </option>
 
-                  <option value="Weekday Evenings">
-                    Weekday Evenings
+                  <option value="Afternoon">
+                    Afternoon
                   </option>
 
-                  <option value="Weekends">
-                    Weekends
+                  <option value="Evening">
+                    Evening
+                  </option>
+
+                  <option value="Night">
+                    Night
                   </option>
 
                   <option value="Flexible">
@@ -1311,33 +1344,29 @@ export default function TeacherProfile() {
               </div>
 
               <div className="teacher-field">
-                <label>Time Zone</label>
+                <label>Bangladesh Time</label>
 
                 <select
                   name="timeZone"
                   value={formData.timeZone}
                   onChange={handleChange}
                 >
-                  <option value="">
-                    Select time zone
-                  </option>
-
-                  <option value="CST">
-                    Central Time (US & Canada)
-                  </option>
-
-                  <option value="EST">
-                    Eastern Time (US & Canada)
-                  </option>
-
-                  <option value="PST">
-                    Pacific Time (US & Canada)
-                  </option>
-
-                  <option value="BST">
-                    Bangladesh Standard Time
-                  </option>
+                  {!formData.availability && (
+                    <option value="">
+                      Select availability first
+                    </option>
+                  )}
+                  {getTimeOptions(formData.availability).map((time) => (
+                    <option key={time} value={time}>
+                      {time} (Bangladesh Time)
+                    </option>
+                  ))}
                 </select>
+                <small className="teacher-timezone-note">
+                  {formData.availability
+                    ? `${formData.availability} · Bangladesh Time`
+                    : "Select availability first"}
+                </small>
               </div>
 
             </div>

@@ -17,7 +17,7 @@ class FindTutorController extends Controller
     //   subject      - subject name (partial match)
     //   subject_id   - exact subject id
     //   location     - location (partial match)
-    //   mode         - online | in_person | both
+    //   mode         - online | in-person | both
     //   min_price    - minimum hourly rate
     //   max_price    - maximum hourly rate
     //   per_page     - results per page (default 12, max 50)
@@ -33,7 +33,7 @@ class FindTutorController extends Controller
             'subject' => 'nullable|string|max:255',
             'subject_id' => 'nullable|integer|exists:subjects,id',
             'location' => 'nullable|string|max:255',
-            'mode' => 'nullable|string|in:online,in_person,both',
+            'mode' => 'nullable|string|in:online,in-person,both',
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|numeric|min:0',
             'per_page' => 'nullable|integer|min:1|max:50',
@@ -100,7 +100,7 @@ class FindTutorController extends Controller
         // FILTER: TUTORING MODE
         //
         // A teacher offering "both" should still show up when a
-        // student filters by online or in_person specifically.
+        // student filters by online or in-person specifically.
         // ---------------------------------------------------------
 
         if (!empty($validated['mode'])) {

@@ -40,7 +40,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
-            'role' => 'required|in:student,teacher',
+            'role' => 'required|in:student,teacher,admin',
         ]);
 
         $user = User::where('email', $validated['email'])

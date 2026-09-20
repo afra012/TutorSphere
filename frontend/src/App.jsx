@@ -275,6 +275,16 @@ function App() {
           }
         />
 
+        <Route
+          path="/teacher-posts"
+          element={
+            <>
+              <Navbar dashboardMode={true} role="teacher" />
+              <TeacherPosts />
+            </>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );

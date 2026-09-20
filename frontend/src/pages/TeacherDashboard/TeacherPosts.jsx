@@ -19,6 +19,7 @@ export default function TeacherPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [accepting, setAccepting] = useState(false);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -55,6 +56,36 @@ export default function TeacherPosts() {
 
   const closeModal = () => {
     setSelectedPost(null);
+  };
+
+  const acceptRequest = async () => {
+    if (!selectedPost) return;
+
+    try {
+      setAccepting(true);
+      const response = await axios.patch(
+        `${API_URL}/tutor-posts/${selectedPost.id}/accept`,
+        {},
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      const acceptedPost = response.data?.post || {
+        ...selectedPost,
+        status: "accepted",
+      };
+      setPosts((current) => current.map((post) =>
+        post.id === acceptedPost.id ? { ...post, ...acceptedPost } : post
+      ));
+      setSelectedPost(acceptedPost);
+    } catch (error) {
+      window.alert(error.response?.data?.message || "Request could not be accepted.");
+    } finally {
+      setAccepting(false);
+    }
   };
 
   return (
@@ -161,7 +192,7 @@ export default function TeacherPosts() {
                     <div>
                       <small>Budget</small>
                       <strong>
-                        BDT {post.salary_amount || "0"}
+                        BDT {post.salary_min ?? post.salary_amount ?? "0"} - {post.salary_max ?? post.salary_amount ?? "0"}
                       </strong>
                     </div>
                   </div>
@@ -317,7 +348,8 @@ export default function TeacherPosts() {
 
                       <strong>
                         BDT{" "}
-                        {selectedPost.salary_amount ||
+                        {selectedPost.salary_min ?? selectedPost.salary_amount ??
+                          "Not specified"} - {selectedPost.salary_max ?? selectedPost.salary_amount ??
                           "Not specified"}
                       </strong>
                     </div>
@@ -391,6 +423,17 @@ export default function TeacherPosts() {
 
                   if (phone) {
                     window.location.href = `tel:${phone}`;
+
+              {selectedPost.status !== "accepted" && (
+                <button
+                  type="button"
+                  className="modal-accept-btn"
+                  onClick={acceptRequest}
+                  disabled={accepting}
+                >
+                  {accepting ? "Accepting..." : "Accept Request"}
+                </button>
+              )}
                   }
                 }}
               >

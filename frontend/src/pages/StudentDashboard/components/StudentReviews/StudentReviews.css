@@ -25,12 +25,12 @@
 ========================================================= */
 
 .student-reviews-layout > .dashboard-sidebar {
-  position: relative !important;
+  position: fixed !important;
 
   top: auto !important;
-  left: auto !important;
+  left: 0 !important;
   right: auto !important;
-  bottom: auto !important;
+  bottom: 0 !important;
 
   width: 260px !important;
   min-width: 260px !important;
@@ -43,7 +43,7 @@
 
   box-sizing: border-box;
 
-  z-index: 5;
+  z-index: 20;
 }
 
 
@@ -930,5 +930,27 @@
 
   .review-actions button {
     width: 100%;
+  }
+}
+
+@media (min-width: 821px) {
+  .student-reviews-layout {
+    display: block;
+  }
+
+  .student-reviews-main {
+    margin-left: 230px;
+  }
+}
+
+@media (max-width: 820px) {
+  .student-reviews-layout > .dashboard-sidebar {
+    position: static !important;
+    left: auto !important;
+    bottom: auto !important;
+  }
+
+  .student-reviews-main {
+    margin-left: 0;
   }
 }

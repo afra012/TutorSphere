@@ -19,6 +19,8 @@ class TutorPost extends Model
         'contact_number',
         'tutoring_mode',
         'salary_amount',
+        'salary_min',
+        'salary_max',
         'salary_period',
         'description',
         'status',
@@ -28,6 +30,8 @@ class TutorPost extends Model
     {
         return [
             'salary_amount' => 'decimal:2',
+            'salary_min' => 'decimal:2',
+            'salary_max' => 'decimal:2',
         ];
     }
 
