@@ -33,6 +33,12 @@
   background: rgba(255, 255, 255, 0.8);
   border-right: 1px solid #ece5f7;
   padding: 25px 16px;
+  position: fixed;
+  top: 76px;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  overflow: hidden;
 }
 
 .teacher-sidebar-nav {
@@ -96,6 +102,7 @@
 .teacher-profile-content {
   flex: 1;
   min-width: 0;
+  margin-left: 220px;
   padding: 22px 30px 35px;
   background: linear-gradient(
     135deg,
@@ -505,6 +512,13 @@
   color: #d14c67;
 }
 
+.teacher-timezone-note {
+  display: block;
+  margin-top: 6px;
+  color: #756d86;
+  font-size: 10px;
+}
+
 /* =========================================================
    INPUT / SELECT / TEXTAREA
 ========================================================= */
@@ -765,6 +779,10 @@
     min-width: 100%;
     min-height: auto;
     flex-basis: auto;
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
     border-right: none;
     border-bottom: 1px solid #ece5f7;
     padding: 12px;
@@ -831,6 +849,12 @@
   .teacher-profile-success,
   .teacher-profile-error {
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 820px) {
+  .teacher-profile-content {
+    margin-left: 0;
   }
 }
 
