@@ -64,20 +64,16 @@ function TeacherDashboard() {
 
         try {
           const requestResponse = await axios.get(
-            "http://127.0.0.1:8000/api/requests",
+            "http://127.0.0.1:8000/api/tutor-posts",
             config
           );
 
           const requests = Array.isArray(requestResponse.data)
             ? requestResponse.data
-            : requestResponse.data?.data || [];
+            : requestResponse.data?.posts ||
+              requestResponse.data?.data || [];
 
-          const teacherRequests = requests.filter(
-            (request) =>
-              Number(request.teacher_id) === Number(currentUser.id)
-          );
-
-          setRequestCount(teacherRequests.length);
+          setRequestCount(requests.length);
         } catch (error) {
           console.error("Request fetch error:", error);
           setRequestCount(0);
@@ -132,7 +128,6 @@ function TeacherDashboard() {
             </p>
 
           </section>
-
 
           {/* =========================================
               DASHBOARD CARDS
