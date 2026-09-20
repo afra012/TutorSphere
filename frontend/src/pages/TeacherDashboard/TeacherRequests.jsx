@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import TeacherSidebar from "./components/TeacherSidebar";
 import "./TeacherRequests.css";
 
 const API_URL = "http://127.0.0.1:8000/api";
@@ -37,7 +38,7 @@ export default function TeacherRequests() {
     const fetchRequests = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/requests`,
+          `${API_URL}/tutor-posts`,
           {
             headers: {
               Accept: "application/json",
@@ -54,14 +55,9 @@ export default function TeacherRequests() {
 
         const allRequests = Array.isArray(data)
           ? data
-          : data.data || data.requests || [];
+          : data.posts || data.data || data.requests || [];
 
-        const teacherRequests = allRequests.filter(
-          (request) =>
-            Number(request.teacher_id) === Number(user.id)
-        );
-
-        setRequests(teacherRequests);
+        setRequests(allRequests);
       } catch (error) {
         console.error("Requests error:", error);
         setRequests([]);
@@ -74,25 +70,18 @@ export default function TeacherRequests() {
   }, [navigate]);
 
   return (
-    <div className="teacher-page">
-      <header className="teacher-page-header">
-        <button
-          type="button"
-          className="teacher-back-button"
-          onClick={() => navigate("/teacher-dashboard")}
-        >
-          ←
-        </button>
+    <div className="teacher-requests-layout">
+      <TeacherSidebar />
+      <main className="teacher-page">
+        <header className="teacher-page-header">
+          <div>
+            <p className="teacher-page-label">Student requests</p>
+            <h1>Requests</h1>
+            <p>Students looking for a teacher like you</p>
+          </div>
+        </header>
 
-        <div>
-          <h1>Requests</h1>
-          <p>
-            Student requests received by you
-          </p>
-        </div>
-      </header>
-
-      <main className="teacher-request-content">
+        <section className="teacher-request-content">
         {loading ? (
           <div className="teacher-empty-state">
             <h2>Loading requests...</h2>
@@ -118,15 +107,15 @@ export default function TeacherRequests() {
               >
                 <div>
                   <h2>
-                    {request.title ||
-                      request.subject ||
-                      "Student Request"}
+                    {request.subject_name || "Student Request"}
                   </h2>
 
+                  <strong className="teacher-request-student">
+                    Requested by {request.student_name || "Student"}
+                  </strong>
+
                   <p>
-                    {request.description ||
-                      request.request_text ||
-                      "No description available."}
+                    {request.description || "No description available."}
                   </p>
                 </div>
 
@@ -138,16 +127,15 @@ export default function TeacherRequests() {
                     </strong>
                   </span>
 
-                  {request.budget && (
-                    <span>
-                      Budget: {request.budget}
-                    </span>
-                  )}
+                  <span>Location: {request.location || "Not specified"}</span>
+                  <span>Budget: BDT {request.salary_min ?? request.salary_amount ?? "0"} - {request.salary_max ?? request.salary_amount ?? "0"}</span>
+                  <span>Schedule: {request.salary_period || "Flexible"}</span>
                 </div>
               </article>
             ))}
           </div>
         )}
+        </section>
       </main>
     </div>
   );
