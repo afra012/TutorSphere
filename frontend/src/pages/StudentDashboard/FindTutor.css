@@ -1,5 +1,7 @@
 .find-tutor-page { min-height: 100vh; padding-top: 76px; display: grid; grid-template-columns: 270px minmax(0, 1fr); background: linear-gradient(135deg, #fcfbff, #f6f1ff); color: #20193c; font-family: Arial, sans-serif; }
-.find-tutor-content { min-width: 0; padding: 32px 38px 48px; }
+.find-tutor-content { min-width: 0; padding: 32px 20px 48px; }
+@media (min-width: 821px) { .find-tutor-page { display: grid; } .find-tutor-content { grid-column: 2; margin-left: 0; } }
+@media (max-width: 820px) { .find-tutor-content { margin-left: 0; } }
 
 .find-tutor-heading h1 { margin: 0 0 6px; color: #24163f; font-size: 28px; line-height: 1.2; font-weight: 800; letter-spacing: -.5px; }
 .find-tutor-heading h1 span { color: #7332e6; }
