@@ -209,7 +209,7 @@ class StudentProfileController extends Controller
                 SET
                     name = ?,
                     email = ?,
-                    updated_at = NOW()
+                    updated_at = CURRENT_TIMESTAMP
 
                 WHERE id = ?
                 ",
@@ -300,7 +300,7 @@ class StudentProfileController extends Controller
                         class_grade = ?,
                         preferred_time = ?,
                         about_me = ?,
-                        updated_at = NOW()
+                        updated_at = CURRENT_TIMESTAMP
 
                     WHERE id = ?
                     ",
@@ -344,8 +344,8 @@ class StudentProfileController extends Controller
                     VALUES
                     (
                         ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                        NOW(),
-                        NOW()
+                        CURRENT_TIMESTAMP,
+                        CURRENT_TIMESTAMP
                     )
                     ",
                     [
