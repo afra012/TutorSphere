@@ -4,8 +4,7 @@
 
 .teacher-posts-layout {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  display: block;
   background: #faf8ff;
 }
 
@@ -17,6 +16,7 @@
 .teacher-posts-content {
   min-width: 0;
   width: 100%;
+  margin-left: 220px;
   box-sizing: border-box;
 
   /*
@@ -1057,4 +1057,21 @@
   .teacher-post-card {
     padding: 17px;
   }
+}
+
+@media (max-width: 820px) {
+  .teacher-posts-content {
+    margin-left: 0;
+  }
+}
+
+.modal-accept-btn {
+  border: 1px solid #24824d;
+  background: #2f9b5e;
+  color: #fff;
+}
+
+.modal-accept-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
