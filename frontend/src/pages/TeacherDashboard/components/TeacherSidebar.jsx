@@ -62,7 +62,7 @@ const items = [
   ["Dashboard", "dashboard", "/teacher-dashboard"],
   ["Requests", "requests", "/teacher-requests"],
   ["Reviews", "reviews", "/teacher-reviews"],
-  ["View Post", "post", "/teacher-post"],
+  ["View Post", "post", "/teacher-posts"],
   ["Profile", "profile", "/teacher-profile"],
 ];
 
