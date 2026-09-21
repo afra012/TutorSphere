@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
 import "./Navbar.css";
 
 import Login from "../../pages/Auth/Login/login";
@@ -9,7 +8,7 @@ import Register from "../../pages/Auth/Register/register";
 function Navbar({
   hideLinks = false,
   dashboardMode = false,
-  role = "student",
+  role = null,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -17,63 +16,146 @@ function Navbar({
 
   const navigate = useNavigate();
 
-  const currentRole =
-    role?.toLowerCase() === "teacher"
-      ? "Teacher"
-      : "Student";
+  let currentUser = null;
 
-  /* =========================================================
-     LOGIN SUCCESS
-  ========================================================= */
+  const savedUser = localStorage.getItem("currentUser");
+
+  if (savedUser) {
+    try {
+      currentUser = JSON.parse(savedUser);
+    } catch (error) {
+      currentUser = null;
+    }
+  }
+
+  const storedRole = localStorage.getItem("role");
+
+  let actualRole = "student";
+
+  if (currentUser?.role) {
+    actualRole = currentUser.role;
+  } else if (storedRole) {
+    actualRole = storedRole;
+  } else if (role) {
+    actualRole = role;
+  }
+
+  const normalizedRole = String(actualRole).toLowerCase();
+
+  let currentRole = "Student";
+
+  if (normalizedRole === "admin") {
+    currentRole = "Admin";
+  } else if (normalizedRole === "teacher") {
+    currentRole = "Teacher";
+  }
 
   const handleLoginSuccess = (user) => {
     setLoginOpen(false);
 
-    const userRole = user?.role?.toLowerCase();
+    if (!user) {
+      return;
+    }
 
-    if (userRole === "student") {
-      navigate("/student-dashboard");
+    const userRole = String(
+      user.role || "student"
+    ).toLowerCase();
+
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify({
+        ...user,
+        role: userRole,
+      })
+    );
+
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("role", userRole);
+
+    if (userRole === "admin") {
+      navigate("/admin-dashboard");
     } else if (userRole === "teacher") {
       navigate("/teacher-dashboard");
-    } else if (userRole === "admin") {
-      navigate("/admin-dashboard");
     } else {
       navigate("/student-dashboard");
     }
   };
 
-  /* =========================================================
-     REGISTER SUCCESS
-  ========================================================= */
-
-  const handleRegisterSuccess = (registeredRole) => {
+  const handleRegisterSuccess = (user) => {
     setRegisterOpen(false);
 
-    const userRole = registeredRole?.toLowerCase();
+    if (!user) {
+      return;
+    }
 
-    if (userRole === "student") {
-      navigate("/student-dashboard");
-    } else if (userRole === "teacher") {
+    const userRole = String(
+      user.role || "student"
+    ).toLowerCase();
+
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify({
+        ...user,
+        role: userRole,
+      })
+    );
+
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("role", userRole);
+
+    if (userRole === "teacher") {
       navigate("/teacher-dashboard");
     } else {
-      navigate("/");
+      navigate("/student-dashboard");
     }
   };
 
-  /* =========================================================
-     PROFILE CLICK
-  ========================================================= */
-
   const handleProfileClick = () => {
-    const userRole = role?.toLowerCase();
+    let user = null;
 
-    if (userRole === "teacher") {
+    const savedUser = localStorage.getItem(
+      "currentUser"
+    );
+
+    if (savedUser) {
+      try {
+        user = JSON.parse(savedUser);
+      } catch (error) {
+        user = null;
+      }
+    }
+
+    const savedRole = localStorage.getItem("role");
+
+    let profileRole = "student";
+
+    if (user?.role) {
+      profileRole = String(user.role).toLowerCase();
+    } else if (savedRole) {
+      profileRole = String(savedRole).toLowerCase();
+    }
+
+    if (profileRole === "admin") {
+      navigate("/admin-profile");
+    } else if (profileRole === "teacher") {
       navigate("/teacher-profile");
     } else {
       navigate("/student-profile");
     }
 
     setMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("role");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("pendingAdminEmail");
+
+    setMenuOpen(false);
+
+    navigate("/");
   };
 
   return (
@@ -86,11 +168,6 @@ function Navbar({
         }`}
       >
         <nav className="navbar">
-
-          {/* =================================================
-              LOGO
-          ================================================= */}
-
           <Link
             to="/"
             className="navbar-logo"
@@ -125,40 +202,30 @@ function Navbar({
             </div>
           </Link>
 
-          {/* =================================================
-              MOBILE MENU BUTTON
-          ================================================= */}
-
           <button
             type="button"
             className="menu-button"
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() =>
+              setMenuOpen(!menuOpen)
+            }
             aria-label="Open menu"
           >
             ☰
           </button>
-
-          {/* =================================================
-              NAVBAR CONTENT
-          ================================================= */}
 
           <div
             className={`navbar-content ${
               menuOpen ? "show" : ""
             }`}
           >
-
-            {/* =================================================
-                PUBLIC NAVIGATION
-            ================================================= */}
-
             {!hideLinks && !dashboardMode && (
               <div className="navbar-links">
-
                 <Link
                   to="/"
                   className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
                 >
                   Home
                 </Link>
@@ -166,7 +233,9 @@ function Navbar({
                 <Link
                   to="/about"
                   className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
                 >
                   About Us
                 </Link>
@@ -174,23 +243,17 @@ function Navbar({
                 <Link
                   to="/help"
                   className="nav-link"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
                 >
                   Help
                 </Link>
-
               </div>
             )}
 
-            {/* =================================================
-                DASHBOARD NAVBAR
-            ================================================= */}
-
             {dashboardMode ? (
               <div className="dashboard-account-actions">
-
-                {/* Notification */}
-
                 <button
                   type="button"
                   className="notification-button"
@@ -209,15 +272,17 @@ function Navbar({
                   <i></i>
                 </button>
 
-                {/* Profile */}
-
                 <button
                   type="button"
                   className="profile-button"
                   onClick={handleProfileClick}
                 >
                   <span className="profile-avatar">
-                    {currentRole.charAt(0)}
+                    {currentUser?.name
+                      ? currentUser.name
+                          .charAt(0)
+                          .toUpperCase()
+                      : currentRole.charAt(0)}
                   </span>
 
                   <span className="profile-name">
@@ -229,16 +294,9 @@ function Navbar({
                     ›
                   </span>
                 </button>
-
               </div>
             ) : (
-
-              /* =================================================
-                 LOGIN / REGISTER
-              ================================================= */
-
               <div className="navbar-buttons">
-
                 <button
                   type="button"
                   className="login-button"
@@ -262,17 +320,11 @@ function Navbar({
                 >
                   Register
                 </button>
-
               </div>
             )}
-
           </div>
         </nav>
       </header>
-
-      {/* =================================================
-          LOGIN MODAL
-      ================================================= */}
 
       {loginOpen && (
         <Login
@@ -285,18 +337,18 @@ function Navbar({
         />
       )}
 
-      {/* =================================================
-          REGISTER MODAL
-      ================================================= */}
-
       {registerOpen && (
         <Register
-          onClose={() => setRegisterOpen(false)}
+          onClose={() =>
+            setRegisterOpen(false)
+          }
           onLogin={() => {
             setRegisterOpen(false);
             setLoginOpen(true);
           }}
-          onRegisterSuccess={handleRegisterSuccess}
+          onRegisterSuccess={
+            handleRegisterSuccess
+          }
         />
       )}
     </>

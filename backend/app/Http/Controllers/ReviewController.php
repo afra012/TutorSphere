@@ -10,8 +10,11 @@ class ReviewController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Get All Reviews
+    | Public Reviews
     |--------------------------------------------------------------------------
+    |
+    | Only approved reviews are visible publicly.
+    |
     */
 
     public function index()
@@ -20,12 +23,48 @@ class ReviewController extends Controller
             'student:id,name,email,role',
             'teacher:id,name,email,role',
         ])
+            ->where('status', 'approved')
             ->latest()
             ->get();
 
         return response()->json($reviews);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Student Own Reviews
+    |--------------------------------------------------------------------------
+    |
+    | Student can see pending, approved and rejected reviews.
+    |
+    */
+
+    public function myReviews(Request $request)
+    {
+        $student = $request->user();
+
+        if (!$student) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+
+        if (strtolower($student->role) !== 'student') {
+            return response()->json([
+                'message' => 'Only students can access their reviews.'
+            ], 403);
+        }
+
+        $reviews = Review::with([
+            'student:id,name,email,role',
+            'teacher:id,name,email,role',
+        ])
+            ->where('student_id', $student->id)
+            ->latest()
+            ->get();
+
+        return response()->json($reviews);
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -41,14 +80,12 @@ class ReviewController extends Controller
                 'integer',
                 'exists:users,id',
             ],
-
             'rating' => [
                 'required',
                 'integer',
                 'min:1',
                 'max:5',
             ],
-
             'review_text' => [
                 'required',
                 'string',
@@ -56,97 +93,61 @@ class ReviewController extends Controller
             ],
         ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Logged-in User
-        |--------------------------------------------------------------------------
-        */
-
         $student = $request->user();
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only Student can submit review
-        |--------------------------------------------------------------------------
-        */
-
-        if ($student->role !== 'student') {
+        if (!$student) {
             return response()->json([
-                'message' =>
-                    'Only students can submit reviews.',
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+
+        if (strtolower($student->role) !== 'student') {
+            return response()->json([
+                'message' => 'Only students can submit reviews.'
             ], 403);
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Check Selected User
-        |--------------------------------------------------------------------------
-        */
-
-        $teacher = User::find(
-            $request->teacher_id
-        );
+        $teacher = User::find($request->teacher_id);
 
         if (!$teacher) {
             return response()->json([
-                'message' =>
-                    'Selected user does not exist.',
+                'message' => 'Selected user does not exist.'
             ], 422);
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Create Review
-        |--------------------------------------------------------------------------
-        */
+        if (strtolower($teacher->role) !== 'teacher') {
+            return response()->json([
+                'message' => 'You can only review a teacher.'
+            ], 422);
+        }
 
         $review = Review::create([
             'student_id' => $student->id,
-
             'teacher_id' => $teacher->id,
-
             'rating' => $request->rating,
-
-            'review_text' =>
-                $request->review_text,
+            'review_text' => $request->review_text,
+            'status' => 'pending',
         ]);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Load Relationships
-        |--------------------------------------------------------------------------
-        */
 
         $review->load([
             'student:id,name,email,role',
             'teacher:id,name,email,role',
         ]);
 
-
         return response()->json([
-            'message' =>
-                'Review created successfully',
-
+            'message' => 'Review submitted and is waiting for admin approval.',
             'review' => $review,
         ], 201);
     }
 
-
     /*
     |--------------------------------------------------------------------------
-    | Update Review
+    | Update Own Review
     |--------------------------------------------------------------------------
     */
 
-    public function update(
-        Request $request,
-        $id
-    ) {
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'rating' => [
                 'required',
@@ -154,7 +155,6 @@ class ReviewController extends Controller
                 'min:1',
                 'max:5',
             ],
-
             'review_text' => [
                 'required',
                 'string',
@@ -162,86 +162,59 @@ class ReviewController extends Controller
             ],
         ]);
 
-
         $review = Review::findOrFail($id);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only Owner Can Update
-        |--------------------------------------------------------------------------
-        */
-
         if (
-            $review->student_id !==
-            $request->user()->id
+            (int) $review->student_id !==
+            (int) $request->user()->id
         ) {
             return response()->json([
-                'message' =>
-                    'You can only update your own review.',
+                'message' => 'You can only update your own review.'
             ], 403);
         }
 
-
         $review->update([
             'rating' => $request->rating,
+            'review_text' => $request->review_text,
 
-            'review_text' =>
-                $request->review_text,
+            // Edited review must be approved again.
+            'status' => 'pending',
         ]);
-
 
         $review->load([
             'student:id,name,email,role',
             'teacher:id,name,email,role',
         ]);
 
-
         return response()->json([
-            'message' =>
-                'Review updated successfully',
-
+            'message' => 'Review updated and sent for approval.',
             'review' => $review,
         ]);
     }
 
-
     /*
     |--------------------------------------------------------------------------
-    | Delete Review
+    | Delete Own Review
     |--------------------------------------------------------------------------
     */
 
-    public function destroy(
-        Request $request,
-        $id
-    ) {
+    public function destroy(Request $request, $id)
+    {
         $review = Review::findOrFail($id);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only Owner Can Delete
-        |--------------------------------------------------------------------------
-        */
-
         if (
-            $review->student_id !==
-            $request->user()->id
+            (int) $review->student_id !==
+            (int) $request->user()->id
         ) {
             return response()->json([
-                'message' =>
-                    'You can only delete your own review.',
+                'message' => 'You can only delete your own review.'
             ], 403);
         }
 
-
         $review->delete();
 
-
         return response()->json([
-            'message' =>
-                'Review deleted successfully',
+            'message' => 'Review deleted successfully.'
         ]);
     }
 }
