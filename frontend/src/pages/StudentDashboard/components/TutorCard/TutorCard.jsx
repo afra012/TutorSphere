@@ -34,7 +34,14 @@ function formatMode(mode) {
   return mode;
 }
 
-export default function TutorCard({ tutor, isFavorite, onToggleFavorite, onViewProfile }) {
+export default function TutorCard({
+  tutor,
+  isFavorite,
+  onToggleFavorite,
+  onViewProfile,
+  onRequest,
+  requestState = "idle", // "idle" | "sending" | "requested"
+}) {
   if (!tutor) return null;
 
   const {
@@ -53,6 +60,15 @@ export default function TutorCard({ tutor, isFavorite, onToggleFavorite, onViewP
   } = tutor;
 
   const modeLabel = formatMode(mode);
+
+  const isSending = requestState === "sending";
+  const isRequested = requestState === "requested";
+
+  const requestLabel = isSending
+    ? "Sending…"
+    : isRequested
+    ? "Requested"
+    : "Request";
 
   return (
     <article className="tutor-card">
@@ -135,13 +151,25 @@ export default function TutorCard({ tutor, isFavorite, onToggleFavorite, onViewP
           {modeLabel && <span className="tutor-mode-badge">{modeLabel}</span>}
         </div>
 
-        <button
-          type="button"
-          className="tutor-view-profile"
-          onClick={() => onViewProfile?.(tutor)}
-        >
-          View Profile
-        </button>
+        <div className="tutor-card-actions">
+          <button
+            type="button"
+            className="tutor-view-profile"
+            onClick={() => onViewProfile?.(tutor)}
+          >
+            View Profile
+          </button>
+
+          <button
+            type="button"
+            className={`tutor-request-button ${isRequested ? "is-requested" : ""}`}
+            onClick={() => onRequest?.(tutor)}
+            disabled={isSending || isRequested}
+            title={isRequested ? "You already have an active request with this tutor" : undefined}
+          >
+            {requestLabel}
+          </button>
+        </div>
       </div>
     </article>
   );

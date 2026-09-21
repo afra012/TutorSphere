@@ -114,6 +114,57 @@ export default function FindTutor() {
   const [sortBy, setSortBy] = useState("recommended");
   const [favorites, setFavorites] = useState([]);
 
+  // Tracks per-tutor request UI state: "sending" while the request is
+  // in flight, "requested" once an active request exists (either just
+  // sent, or discovered on load / returned as a duplicate by the API).
+  const [requestStatusById, setRequestStatusById] = useState({});
+  const [toast, setToast] = useState(null); // { type: "success" | "error" | "info", message }
+
+  const showToast = (type, message) => {
+    setToast({ type, message });
+  };
+
+  useEffect(() => {
+    if (!toast) return undefined;
+    const timer = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  // Pre-load any requests the student already has, so tutors with an
+  // active request show "Requested" instead of "Request" right away.
+  const fetchMyRequests = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/tutoring-requests`,
+        getAuthConfig()
+      );
+
+      const existing = Array.isArray(response.data?.requests)
+        ? response.data.requests
+        : Array.isArray(response.data)
+        ? response.data
+        : [];
+
+      const activeTeacherIds = existing
+        .filter((r) => !r.status || !["cancelled", "rejected", "declined"].includes(String(r.status).toLowerCase()))
+        .map((r) => r.teacher_id ?? r.tutor_id);
+
+      if (activeTeacherIds.length) {
+        setRequestStatusById((current) => {
+          const next = { ...current };
+          activeTeacherIds.forEach((id) => {
+            next[id] = "requested";
+          });
+          return next;
+        });
+      }
+    } catch (err) {
+      // Non-fatal: if this endpoint isn't available yet, requests can
+      // still be sent — duplicates are still caught server-side.
+      console.error("Failed to load existing requests:", err);
+    }
+  };
+
   const fetchSubjects = async () => {
     try {
       const response = await axios.get(
@@ -161,6 +212,7 @@ export default function FindTutor() {
   useEffect(() => {
     fetchTutors();
     fetchSubjects();
+    fetchMyRequests();
   }, []);
 
   // Subject dropdown always shows the full subject list from the
@@ -229,6 +281,48 @@ export default function FindTutor() {
 
   const handleViewProfile = (tutor) => {
     navigate(`/tutor-profile/${tutor.id}`);
+  };
+
+  const handleRequest = async (tutor) => {
+    if (!tutor) return;
+
+    const currentStatus = requestStatusById[tutor.id];
+    // Guard against duplicate requests: block if one is already in
+    // flight or an active request already exists for this tutor.
+    if (currentStatus === "sending" || currentStatus === "requested") {
+      if (currentStatus === "requested") {
+        showToast("info", `You already have an active request with ${tutor.name || "this tutor"}.`);
+      }
+      return;
+    }
+
+    setRequestStatusById((current) => ({ ...current, [tutor.id]: "sending" }));
+
+    try {
+      await axios.post(
+        `${API_BASE_URL}/tutoring-requests`,
+        { teacher_id: tutor.id },
+        getAuthConfig()
+      );
+
+      setRequestStatusById((current) => ({ ...current, [tutor.id]: "requested" }));
+      showToast("success", `Request sent to ${tutor.name || "the tutor"}.`);
+    } catch (err) {
+      const status = err.response?.status;
+      const serverMessage = err.response?.data?.message;
+
+      if (status === 409 || /already/i.test(serverMessage || "")) {
+        // An active request already exists on the server — sync the UI
+        // instead of leaving the button in a broken "sending" state.
+        setRequestStatusById((current) => ({ ...current, [tutor.id]: "requested" }));
+        showToast("info", serverMessage || `You already have an active request with ${tutor.name || "this tutor"}.`);
+      } else {
+        setRequestStatusById((current) => ({ ...current, [tutor.id]: "idle" }));
+        showToast("error", serverMessage || "Could not send the request. Please try again.");
+      }
+
+      console.error("Failed to send tutoring request:", err);
+    }
   };
 
   return (
@@ -339,6 +433,12 @@ export default function FindTutor() {
           </label>
         </div>
 
+        {toast && (
+          <div className={`tutor-toast tutor-toast-${toast.type}`} role="status">
+            {toast.message}
+          </div>
+        )}
+
         {loading && (
           <div className="tutor-results-status">
             <p>Loading tutors…</p>
@@ -376,6 +476,8 @@ export default function FindTutor() {
                 isFavorite={favorites.includes(tutor.id)}
                 onToggleFavorite={toggleFavorite}
                 onViewProfile={handleViewProfile}
+                onRequest={handleRequest}
+                requestState={requestStatusById[tutor.id] || "idle"}
               />
             ))}
           </div>
