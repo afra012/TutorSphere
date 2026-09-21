@@ -9,6 +9,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\TeacherProfileController;
 use App\Http\Controllers\TutorPostController;
+use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +28,23 @@ Route::post('/login', [
     'login'
 ]);
 
+Route::get('/auth/google', [
+    GoogleAuthController::class,
+    'redirect'
+]);
+
+Route::get('/auth/google/callback', [
+    GoogleAuthController::class,
+    'callback'
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Public Reviews
 |--------------------------------------------------------------------------
+|
+| Only approved reviews should be returned by ReviewController@index().
+|
 */
 
 Route::get('/reviews', [
@@ -45,18 +60,22 @@ Route::get('/reviews', [
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // =========================================================
-    // AUTHENTICATION
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    */
 
     Route::post('/logout', [
         AuthController::class,
         'logout'
     ]);
 
-    // =========================================================
-    // CURRENT USER
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Current User
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/user', function (Request $request) {
         return response()->json(
@@ -64,9 +83,11 @@ Route::middleware('auth:sanctum')->group(function () {
         );
     });
 
-    // =========================================================
-    // USERS
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Users
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/users', function () {
         return response()->json([
@@ -78,9 +99,11 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
-    // =========================================================
-    // STUDENT PROFILE
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Student Profile
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/student/profile', [
         StudentProfileController::class,
@@ -97,18 +120,22 @@ Route::middleware('auth:sanctum')->group(function () {
         'update'
     ]);
 
-    // =========================================================
-    // STUDENT SUBJECTS
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Student Subjects
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/subjects', [
         TeacherProfileController::class,
         'subjects'
     ]);
 
-    // =========================================================
-    // TEACHER PROFILE
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Profile
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/teacher-profile', [
         TeacherProfileController::class,
@@ -120,37 +147,44 @@ Route::middleware('auth:sanctum')->group(function () {
         'update'
     ]);
 
-    // =========================================================
-    // TEACHER SUBJECTS
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Subjects
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/teacher-profile/subjects', [
         TeacherProfileController::class,
         'subjects'
     ]);
 
-    // =========================================================
-    // TEACHER LANGUAGES
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Languages
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/teacher-profile/languages', [
         TeacherProfileController::class,
         'languages'
     ]);
 
-    // =========================================================
-    // TEACHER PROFILE IMAGE
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Teacher Profile Image
+    |--------------------------------------------------------------------------
+    */
 
     Route::post('/teacher-profile/image', [
         TeacherProfileController::class,
         'uploadImage'
     ]);
 
-    // =========================================================
-    // TUTOR POSTS
-    // (students create/manage; teachers view active posts)
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Tutor Posts
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/tutor-posts', [
         TutorPostController::class,
@@ -182,9 +216,11 @@ Route::middleware('auth:sanctum')->group(function () {
         'destroy'
     ]);
 
-    // =========================================================
-    // FIND TUTOR (STUDENT)
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Find Tutor
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/find-tutor', [
         FindTutorController::class,
@@ -196,24 +232,105 @@ Route::middleware('auth:sanctum')->group(function () {
         'show'
     ]);
 
-    // =========================================================
-    // REVIEWS CRUD
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | Reviews
+    |--------------------------------------------------------------------------
+    */
 
+    // Student's own reviews
+    // Includes pending, approved and rejected reviews.
+    Route::get('/my-reviews', [
+        ReviewController::class,
+        'myReviews'
+    ]);
+
+    // Submit new review
     Route::post('/reviews', [
         ReviewController::class,
         'store'
     ]);
 
+    // Edit own review
     Route::put('/reviews/{id}', [
         ReviewController::class,
         'update'
     ]);
 
+    // Delete own review
     Route::delete('/reviews/{id}', [
         ReviewController::class,
         'destroy'
     ]);
-
 });
 
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+|
+| Only authenticated users with admin role can access these routes.
+|
+*/
+
+Route::middleware([
+    'auth:sanctum',
+    'admin'
+])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/dashboard', [
+        AdminController::class,
+        'dashboard'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Reviews
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/reviews', [
+        AdminController::class,
+        'reviews'
+    ]);
+
+    Route::put('/admin/reviews/{id}/approve', [
+        AdminController::class,
+        'approveReview'
+    ]);
+
+    Route::put('/admin/reviews/{id}/reject', [
+        AdminController::class,
+        'rejectReview'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Management
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/admin/add-admin', [
+        AdminController::class,
+        'addAdmin'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Middleware Test
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/test', function (Request $request) {
+        return response()->json([
+            'message' => 'Admin access successful.',
+            'user' => $request->user(),
+        ]);
+    });
+});
