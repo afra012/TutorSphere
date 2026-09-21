@@ -12,6 +12,7 @@ class Review extends Model
         'teacher_id',
         'rating',
         'review_text',
+        'status',
     ];
 
     public function student(): BelongsTo
