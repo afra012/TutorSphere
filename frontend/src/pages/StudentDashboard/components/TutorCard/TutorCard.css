@@ -29,12 +29,19 @@
 .tutor-price { margin: 0; color: #6a2fd6; font-size: 20px; font-weight: 800; }
 .tutor-price span { color: #928a9d; font-size: 12px; font-weight: 500; }
 .tutor-mode-badge { padding: 4px 12px; border-radius: 20px; background: #e6f8ef; color: #1f9d5c; font-size: 11px; font-weight: 700; }
+.tutor-card-actions { display: flex; align-items: center; gap: 8px; }
 .tutor-view-profile { height: 36px; padding: 0 20px; border: 1.5px solid #7332e6; border-radius: 8px; background: #fff; color: #6a2fd6; font: 700 12.5px Arial, sans-serif; cursor: pointer; transition: background .2s ease, color .2s ease; white-space: nowrap; }
 .tutor-view-profile:hover { background: #7332e6; color: #fff; }
+
+.tutor-request-button { height: 36px; padding: 0 18px; border: 1.5px solid #7332e6; border-radius: 8px; background: #7332e6; color: #fff; font: 700 12.5px Arial, sans-serif; cursor: pointer; transition: background .2s ease, border-color .2s ease, color .2s ease, opacity .2s ease; white-space: nowrap; }
+.tutor-request-button:hover:not(:disabled) { background: #5c25bd; border-color: #5c25bd; }
+.tutor-request-button:disabled { cursor: not-allowed; opacity: .75; }
+.tutor-request-button.is-requested { background: #e6f8ef; border-color: #b7e9cd; color: #1f9d5c; }
 
 @media (max-width: 720px) {
   .tutor-card { flex-direction: column; align-items: stretch; }
   .tutor-card-side { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; min-width: 0; }
   .tutor-favorite { position: static; }
   .tutor-price-block { margin-top: 0; text-align: left; justify-items: start; }
+  .tutor-card-actions { flex-wrap: wrap; }
 }
