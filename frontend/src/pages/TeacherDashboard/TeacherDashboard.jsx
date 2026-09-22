@@ -62,22 +62,10 @@ function TeacherDashboard() {
            REQUESTS
         ========================================= */
 
-        try {
-          const requestResponse = await axios.get(
-            "http://127.0.0.1:8000/api/tutor-posts",
-            config
-          );
+        // Student tutor posts are not direct teacher requests.
+        // Direct tutor requests will be connected later.
+        setRequestCount(0);
 
-          const requests = Array.isArray(requestResponse.data)
-            ? requestResponse.data
-            : requestResponse.data?.posts ||
-              requestResponse.data?.data || [];
-
-          setRequestCount(requests.length);
-        } catch (error) {
-          console.error("Request fetch error:", error);
-          setRequestCount(0);
-        }
       } catch (error) {
         console.error("Dashboard error:", error);
       } finally {
@@ -175,7 +163,6 @@ function TeacherDashboard() {
               </button>
 
             </div>
-
 
             {/* REVIEW CARD */}
 
