@@ -7,25 +7,11 @@ use Illuminate\Http\Request;
 
 class FindTutorController extends Controller
 {
-    // =========================================================
-    // LIST / SEARCH TUTORS
-    // =========================================================
-    //
-    // GET /api/find-tutor
-    //
-    // Optional query params:
-    //   subject      - subject name (partial match)
-    //   subject_id   - exact subject id
-    //   location     - location (partial match)
-    //   mode         - online | in-person | both
-    //   min_price    - minimum hourly rate
-    //   max_price    - maximum hourly rate
-    //   per_page     - results per page (default 12, max 50)
-    //
-    // Only returns users with role = teacher who have a saved
-    // teacher profile. No mock/hardcoded data - everything is
-    // pulled from users / teacher_profiles and related tables.
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | LIST / SEARCH TUTORS
+    |--------------------------------------------------------------------------
+    */
 
     public function index(Request $request)
     {
@@ -39,15 +25,6 @@ class FindTutorController extends Controller
             'per_page' => 'nullable|integer|min:1|max:50',
         ]);
 
-
-        // ---------------------------------------------------------
-        // BASE QUERY
-        //
-        // Only Teacher-role users that have already created/saved
-        // a teacher profile (whereHas = inner-join style filter,
-        // so students and teachers-without-profiles never appear).
-        // ---------------------------------------------------------
-
         $query = User::query()
             ->where('role', 'teacher')
             ->whereHas('teacherProfile')
@@ -59,98 +36,127 @@ class FindTutorController extends Controller
             ->withCount('reviews')
             ->select('id', 'name');
 
-
-        // ---------------------------------------------------------
-        // FILTER: SUBJECT
-        // ---------------------------------------------------------
+        /*
+        |--------------------------------------------------------------------------
+        | SUBJECT FILTER
+        |--------------------------------------------------------------------------
+        */
 
         if (!empty($validated['subject_id'])) {
-
             $subjectId = $validated['subject_id'];
 
-            $query->whereHas('teacherProfile.subjects', function ($q) use ($subjectId) {
-                $q->where('subjects.id', $subjectId);
-            });
-
+            $query->whereHas(
+                'teacherProfile.subjects',
+                function ($q) use ($subjectId) {
+                    $q->where('subjects.id', $subjectId);
+                }
+            );
         } elseif (!empty($validated['subject'])) {
-
             $subject = $validated['subject'];
 
-            $query->whereHas('teacherProfile.subjects', function ($q) use ($subject) {
-                $q->where('subjects.subject_name', 'like', '%' . $subject . '%');
-            });
+            $query->whereHas(
+                'teacherProfile.subjects',
+                function ($q) use ($subject) {
+                    $q->where(
+                        'subjects.subject_name',
+                        'like',
+                        '%' . $subject . '%'
+                    );
+                }
+            );
         }
 
-
-        // ---------------------------------------------------------
-        // FILTER: LOCATION
-        // ---------------------------------------------------------
+        /*
+        |--------------------------------------------------------------------------
+        | LOCATION FILTER
+        |--------------------------------------------------------------------------
+        */
 
         if (!empty($validated['location'])) {
-
             $location = $validated['location'];
 
-            $query->whereHas('teacherProfile', function ($q) use ($location) {
-                $q->where('location', 'like', '%' . $location . '%');
-            });
+            $query->whereHas(
+                'teacherProfile',
+                function ($q) use ($location) {
+                    $q->where(
+                        'location',
+                        'like',
+                        '%' . $location . '%'
+                    );
+                }
+            );
         }
 
-
-        // ---------------------------------------------------------
-        // FILTER: TUTORING MODE
-        //
-        // A teacher offering "both" should still show up when a
-        // student filters by online or in-person specifically.
-        // ---------------------------------------------------------
+        /*
+        |--------------------------------------------------------------------------
+        | TUTORING MODE FILTER
+        |--------------------------------------------------------------------------
+        */
 
         if (!empty($validated['mode'])) {
-
             $mode = $validated['mode'];
 
-            $query->whereHas('teacherProfile', function ($q) use ($mode) {
-                if ($mode === 'both') {
-                    $q->where('tutoring_mode', 'both');
-                } else {
-                    $q->whereIn('tutoring_mode', [$mode, 'both']);
+            $query->whereHas(
+                'teacherProfile',
+                function ($q) use ($mode) {
+                    if ($mode === 'both') {
+                        $q->where('tutoring_mode', 'both');
+                    } else {
+                        $q->whereIn(
+                            'tutoring_mode',
+                            [$mode, 'both']
+                        );
+                    }
                 }
-            });
+            );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | PRICE FILTER
+        |--------------------------------------------------------------------------
+        */
 
-        // ---------------------------------------------------------
-        // FILTER: PRICE RANGE
-        // ---------------------------------------------------------
-
-        if (isset($validated['min_price']) || isset($validated['max_price'])) {
-
+        if (
+            isset($validated['min_price']) ||
+            isset($validated['max_price'])
+        ) {
             $minPrice = $validated['min_price'] ?? null;
             $maxPrice = $validated['max_price'] ?? null;
 
-            $query->whereHas('teacherProfile', function ($q) use ($minPrice, $maxPrice) {
+            $query->whereHas(
+                'teacherProfile',
+                function ($q) use ($minPrice, $maxPrice) {
+                    if ($minPrice !== null) {
+                        $q->where(
+                            'hourly_rate',
+                            '>=',
+                            $minPrice
+                        );
+                    }
 
-                if ($minPrice !== null) {
-                    $q->where('hourly_rate', '>=', $minPrice);
+                    if ($maxPrice !== null) {
+                        $q->where(
+                            'hourly_rate',
+                            '<=',
+                            $maxPrice
+                        );
+                    }
                 }
-
-                if ($maxPrice !== null) {
-                    $q->where('hourly_rate', '<=', $maxPrice);
-                }
-            });
+            );
         }
 
-
-        // ---------------------------------------------------------
-        // PAGINATE
-        // ---------------------------------------------------------
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINATION
+        |--------------------------------------------------------------------------
+        */
 
         $perPage = $validated['per_page'] ?? 12;
 
-        $teachers = $query->orderBy('name')->paginate($perPage);
-
-
-        // ---------------------------------------------------------
-        // NO RESULT CASE
-        // ---------------------------------------------------------
+        $teachers = $query
+            ->orderBy('name')
+            ->paginate($perPage);
 
         if ($teachers->isEmpty()) {
             return response()->json([
@@ -165,13 +171,21 @@ class FindTutorController extends Controller
             ], 200);
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | FORMAT TUTORS
+        |--------------------------------------------------------------------------
+        */
 
-        // ---------------------------------------------------------
-        // FORMAT FOR TUTOR PROFILE CARDS
-        // ---------------------------------------------------------
-
-        $tutors = $teachers->getCollection()
-            ->map(fn ($teacher) => $this->formatTutorCard($teacher, $request))
+        $tutors = $teachers
+            ->getCollection()
+            ->map(
+                fn ($teacher) =>
+                    $this->formatTutorCard(
+                        $teacher,
+                        $request
+                    )
+            )
             ->values();
 
         return response()->json([
@@ -186,17 +200,11 @@ class FindTutorController extends Controller
         ], 200);
     }
 
-
-    // =========================================================
-    // SHOW A SINGLE TUTOR (for View Profile / Send Request)
-    // =========================================================
-    //
-    // GET /api/find-tutor/{id}
-    //
-    // {id} is the Teacher's user id (users.id), so the same id
-    // returned in the tutor cards can be reused directly here
-    // and by future features.
-    // =========================================================
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW SINGLE TUTOR
+    |--------------------------------------------------------------------------
+    */
 
     public function show(Request $request, $id)
     {
@@ -220,23 +228,24 @@ class FindTutorController extends Controller
 
         return response()->json([
             'message' => 'Tutor profile retrieved successfully.',
-            'tutor' => $this->formatTutorCard($teacher, $request),
+            'tutor' => $this->formatTutorCard(
+                $teacher,
+                $request
+            ),
         ], 200);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FORMAT TUTOR CARD
+    |--------------------------------------------------------------------------
+    */
 
-    // =========================================================
-    // FORMAT A TEACHER INTO A TUTOR PROFILE CARD SHAPE
-    // =========================================================
-
-    private function formatTutorCard(User $teacher, Request $request): array
-    {
+    private function formatTutorCard(
+        User $teacher,
+        Request $request
+    ): array {
         $profile = $teacher->teacherProfile;
-
-
-        // -------------------------------------------------------
-        // PROFILE PICTURE URL (same pattern as TeacherProfileController)
-        // -------------------------------------------------------
 
         $profilePictureUrl = null;
 
@@ -247,30 +256,69 @@ class FindTutorController extends Controller
                 . $profile->profile_image;
         }
 
-
-        // -------------------------------------------------------
-        // RATING
-        // -------------------------------------------------------
-
-        $rating = $teacher->reviews_avg_rating !== null
-            ? round((float) $teacher->reviews_avg_rating, 1)
-            : null;
+        $rating =
+            $teacher->reviews_avg_rating !== null
+                ? round(
+                    (float) $teacher->reviews_avg_rating,
+                    1
+                )
+                : null;
 
         return [
+            /*
+            users.id
+            Used for View Profile
+            */
             'teacher_id' => $teacher->id,
+
+            /*
+            teacher_profiles.id
+            Used for Tutor Request
+            */
+            'teacher_profile_id' => $profile->id,
+
             'name' => $teacher->name,
-            'profile_picture' => $profilePictureUrl,
-            'location' => $profile->location,
-            'subjects' => $profile->subjects->pluck('subject_name')->values(),
-            'qualification' => $profile->qualification,
-            'teaching_experience' => $profile->teaching_experience,
-            'tutoring_mode' => $profile->tutoring_mode,
-            'hourly_rate' => $profile->hourly_rate,
-            'availability' => $profile->availability,
-            'bio' => $profile->bio,
-            'languages' => $profile->languages->pluck('language_name')->values(),
+
+            'profile_picture' =>
+                $profilePictureUrl,
+
+            'location' =>
+                $profile->location,
+
+            'subjects' =>
+                $profile
+                    ->subjects
+                    ->pluck('subject_name')
+                    ->values(),
+
+            'qualification' =>
+                $profile->qualification,
+
+            'teaching_experience' =>
+                $profile->teaching_experience,
+
+            'tutoring_mode' =>
+                $profile->tutoring_mode,
+
+            'hourly_rate' =>
+                $profile->hourly_rate,
+
+            'availability' =>
+                $profile->availability,
+
+            'bio' =>
+                $profile->bio,
+
+            'languages' =>
+                $profile
+                    ->languages
+                    ->pluck('language_name')
+                    ->values(),
+
             'rating' => $rating,
-            'review_count' => $teacher->reviews_count,
+
+            'review_count' =>
+                $teacher->reviews_count,
         ];
     }
 }

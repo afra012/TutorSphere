@@ -248,8 +248,12 @@ body {
 }
 
 /* =========================================
-   NOTIFICATION
+   NOTIFICATION BELL
 ========================================= */
+
+.notification-wrapper {
+  position: relative;
+}
 
 .notification-button {
   position: relative;
@@ -282,20 +286,225 @@ body {
   height: 25px;
 }
 
-.notification-button i {
+/* =========================================
+   UNREAD COUNT
+========================================= */
+
+.notification-count {
   position: absolute;
 
-  top: 6px;
-  right: 5px;
+  top: -5px;
+  right: -6px;
 
-  width: 9px;
-  height: 9px;
+  min-width: 18px;
+  height: 18px;
+
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border: 2px solid #ffffff;
+  border-radius: 20px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  line-height: 1;
+}
+
+/* =========================================
+   NOTIFICATION DROPDOWN
+========================================= */
+
+.notification-dropdown {
+  position: absolute;
+
+  top: 50px;
+  right: 0;
+
+  width: 370px;
+
+  z-index: 9999;
+
+  border: 1px solid #e8def8;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 45px rgba(58, 31, 103, 0.18);
+
+  overflow: hidden;
+}
+
+/* =========================================
+   DROPDOWN HEADER
+========================================= */
+
+.notification-dropdown-header {
+  padding: 16px 18px;
+
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid #eee8f6;
+
+  background: #ffffff;
+}
+
+.notification-dropdown-header strong {
+  color: #251d39;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =========================================
+   DROPDOWN BODY
+========================================= */
+
+.notification-dropdown-body {
+  max-height: 360px;
+
+  overflow-y: auto;
+}
+
+/* =========================================
+   NOTIFICATION ITEM
+========================================= */
+
+.notification-item {
+  width: 100%;
+
+  padding: 15px 17px;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  border: none;
+  border-bottom: 1px solid #f0ebf7;
+
+  background: #ffffff;
+
+  text-align: left;
+
+  font-family: Arial, sans-serif;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background: #faf8ff;
+}
+
+/* =========================================
+   UNREAD NOTIFICATION
+========================================= */
+
+.notification-item.notification-unread {
+  background: #faf7ff;
+}
+
+.notification-item.notification-unread:hover {
+  background: #f6f0ff;
+}
+
+/* =========================================
+   NOTIFICATION ICON
+========================================= */
+
+.notification-item-icon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 50%;
 
-  background: #ef3f5c;
+  background: #eee5ff;
+  color: #6630dc;
+
+  font-size: 17px;
+}
+
+/* =========================================
+   NOTIFICATION TEXT
+========================================= */
+
+.notification-item-text {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.notification-item-text strong {
+  display: block;
+
+  color: #251c39;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.notification-item-text p {
+  margin: 4px 0 0;
+
+  color: #5f586b;
+
+  font-size: 13px;
+  line-height: 1.45;
+
+  word-break: break-word;
+}
+
+/* =========================================
+   NOTIFICATION TIME
+========================================= */
+
+.notification-item-bottom {
+  margin-top: 8px;
+
+  display: flex;
+  align-items: center;
+}
+
+.notification-item-bottom small {
+  color: #948ba0;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+}
+
+/* =========================================
+   EMPTY NOTIFICATION
+========================================= */
+
+.notification-empty {
+  padding: 32px 20px;
+
+  text-align: center;
+
+  color: #777080;
+
+  font-size: 13px;
 }
 
 /* =========================================
@@ -411,6 +620,7 @@ body {
 @media (max-width: 800px) {
   .menu-button {
     display: block;
+
     margin-left: auto;
   }
 
@@ -438,7 +648,8 @@ body {
 
     gap: 20px;
 
-    box-shadow: 0 8px 25px rgba(95, 40, 180, 0.15);
+    box-shadow:
+      0 8px 25px rgba(95, 40, 180, 0.15);
   }
 
   .navbar-links {
@@ -457,7 +668,7 @@ body {
     justify-content: center;
   }
 
-  /* Dashboard mobile */
+  /* DASHBOARD MOBILE */
 
   .dashboard-navbar-container .navbar {
     min-height: 68px;
@@ -508,6 +719,12 @@ body {
     width: 23px;
     height: 23px;
   }
+
+  .notification-dropdown {
+    right: -60px;
+
+    width: 330px;
+  }
 }
 
 /* =========================================
@@ -544,6 +761,7 @@ body {
   .login-button,
   .register-button {
     width: 100%;
+
     text-align: center;
   }
 
@@ -577,5 +795,11 @@ body {
   .notification-button {
     width: 37px;
     height: 37px;
+  }
+
+  .notification-dropdown {
+    width: 300px;
+
+    right: -75px;
   }
 }

@@ -5,87 +5,111 @@
   background: #faf9ff;
 }
 
+/* =========================
+   MAIN PAGE
+========================= */
+
 .teacher-page {
-  min-height: 100vh;
   flex: 1;
   min-width: 0;
+  min-height: calc(100vh - 76px);
+
   margin-left: 220px;
 
-  padding: 45px 60px;
+  padding: 38px 55px 32px;
 
-  background: linear-gradient(
-    135deg,
-    #fbf9ff 0%,
-    #f7f2ff 50%,
-    #eee5ff 100%
-  );
+  background:
+    radial-gradient(
+      circle at 92% 10%,
+      #eee5ff 0,
+      transparent 25%
+    ),
+    linear-gradient(
+      135deg,
+      #fbf9ff 0%,
+      #f7f2ff 55%,
+      #eee7ff 100%
+    );
 
   font-family: Arial, sans-serif;
 
   color: #201b31;
 }
 
-.teacher-page-label {
-  margin: 0 0 7px;
-  color: #6336c8;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.teacher-page-header {
-  max-width: 1050px;
-
-  margin: 0 auto 30px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 17px;
-}
-
-.teacher-back-button {
-  width: 42px;
-  height: 42px;
-
-  border: 1px solid #e7def5;
-
-  border-radius: 11px;
-
-  background: #fff;
-
-  color: #5722d5;
-
-  font-size: 22px;
-
-  cursor: pointer;
-}
-
-.teacher-page-header h1 {
-  margin: 0 0 6px;
-
-  font-size: 30px;
-
-  color: #17152b;
-}
-
-.teacher-page-header p {
-  margin: 0;
-
-  color: #6b6577;
-
-  font-size: 14px;
-}
-
-.teacher-request-content {
-  max-width: 1050px;
-
+.teacher-request-container {
+  width: 100%;
+  max-width: 1120px;
   margin: 0 auto;
 }
 
+/* =========================
+   HEADER
+========================= */
+
+.teacher-page-header {
+  margin-bottom: 28px;
+}
+
+.teacher-page-label {
+  margin: 0 0 6px;
+
+  color: #6933e5;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.teacher-page-header h1 {
+  margin: 0 0 7px;
+
+  color: #17132d;
+
+  font-size: 34px;
+  font-weight: 750;
+}
+
+.teacher-page-subtitle {
+  margin: 0;
+
+  color: #716a80;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* =========================
+   CONTENT BOX
+========================= */
+
+.teacher-request-content {
+  width: 100%;
+  min-height: 390px;
+
+  border: 1px solid #e6dcf7;
+
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  box-shadow:
+    0 18px 45px rgba(76, 42, 142, 0.08);
+
+  overflow: hidden;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
 .teacher-empty-state {
-  min-height: 300px;
+  position: relative;
+
+  min-height: 390px;
+
+  padding: 40px 25px;
 
   display: flex;
   flex-direction: column;
@@ -95,111 +119,437 @@
 
   text-align: center;
 
-  border: 1px solid #ebe4f5;
-
-  border-radius: 18px;
-
-  background: rgba(255, 255, 255, 0.8);
+  overflow: hidden;
 }
 
-.teacher-empty-icon {
-  width: 60px;
-  height: 60px;
+/* =========================
+   DECORATION
+========================= */
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.empty-circle {
+  position: absolute;
 
   border-radius: 50%;
 
-  background: #eee5ff;
+  background: rgba(224, 210, 255, 0.45);
 
-  color: #5b27d6;
-
-  font-size: 27px;
-
-  margin-bottom: 16px;
+  pointer-events: none;
 }
 
-.teacher-empty-state h2 {
-  margin: 0 0 8px;
+.top-circle {
+  width: 230px;
+  height: 230px;
 
-  color: #272239;
+  top: -130px;
+  right: -75px;
 
-  font-size: 21px;
+  border: 24px solid
+    rgba(211, 191, 255, 0.25);
+
+  background: transparent;
 }
 
-.teacher-empty-state p {
-  margin: 0;
+.bottom-circle {
+  width: 150px;
+  height: 150px;
 
-  color: #706a7c;
+  bottom: -85px;
+  left: -45px;
 
-  font-size: 14px;
+  background:
+    rgba(226, 213, 255, 0.45);
 }
 
-.teacher-request-list {
-  display: grid;
+/* =========================
+   ILLUSTRATION
+========================= */
 
-  gap: 16px;
+.request-illustration {
+  position: relative;
+
+  width: 230px;
+  height: 110px;
+
+  margin-bottom: 12px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
 }
 
-.teacher-request-card {
-  padding: 22px;
+.teacher-empty-icon {
+  position: relative;
+  z-index: 2;
 
-  border: 1px solid #ebe4f5;
+  width: 82px;
+  height: 82px;
 
-  border-radius: 16px;
+  display: flex;
 
-  background: rgba(255, 255, 255, 0.9);
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 24px;
+
+  color: #6b31e7;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f1e9ff 0%,
+      #e4d4ff 100%
+    );
 
   box-shadow:
-    0 8px 25px rgba(77, 42, 135, 0.06);
+    0 12px 30px
+      rgba(101, 50, 205, 0.16);
+}
+
+.teacher-empty-icon svg {
+  width: 38px;
+  height: 38px;
+}
+
+/* =========================
+   PAPER PLANE
+========================= */
+
+.paper-plane {
+  position: absolute;
+
+  right: 20px;
+  top: 23px;
+
+  color: #a078f0;
+
+  font-size: 31px;
+
+  transform: rotate(-20deg);
+}
+
+.paper-plane::before {
+  content: "";
+
+  position: absolute;
+
+  width: 75px;
+  height: 35px;
+
+  right: 24px;
+  top: 15px;
+
+  border-bottom:
+    2px dashed #d0b9fb;
+
+  border-radius: 50%;
+
+  transform: rotate(8deg);
+}
+
+/* =========================
+   EMPTY TEXT
+========================= */
+
+.teacher-empty-state h2 {
+  position: relative;
+  z-index: 2;
+
+  margin: 3px 0 9px;
+
+  color: #17132d;
+
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.teacher-empty-state > p {
+  position: relative;
+  z-index: 2;
+
+  margin: 0 0 20px;
+
+  color: #746d82;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* =========================
+   HELPER MESSAGE
+========================= */
+
+.request-helper {
+  position: relative;
+  z-index: 2;
+
+  padding: 10px 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border:
+    1px solid #eee5fc;
+
+  border-radius: 25px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #faf7ff,
+      #f1eaff
+    );
+
+  color: #6d6679;
+
+  font-size: 13px;
+}
+
+.request-helper span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #7134ed;
+
+  box-shadow:
+    0 0 0 4px
+      rgba(113, 52, 237, 0.08);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.request-footer-text {
+  margin: 26px 0 0;
+
+  text-align: center;
+
+  color: #80778e;
+
+  font-size: 14px;
+
+  letter-spacing: 0.3px;
+}
+
+/* =========================
+   REQUEST LIST
+========================= */
+
+.teacher-request-list {
+  padding: 25px;
+
+  display: grid;
+
+  gap: 18px;
+}
+
+/* =========================
+   REQUEST CARD
+========================= */
+
+.teacher-request-card {
+  padding: 23px 24px;
+
+  border:
+    1px solid #eae2f6;
+
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 9px 26px
+      rgba(70, 42, 120, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.teacher-request-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 32px
+      rgba(70, 42, 120, 0.11);
+}
+
+.request-card-top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 20px;
 }
 
 .teacher-request-card h2 {
-  margin: 0 0 8px;
+  margin: 0 0 7px;
 
-  color: #29243a;
+  color: #211a37;
 
-  font-size: 18px;
+  font-size: 20px;
+}
+
+.teacher-request-student {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #6832da;
+
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .teacher-request-card p {
   margin: 0;
 
-  color: #6d6778;
+  color: #716a7d;
 
   font-size: 14px;
 
   line-height: 1.6;
 }
 
+/* =========================
+   STATUS
+========================= */
+
+.request-status {
+  padding: 7px 13px;
+
+  border-radius: 20px;
+
+  background: #f1e9ff;
+
+  color: #6832da;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-transform: capitalize;
+}
+
+/* =========================
+   META
+========================= */
+
 .teacher-request-meta {
   margin-top: 18px;
 
-  padding-top: 14px;
+  padding-top: 15px;
 
-  border-top: 1px solid #eee8f5;
+  border-top:
+    1px solid #eee8f6;
 
   display: flex;
-  gap: 25px;
+
+  flex-wrap: wrap;
+
+  gap: 22px;
 
   color: #716a7d;
 
   font-size: 13px;
 }
 
-.teacher-request-meta strong {
-  color: #5a24d1;
+/* =========================
+   BUTTONS
+========================= */
+
+.request-actions {
+  margin-top: 20px;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 11px;
+}
+
+.request-actions button {
+  min-width: 90px;
+
+  padding: 10px 18px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.reject-btn {
+  border:
+    1px solid #7a42ec;
+
+  background: #ffffff;
+
+  color: #6b32dd;
+}
+
+.reject-btn:hover {
+  background: #f6f1ff;
+}
+
+.accept-btn {
+  border:
+    1px solid #6730d9;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7137eb,
+      #5b22d5
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 15px
+      rgba(100, 44, 215, 0.18);
+}
+
+.accept-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 820px) {
+  .teacher-page {
+    margin-left: 0;
+
+    padding: 30px 22px;
+  }
 }
 
 @media (max-width: 700px) {
+
   .teacher-page {
-    padding: 30px 17px;
+    padding: 25px 16px;
   }
 
   .teacher-page-header h1 {
-    font-size: 25px;
+    font-size: 28px;
+  }
+
+  .teacher-request-content,
+  .teacher-empty-state {
+    min-height: 350px;
   }
 
   .teacher-request-meta {
@@ -207,17 +557,20 @@
 
     gap: 7px;
   }
-}
 
-@media (max-width: 820px) {
-  .teacher-page {
-    margin-left: 0;
+  .request-card-top {
+    flex-direction: column;
   }
-}
 
-.teacher-request-student {
-  display: block;
-  margin: 0 0 10px;
-  color: #6336c8;
-  font-size: 13px;
+  .request-actions {
+    justify-content: stretch;
+  }
+
+  .request-actions button {
+    flex: 1;
+  }
+
+  .paper-plane {
+    right: 35px;
+  }
 }
