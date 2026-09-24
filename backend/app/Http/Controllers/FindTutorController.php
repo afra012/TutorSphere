@@ -20,6 +20,7 @@ class FindTutorController extends Controller
     //   mode         - online | in-person | both
     //   min_price    - minimum hourly rate
     //   max_price    - maximum hourly rate
+    //   gender       - Male | Female | Other
     //   per_page     - results per page (default 12, max 50)
     //
     // Only returns users with role = teacher who have a saved
@@ -36,6 +37,7 @@ class FindTutorController extends Controller
             'mode' => 'nullable|string|in:online,in-person,both',
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|numeric|min:0',
+            'gender' => 'nullable|string|max:20',
             'per_page' => 'nullable|integer|min:1|max:50',
         ]);
 
@@ -135,6 +137,20 @@ class FindTutorController extends Controller
                 if ($maxPrice !== null) {
                     $q->where('hourly_rate', '<=', $maxPrice);
                 }
+            });
+        }
+
+
+        // ---------------------------------------------------------
+        // FILTER: GENDER
+        // ---------------------------------------------------------
+
+        if (!empty($validated['gender'])) {
+
+            $gender = $validated['gender'];
+
+            $query->whereHas('teacherProfile', function ($q) use ($gender) {
+                $q->whereRaw('LOWER(gender) = ?', [strtolower($gender)]);
             });
         }
 
@@ -261,6 +277,7 @@ class FindTutorController extends Controller
             'name' => $teacher->name,
             'profile_picture' => $profilePictureUrl,
             'location' => $profile->location,
+            'gender' => $profile->gender,
             'subjects' => $profile->subjects->pluck('subject_name')->values(),
             'qualification' => $profile->qualification,
             'teaching_experience' => $profile->teaching_experience,
