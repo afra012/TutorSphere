@@ -8,10 +8,26 @@ export async function syncProfileAddress(address, token) {
       if (!response.ok) throw new Error("Address lookup failed.");
       return response.json();
     };
-    let points = await query(`${address.trim()}, Bangladesh`);
-    if (!points.length) points = await query(address.trim());
-    const point = points[0];
-    if (!point) return { ok: false, message: "Address could not be located. Add a specific area, city, and district to your profile address." };
+    const cleanAddress = address.trim().replace(/,?\s*Bangladesh\s*$/i, "");
+    const parts = cleanAddress.split(/[\n,]+/).map((part) => part.trim()).filter(Boolean);
+    const candidates = [
+      `${cleanAddress}, Bangladesh`,
+      parts.length > 1 ? `${parts.slice(1).join(", ")}, Bangladesh` : "",
+      parts.length > 2 ? `${parts.slice(-2).join(", ")}, Bangladesh` : "",
+    ].filter((candidate, index, all) => candidate && all.indexOf(candidate) === index);
+
+    let point = null;
+    let matchedQuery = "";
+    for (const [index, candidate] of candidates.entries()) {
+      if (index > 0) await new Promise((resolve) => setTimeout(resolve, 1100));
+      const points = await query(candidate);
+      if (points.length) {
+        point = points[0];
+        matchedQuery = candidate;
+        break;
+      }
+    }
+    if (!point) return { ok: false, message: "Could not find an area for this address. Add the area and city after your house/road details." };
 
     const headers = { Authorization: `Bearer ${token}`, Accept: "application/json" };
     const currentResponse = await fetch(`${API_URL}/locations/me`, { headers });
@@ -26,7 +42,7 @@ export async function syncProfileAddress(address, token) {
     });
     const savedData = await saveResponse.json();
     if (!saveResponse.ok) return { ok: false, message: savedData.message || "Address found, but the map pin could not be saved." };
-    return { ok: true };
+    return { ok: true, approximate: matchedQuery !== `${cleanAddress}, Bangladesh` };
   } catch (error) {
     console.error("Profile address map sync failed:", error);
     return { ok: false, message: "Could not connect to the map service. Your profile is saved; try again." };
