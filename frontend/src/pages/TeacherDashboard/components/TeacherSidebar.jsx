@@ -18,6 +18,13 @@ function Icon({ name }) {
       <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
     ),
 
+    location: (
+      <>
+        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+        <circle cx="12" cy="10" r="2.5" />
+      </>
+    ),
+
     profile: (
       <>
         <circle cx="12" cy="7" r="4" />
@@ -25,7 +32,6 @@ function Icon({ name }) {
       </>
     ),
 
-    // View Post icon
     post: (
       <>
         <path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5Z" />
@@ -63,6 +69,7 @@ const items = [
   ["Requests", "requests", "/teacher-requests"],
   ["Reviews", "reviews", "/teacher-reviews"],
   ["View Post", "post", "/teacher-posts"],
+  ["Location", "location", "/location"],
   ["Profile", "profile", "/teacher-profile"],
 ];
 
