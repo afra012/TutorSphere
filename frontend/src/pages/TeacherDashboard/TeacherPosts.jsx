@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import TeacherSidebar from "./components/TeacherSidebar";
 import "./TeacherPosts.css";
 
@@ -19,10 +20,17 @@ export default function TeacherPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [accepting, setAccepting] = useState(false);
+
+  // Keeps request status for each student post
+  // Example:
+  // {
+  //   1: "requested",
+  //   2: "requesting"
+  // }
+  const [requestStatusByPostId, setRequestStatusByPostId] = useState({});
 
   useEffect(() => {
-    const loadPosts = async () => {
+    const loadData = async () => {
       const token = getToken();
 
       if (!token) {
@@ -30,19 +38,71 @@ export default function TeacherPosts() {
         return;
       }
 
-      try {
-        const response = await axios.get(`${API_URL}/tutor-posts`, {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const config = {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-        setPosts(
-          Array.isArray(response.data?.posts)
-            ? response.data.posts
-            : []
+      try {
+        /*
+        |--------------------------------------------------------------------------
+        | Load Student Posts
+        |--------------------------------------------------------------------------
+        */
+
+        const postsResponse = await axios.get(
+          `${API_URL}/tutor-posts`,
+          config
         );
+
+        const loadedPosts = Array.isArray(postsResponse.data?.posts)
+          ? postsResponse.data.posts
+          : [];
+
+        setPosts(loadedPosts);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Load Teacher's Existing Requests
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+          const requestsResponse = await axios.get(
+            `${API_URL}/teacher/post-requests`,
+            config
+          );
+
+          const existingRequests = Array.isArray(
+            requestsResponse.data?.requests
+          )
+            ? requestsResponse.data.requests
+            : [];
+
+          const statusMap = {};
+
+          existingRequests.forEach((request) => {
+            /*
+             * pending or accepted means there is already
+             * an active request for this post.
+             */
+            if (
+              request.status === "pending" ||
+              request.status === "accepted"
+            ) {
+              statusMap[request.tutor_post_id] = "requested";
+            }
+          });
+
+          setRequestStatusByPostId(statusMap);
+        } catch (requestError) {
+          console.error(
+            "Failed to load teacher post requests:",
+            requestError
+          );
+        }
       } catch (error) {
         console.error("Failed to load student posts:", error);
         setPosts([]);
@@ -51,42 +111,145 @@ export default function TeacherPosts() {
       }
     };
 
-    loadPosts();
+    loadData();
   }, [navigate]);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Close Post Modal
+  |--------------------------------------------------------------------------
+  */
 
   const closeModal = () => {
     setSelectedPost(null);
   };
 
-  const acceptRequest = async () => {
-    if (!selectedPost) return;
+  /*
+  |--------------------------------------------------------------------------
+  | Teacher Sends Request to Student Post
+  |--------------------------------------------------------------------------
+  */
+
+  const sendRequest = async () => {
+    if (!selectedPost) {
+      return;
+    }
+
+    const postId = selectedPost.id;
+    const currentStatus = requestStatusByPostId[postId];
+
+    // Prevent repeated clicking from frontend
+    if (
+      currentStatus === "requesting" ||
+      currentStatus === "requested"
+    ) {
+      return;
+    }
+
+    const token = getToken();
+
+    if (!token) {
+      navigate("/login", { replace: true });
+      return;
+    }
 
     try {
-      setAccepting(true);
-      const response = await axios.patch(
-        `${API_URL}/tutor-posts/${selectedPost.id}/accept`,
-        {},
+      // Show Requesting... while API call is running
+      setRequestStatusByPostId((current) => ({
+        ...current,
+        [postId]: "requesting",
+      }));
+
+      const response = await axios.post(
+        `${API_URL}/teacher/post-requests`,
+        {
+          tutor_post_id: postId,
+        },
         {
           headers: {
             Accept: "application/json",
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      const acceptedPost = response.data?.post || {
-        ...selectedPost,
-        status: "accepted",
-      };
-      setPosts((current) => current.map((post) =>
-        post.id === acceptedPost.id ? { ...post, ...acceptedPost } : post
-      ));
-      setSelectedPost(acceptedPost);
+
+      /*
+       * Backend successfully created request.
+       * Change button to Requested.
+       */
+      if (
+        response.data?.request?.status === "pending" ||
+        response.data?.request?.status === "accepted"
+      ) {
+        setRequestStatusByPostId((current) => ({
+          ...current,
+          [postId]: "requested",
+        }));
+      } else {
+        setRequestStatusByPostId((current) => ({
+          ...current,
+          [postId]: "requested",
+        }));
+      }
+
+      window.alert(
+        response.data?.message || "Request sent successfully."
+      );
     } catch (error) {
-      window.alert(error.response?.data?.message || "Request could not be accepted.");
-    } finally {
-      setAccepting(false);
+      const status = error.response?.status;
+      const message = error.response?.data?.message;
+
+      /*
+       * Backend also prevents duplicate active requests.
+       *
+       * If backend says request already exists,
+       * frontend should still show Requested.
+       */
+      if (
+        status === 422 &&
+        message?.toLowerCase().includes("already")
+      ) {
+        setRequestStatusByPostId((current) => ({
+          ...current,
+          [postId]: "requested",
+        }));
+
+        window.alert(
+          message || "You already requested this student post."
+        );
+
+        return;
+      }
+
+      console.error("Failed to send request:", error);
+
+      // Allow teacher to try again after a real error
+      setRequestStatusByPostId((current) => ({
+        ...current,
+        [postId]: "idle",
+      }));
+
+      window.alert(
+        message || "Request could not be sent. Please try again."
+      );
     }
   };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Current Selected Post Request Status
+  |--------------------------------------------------------------------------
+  */
+
+  const selectedPostRequestStatus = selectedPost
+    ? requestStatusByPostId[selectedPost.id]
+    : null;
+
+  const isRequesting =
+    selectedPostRequestStatus === "requesting";
+
+  const isRequested =
+    selectedPostRequestStatus === "requested";
 
   return (
     <main className="teacher-posts-layout">
@@ -113,6 +276,7 @@ export default function TeacherPosts() {
           </div>
         </div>
 
+        {/* Loading */}
         {loading && (
           <div className="teacher-posts-empty">
             <div className="loading-spinner"></div>
@@ -120,6 +284,7 @@ export default function TeacherPosts() {
           </div>
         )}
 
+        {/* No Posts */}
         {!loading && posts.length === 0 && (
           <div className="teacher-posts-empty">
             <div className="empty-post-icon">📚</div>
@@ -132,109 +297,145 @@ export default function TeacherPosts() {
           </div>
         )}
 
+        {/* Student Post Cards */}
         {!loading && posts.length > 0 && (
           <div className="teacher-posts-grid">
-            {posts.map((post) => (
-              <article
-                className="teacher-post-card"
-                key={post.id}
-              >
-                <div className="post-card-top">
-                  <div className="post-subject-icon">
-                    📖
-                  </div>
+            {posts.map((post) => {
+              const postRequestStatus =
+                requestStatusByPostId[post.id];
 
-                  <span className="post-mode">
-                    {post.tutoring_mode || "Online"}
-                  </span>
-                </div>
-
-                <div className="post-card-content">
-                  <h2>
-                    {post.subject_name || "Subject not specified"}
-                  </h2>
-
-                  <p className="post-description">
-                    {post.description
-                      ? post.description.length > 120
-                        ? `${post.description.substring(0, 120)}...`
-                        : post.description
-                      : "No description provided."}
-                  </p>
-                </div>
-
-                <div className="post-info-grid">
-                  <div className="post-info-item">
-                    <span className="info-icon">👤</span>
-
-                    <div>
-                      <small>Student</small>
-                      <strong>
-                        {post.student_name || "Not available"}
-                      </strong>
+              return (
+                <article
+                  className="teacher-post-card"
+                  key={post.id}
+                >
+                  <div className="post-card-top">
+                    <div className="post-subject-icon">
+                      📖
                     </div>
-                  </div>
 
-                  <div className="post-info-item">
-                    <span className="info-icon">📍</span>
-
-                    <div>
-                      <small>Location</small>
-                      <strong>
-                        {post.location || "Not specified"}
-                      </strong>
-                    </div>
-                  </div>
-
-                  <div className="post-info-item">
-                    <span className="info-icon">💰</span>
-
-                    <div>
-                      <small>Budget</small>
-                      <strong>
-                        BDT {post.salary_min ?? post.salary_amount ?? "0"} - {post.salary_max ?? post.salary_amount ?? "0"}
-                      </strong>
-                    </div>
-                  </div>
-
-                  <div className="post-info-item">
-                    <span className="info-icon">🗓️</span>
-
-                    <div>
-                      <small>Payment</small>
-                      <strong>
-                        {post.salary_period || "Flexible"}
-                      </strong>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="post-card-footer">
-                  <div className="contact-preview">
-                    <span>📞</span>
-
-                    <span>
-                      {post.profile_phone ||
-                        post.contact_number ||
-                        "Contact unavailable"}
+                    <span className="post-mode">
+                      {post.tutoring_mode || "Online"}
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    className="view-post-btn"
-                    onClick={() => setSelectedPost(post)}
-                  >
-                    View Post
-                    <span>→</span>
-                  </button>
-                </div>
-              </article>
-            ))}
+                  <div className="post-card-content">
+                    <h2>
+                      {post.subject_name ||
+                        "Subject not specified"}
+                    </h2>
+
+                    <p className="post-description">
+                      {post.description
+                        ? post.description.length > 120
+                          ? `${post.description.substring(
+                              0,
+                              120
+                            )}...`
+                          : post.description
+                        : "No description provided."}
+                    </p>
+                  </div>
+
+                  <div className="post-info-grid">
+                    <div className="post-info-item">
+                      <span className="info-icon">👤</span>
+
+                      <div>
+                        <small>Student</small>
+
+                        <strong>
+                          {post.student_name ||
+                            "Not available"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="post-info-item">
+                      <span className="info-icon">📍</span>
+
+                      <div>
+                        <small>Location</small>
+
+                        <strong>
+                          {post.location ||
+                            "Not specified"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="post-info-item">
+                      <span className="info-icon">💰</span>
+
+                      <div>
+                        <small>Budget</small>
+
+                        <strong>
+                          BDT{" "}
+                          {post.salary_min ??
+                            post.salary_amount ??
+                            "0"}{" "}
+                          -{" "}
+                          {post.salary_max ??
+                            post.salary_amount ??
+                            "0"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="post-info-item">
+                      <span className="info-icon">🗓️</span>
+
+                      <div>
+                        <small>Payment</small>
+
+                        <strong>
+                          {post.salary_period ||
+                            "Flexible"}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="post-card-footer">
+                    <div className="contact-preview">
+                      {postRequestStatus === "requested" ? (
+                        <>
+                          <span>✓</span>
+                          <span>Requested</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>📞</span>
+
+                          <span>
+                            {post.profile_phone ||
+                              post.contact_number ||
+                              "Contact unavailable"}
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="view-post-btn"
+                      onClick={() =>
+                        setSelectedPost(post)
+                      }
+                    >
+                      View Post
+                      <span>→</span>
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
 
+      {/* Post Details Modal */}
       {selectedPost && (
         <div
           className="post-modal-overlay"
@@ -242,7 +443,9 @@ export default function TeacherPosts() {
         >
           <div
             className="post-modal"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
             <div className="post-modal-header">
               <div className="modal-title-area">
@@ -251,7 +454,9 @@ export default function TeacherPosts() {
                 </div>
 
                 <div>
-                  <span>Student Tutoring Request</span>
+                  <span>
+                    Student Tutoring Request
+                  </span>
 
                   <h2>
                     {selectedPost.subject_name ||
@@ -276,7 +481,8 @@ export default function TeacherPosts() {
                 </span>
 
                 <span className="modal-mode-badge">
-                  {selectedPost.tutoring_mode || "Online"}
+                  {selectedPost.tutoring_mode ||
+                    "Online"}
                 </span>
               </div>
 
@@ -348,8 +554,12 @@ export default function TeacherPosts() {
 
                       <strong>
                         BDT{" "}
-                        {selectedPost.salary_min ?? selectedPost.salary_amount ??
-                          "Not specified"} - {selectedPost.salary_max ?? selectedPost.salary_amount ??
+                        {selectedPost.salary_min ??
+                          selectedPost.salary_amount ??
+                          "Not specified"}{" "}
+                        -{" "}
+                        {selectedPost.salary_max ??
+                          selectedPost.salary_amount ??
                           "Not specified"}
                       </strong>
                     </div>
@@ -361,7 +571,9 @@ export default function TeacherPosts() {
                     </span>
 
                     <div>
-                      <small>Payment Period</small>
+                      <small>
+                        Payment Period
+                      </small>
 
                       <strong>
                         {selectedPost.salary_period ||
@@ -376,7 +588,9 @@ export default function TeacherPosts() {
                     </span>
 
                     <div>
-                      <small>Tutoring Mode</small>
+                      <small>
+                        Tutoring Mode
+                      </small>
 
                       <strong>
                         {selectedPost.tutoring_mode ||
@@ -416,28 +630,17 @@ export default function TeacherPosts() {
               <button
                 type="button"
                 className="modal-contact-btn"
-                onClick={() => {
-                  const phone =
-                    selectedPost.profile_phone ||
-                    selectedPost.contact_number;
-
-                  if (phone) {
-                    window.location.href = `tel:${phone}`;
-
-              {selectedPost.status !== "accepted" && (
-                <button
-                  type="button"
-                  className="modal-accept-btn"
-                  onClick={acceptRequest}
-                  disabled={accepting}
-                >
-                  {accepting ? "Accepting..." : "Accept Request"}
-                </button>
-              )}
-                  }
-                }}
+                onClick={sendRequest}
+                disabled={
+                  isRequesting ||
+                  isRequested
+                }
               >
-                📞 Contact Student
+                {isRequesting
+                  ? "Requesting..."
+                  : isRequested
+                  ? "✓ Requested"
+                  : "Request"}
               </button>
             </div>
           </div>
