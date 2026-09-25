@@ -8,7 +8,7 @@
 .find-tutor-heading p { margin: 0; color: #716985; font-size: 13.5px; }
 
 /* ===== Search bar ===== */
-.tutor-search-bar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; align-items: end; gap: 14px; margin-top: 24px; padding: 20px; background: #fff; border: 1px solid #eee9f5; border-radius: 14px; box-shadow: 0 4px 16px rgba(57, 26, 118, .06); }
+.tutor-search-bar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) auto; align-items: end; gap: 14px; margin-top: 24px; padding: 20px; background: #fff; border: 1px solid #eee9f5; border-radius: 14px; box-shadow: 0 4px 16px rgba(57, 26, 118, .06); }
 .tutor-search-field { min-width: 0; display: grid; gap: 8px; }
 .ft-label { color: #342c4f; font-size: 12px; font-weight: 700; }
 .ft-input-wrap { display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 12px; border: 1px solid #ddd8e6; border-radius: 8px; background: #fbfaff; transition: border-color .2s ease, box-shadow .2s ease; }
