@@ -1,28 +1,32 @@
 import { useEffect } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-
-/* =========================================================
-   NAVBAR
-========================================================= */
+// =========================================================
+// NAVBAR
+// =========================================================
 import Navbar from "./components/Navbar/Navbar";
 
-/* =========================================================
-   PUBLIC
-========================================================= */
+// =========================================================
+// PUBLIC
+// =========================================================
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import Help from "./pages/Help/Help";
 
-/* =========================================================
-   AUTH
-========================================================= */
+// =========================================================
+// AUTH
+// =========================================================
 import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
-/* =========================================================
-   STUDENT
-========================================================= */
+// =========================================================
+// STUDENT
+// =========================================================
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import StudentReviews from "./pages/StudentDashboard/components/StudentReviews/StudentReviews";
@@ -30,27 +34,31 @@ import StudentPosts from "./pages/StudentDashboard/StudentPosts";
 import FindTutor from "./pages/StudentDashboard/FindTutor";
 import TutorProfile from "./pages/StudentDashboard/TutorProfile";
 
-/* =========================================================
-   TEACHER
-========================================================= */
+// =========================================================
+// TEACHER
+// =========================================================
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
 import TeacherRequests from "./pages/TeacherDashboard/TeacherRequests";
 import TeacherReviews from "./pages/TeacherDashboard/TeacherReviews";
 import TeacherPosts from "./pages/TeacherDashboard/TeacherPosts";
 
-/* =========================================================
-   ADMIN
-========================================================= */
+// =========================================================
+// ADMIN
+// =========================================================
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import AdminProfile from "./pages/AdminDashboard/AdminProfile";
 import AdminReviews from "./pages/AdminDashboard/AdminReviews";
 import AdminManagement from "./pages/AdminDashboard/AdminManagement";
 
-/* =========================================================
-   HOME PAGE
-========================================================= */
+// =========================================================
+// LOCATION
+// =========================================================
+import Location from "./pages/Location/Location";
 
+// =========================================================
+// HOME PAGE
+// =========================================================
 function HomePage() {
   const navigate = useNavigate();
 
@@ -62,12 +70,12 @@ function HomePage() {
       const googleEmail = params.get("google_email");
       const googleError = params.get("google_error");
 
-      const pendingAdminEmail = localStorage.getItem("pendingAdminEmail");
+      const pendingAdminEmail =
+        localStorage.getItem("pendingAdminEmail");
 
-      /* =====================================================
-         GOOGLE ERROR
-      ===================================================== */
-
+      // =====================================================
+      // GOOGLE ERROR
+      // =====================================================
       if (googleError) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("currentUser");
@@ -78,30 +86,28 @@ function HomePage() {
         window.history.replaceState(
           {},
           document.title,
-          "/login?google_error=" + googleError,
+          "/login?google_error=" + googleError
         );
 
         navigate("/login?google_error=" + googleError);
-
         return;
       }
 
-      /* =====================================================
-         NO GOOGLE TOKEN
-      ===================================================== */
-
+      // =====================================================
+      // NO GOOGLE TOKEN
+      // =====================================================
       if (!googleToken) {
         return;
       }
 
-      /* =====================================================
-         GOOGLE EMAIL MATCH
-      ===================================================== */
-
+      // =====================================================
+      // GOOGLE EMAIL MATCH
+      // =====================================================
       if (
         !googleEmail ||
         !pendingAdminEmail ||
-        googleEmail.toLowerCase() !== pendingAdminEmail.toLowerCase()
+        googleEmail.toLowerCase() !==
+          pendingAdminEmail.toLowerCase()
       ) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("currentUser");
@@ -112,26 +118,27 @@ function HomePage() {
         window.history.replaceState(
           {},
           document.title,
-          "/login?google_error=email_mismatch",
+          "/login?google_error=email_mismatch"
         );
 
         navigate("/login?google_error=email_mismatch");
-
         return;
       }
 
-      /* =====================================================
-         VERIFY USER
-      ===================================================== */
-
+      // =====================================================
+      // VERIFY USER
+      // =====================================================
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${googleToken}`,
-            Accept: "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/user",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${googleToken}`,
+              Accept: "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to get user.");
@@ -139,38 +146,38 @@ function HomePage() {
 
         const user = await response.json();
 
-        /* ===================================================
-           ONLY ADMIN
-        =================================================== */
-
+        // ===================================================
+        // ONLY ADMIN
+        // ===================================================
         if (user?.role?.toLowerCase() !== "admin") {
           throw new Error("Admin access required.");
         }
 
-        /* ===================================================
-           SAVE LOGIN
-        =================================================== */
-
+        // ===================================================
+        // SAVE LOGIN
+        // ===================================================
         localStorage.setItem("authToken", googleToken);
-
-        localStorage.setItem("currentUser", JSON.stringify(user));
-
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify(user)
+        );
         localStorage.setItem("isLoggedIn", "true");
-
         localStorage.setItem("role", "admin");
 
         localStorage.removeItem("pendingAdminEmail");
 
-        /* ===================================================
-           REMOVE QUERY STRING
-        =================================================== */
+        // ===================================================
+        // REMOVE QUERY STRING
+        // ===================================================
+        window.history.replaceState(
+          {},
+          document.title,
+          "/"
+        );
 
-        window.history.replaceState({}, document.title, "/");
-
-        /* ===================================================
-           ADMIN DASHBOARD
-        =================================================== */
-
+        // ===================================================
+        // ADMIN DASHBOARD
+        // ===================================================
         navigate("/admin-dashboard");
       } catch (error) {
         console.error("Google login error:", error);
@@ -184,7 +191,7 @@ function HomePage() {
         window.history.replaceState(
           {},
           document.title,
-          "/login?google_error=login_failed",
+          "/login?google_error=login_failed"
         );
 
         navigate("/login?google_error=login_failed");
@@ -202,10 +209,9 @@ function HomePage() {
   );
 }
 
-/* =========================================================
-   LOGIN PAGE
-========================================================= */
-
+// =========================================================
+// LOGIN PAGE
+// =========================================================
 function HomeWithLogin() {
   const navigate = useNavigate();
 
@@ -235,10 +241,9 @@ function HomeWithLogin() {
   );
 }
 
-/* =========================================================
-   REGISTER
-========================================================= */
-
+// =========================================================
+// REGISTER
+// =========================================================
 function HomeWithRegister() {
   const navigate = useNavigate();
 
@@ -255,19 +260,22 @@ function HomeWithRegister() {
   );
 }
 
-/* =========================================================
-   APP
-========================================================= */
-
+// =========================================================
+// APP
+// =========================================================
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* =================================================
             PUBLIC
         ================================================= */}
 
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
 
         <Route
           path="/about"
@@ -293,9 +301,15 @@ function App() {
             AUTH
         ================================================= */}
 
-        <Route path="/login" element={<HomeWithLogin />} />
+        <Route
+          path="/login"
+          element={<HomeWithLogin />}
+        />
 
-        <Route path="/register" element={<HomeWithRegister />} />
+        <Route
+          path="/register"
+          element={<HomeWithRegister />}
+        />
 
         {/* =================================================
             STUDENT
@@ -305,7 +319,10 @@ function App() {
           path="/student-dashboard"
           element={
             <>
-              <Navbar dashboardMode={true} role="student" />
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
               <StudentDashboard />
             </>
           }
@@ -315,7 +332,10 @@ function App() {
           path="/student-profile"
           element={
             <>
-              <Navbar dashboardMode={true} role="student" />
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
               <StudentProfile />
             </>
           }
@@ -325,7 +345,10 @@ function App() {
           path="/student-reviews"
           element={
             <>
-              <Navbar dashboardMode={true} role="student" />
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
               <StudentReviews />
             </>
           }
@@ -335,7 +358,10 @@ function App() {
           path="/my-post"
           element={
             <>
-              <Navbar dashboardMode={true} role="student" />
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
               <StudentPosts />
             </>
           }
@@ -345,7 +371,10 @@ function App() {
           path="/find-tutor"
           element={
             <>
-              <Navbar dashboardMode={true} role="student" />
+              <Navbar
+                dashboardMode={true}
+                role="student"
+              />
               <FindTutor />
             </>
           }
@@ -369,7 +398,10 @@ function App() {
           path="/teacher-dashboard"
           element={
             <>
-              <Navbar dashboardMode={true} role="teacher" />
+              <Navbar
+                dashboardMode={true}
+                role="teacher"
+              />
               <TeacherDashboard />
             </>
           }
@@ -379,7 +411,10 @@ function App() {
           path="/teacher-profile"
           element={
             <>
-              <Navbar dashboardMode={true} role="teacher" />
+              <Navbar
+                dashboardMode={true}
+                role="teacher"
+              />
               <TeacherProfile />
             </>
           }
@@ -389,7 +424,10 @@ function App() {
           path="/teacher-requests"
           element={
             <>
-              <Navbar dashboardMode={true} role="teacher" />
+              <Navbar
+                dashboardMode={true}
+                role="teacher"
+              />
               <TeacherRequests />
             </>
           }
@@ -399,7 +437,10 @@ function App() {
           path="/teacher-reviews"
           element={
             <>
-              <Navbar dashboardMode={true} role="teacher" />
+              <Navbar
+                dashboardMode={true}
+                role="teacher"
+              />
               <TeacherReviews />
             </>
           }
@@ -409,7 +450,10 @@ function App() {
           path="/teacher-posts"
           element={
             <>
-              <Navbar dashboardMode={true} role="teacher" />
+              <Navbar
+                dashboardMode={true}
+                role="teacher"
+              />
               <TeacherPosts />
             </>
           }
@@ -423,7 +467,10 @@ function App() {
           path="/admin-dashboard"
           element={
             <>
-              <Navbar dashboardMode={true} role="admin" />
+              <Navbar
+                dashboardMode={true}
+                role="admin"
+              />
               <AdminDashboard />
             </>
           }
@@ -437,17 +484,27 @@ function App() {
           path="/admin-reviews"
           element={
             <>
-              <Navbar dashboardMode={true} role="admin" />
+              <Navbar
+                dashboardMode={true}
+                role="admin"
+              />
               <AdminReviews />
             </>
           }
         />
 
+        {/* =================================================
+            ADMIN MANAGEMENT
+        ================================================= */}
+
         <Route
           path="/admin-management"
           element={
             <>
-              <Navbar dashboardMode={true} role="admin" />
+              <Navbar
+                dashboardMode={true}
+                role="admin"
+              />
               <AdminManagement />
             </>
           }
@@ -461,11 +518,31 @@ function App() {
           path="/admin-profile"
           element={
             <>
-              <Navbar dashboardMode={true} role="admin" />
+              <Navbar
+                dashboardMode={true}
+                role="admin"
+              />
               <AdminProfile />
             </>
           }
         />
+
+        {/* =================================================
+            LOCATION
+        ================================================= */}
+
+        <Route
+          path="/location"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+              />
+              <Location />
+            </>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
