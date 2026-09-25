@@ -11,6 +11,7 @@ use App\Http\Controllers\TeacherProfileController;
 use App\Http\Controllers\TutorPostController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -262,6 +263,36 @@ Route::middleware('auth:sanctum')->group(function () {
         ReviewController::class,
         'destroy'
     ]);
+
+// ---------------------------------------------------------
+// Locations
+// ---------------------------------------------------------
+
+Route::get('/locations', [
+    LocationController::class,
+    'index'
+]);
+
+Route::get('/locations/me', [
+    LocationController::class,
+    'me'
+]);
+
+Route::post('/locations', [
+    LocationController::class,
+    'store'
+]);
+
+Route::put('/locations/{id}', [
+    LocationController::class,
+    'update'
+]);
+
+Route::delete('/locations/{id}', [
+    LocationController::class,
+    'destroy'
+]);
+
 });
 
 /*
@@ -334,3 +365,4 @@ Route::middleware([
         ]);
     });
 });
+
