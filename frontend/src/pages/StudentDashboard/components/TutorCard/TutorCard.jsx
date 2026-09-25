@@ -2,12 +2,50 @@ import "./TutorCard.css";
 
 function TutorIcon({ name }) {
   const paths = {
-    location: <path d="M12 21s7-5.1 7-12a7 7 0 1 0-14 0c0 6.9 7 12 7 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />,
-    star: <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />,
-    badge: <><circle cx="12" cy="12" r="9" /><path d="m9 12 2 2 4-4" /></>,
-    experience: <><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></>,
-    heart: <path d="M12 20.5s-7.5-4.6-9.8-9.1C.6 8 2 4.5 5.4 3.7c2-.5 3.9.3 5.1 1.9a5 5 0 0 1 1.5-1.9c1.7-1.2 4-.9 5.6.4 2.4 2 2.3 5.4.5 8.4-2.3 3.9-6.1 6-6.1 8Z" />,
-    person: <><circle cx="12" cy="8" r="4" /><path d="M4 21c.8-4.2 3.5-6 8-6s7.2 1.8 8 6" /></>,
+    location: (
+      <path d="M12 21s7-5.1 7-12a7 7 0 1 0-14 0c0 6.9 7 12 7 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+    ),
+
+    star: (
+      <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
+    ),
+
+    badge: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="m9 12 2 2 4-4" />
+      </>
+    ),
+
+    experience: (
+      <>
+        <rect
+          x="3"
+          y="7"
+          width="18"
+          height="13"
+          rx="2"
+        />
+
+        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      </>
+    ),
+
+    heart: (
+      <path d="M12 20.5s-7.5-4.6-9.8-9.1C.6 8 2 4.5 5.4 3.7c2-.5 3.9.3 5.1 1.9a5 5 0 0 1 1.5-1.9c1.7-1.2 4-.9 5.6.4 2.4 2 2.3 5.4.5 8.4-2.3 3.9-6.1 6-6.1 8Z" />
+    ),
+
+    person: (
+      <>
+        <circle
+          cx="12"
+          cy="8"
+          r="4"
+        />
+
+        <path d="M4 21c.8-4.2 3.5-6 8-6s7.2 1.8 8 6" />
+      </>
+    ),
   };
 
   return (
@@ -25,14 +63,43 @@ function TutorIcon({ name }) {
   );
 }
 
+/*
+|--------------------------------------------------------------------------
+| FORMAT TUTORING MODE
+|--------------------------------------------------------------------------
+*/
+
 function formatMode(mode) {
-  if (!mode) return null;
-  const normalized = String(mode).toLowerCase();
-  if (normalized === "online") return "Online";
-  if (normalized === "in-person" || normalized === "in person") return "In-Person";
-  if (normalized === "both") return "Both";
+  if (!mode) {
+    return null;
+  }
+
+  const normalized =
+    String(mode).toLowerCase();
+
+  if (normalized === "online") {
+    return "Online";
+  }
+
+  if (
+    normalized === "in-person" ||
+    normalized === "in person"
+  ) {
+    return "In-Person";
+  }
+
+  if (normalized === "both") {
+    return "Both";
+  }
+
   return mode;
 }
+
+/*
+|--------------------------------------------------------------------------
+| TUTOR CARD
+|--------------------------------------------------------------------------
+*/
 
 export default function TutorCard({
   tutor,
@@ -40,9 +107,21 @@ export default function TutorCard({
   onToggleFavorite,
   onViewProfile,
   onRequest,
-  requestState = "idle", // "idle" | "sending" | "requested"
+
+  /*
+  requestState possible values:
+
+  idle      -> Request
+  sending   -> Sending...
+  requested -> Requested
+  accepted  -> Accepted
+  */
+
+  requestState = "idle",
 }) {
-  if (!tutor) return null;
+  if (!tutor) {
+    return null;
+  }
 
   const {
     name,
@@ -59,118 +138,315 @@ export default function TutorCard({
     priceUnit,
   } = tutor;
 
-  const modeLabel = formatMode(mode);
+  const modeLabel =
+    formatMode(mode);
 
-  const isSending = requestState === "sending";
-  const isRequested = requestState === "requested";
+  /*
+  |--------------------------------------------------------------------------
+  | REQUEST STATUS
+  |--------------------------------------------------------------------------
+  */
 
-  const requestLabel = isSending
-    ? "Sending…"
-    : isRequested
-    ? "Requested"
-    : "Request";
+  const isSending =
+    requestState === "sending";
+
+  const isRequested =
+    requestState === "requested";
+
+  const isAccepted =
+    requestState === "accepted";
+
+  /*
+  Pending and Accepted both cannot
+  send another request.
+  */
+
+  const requestDisabled =
+    isSending ||
+    isRequested ||
+    isAccepted;
+
+  /*
+  Button text
+  */
+
+  let requestLabel = "Request";
+
+  if (isSending) {
+    requestLabel = "Sending…";
+  } else if (isRequested) {
+    requestLabel = "Requested";
+  } else if (isAccepted) {
+    requestLabel = "Accepted";
+  }
+
+  /*
+  Button title
+  */
+
+  let requestTitle;
+
+  if (isRequested) {
+    requestTitle =
+      "Your request is waiting for the teacher's response.";
+  } else if (isAccepted) {
+    requestTitle =
+      "Your tutor request has been accepted.";
+  }
 
   return (
     <article className="tutor-card">
+
+      {/* LEFT SIDE */}
+
       <div className="tutor-card-main">
+
+        {/* AVATAR */}
+
         <div className="tutor-avatar">
+
           {avatarUrl ? (
-            <img src={avatarUrl} alt={name || "Tutor"} />
+
+            <img
+              src={avatarUrl}
+              alt={name || "Tutor"}
+            />
+
           ) : (
+
             <TutorIcon name="person" />
+
           )}
+
         </div>
+
+        {/* TUTOR INFO */}
 
         <div className="tutor-info">
+
+          {/* NAME */}
+
           <div className="tutor-name-row">
-            <h3>{name || "Unnamed Tutor"}</h3>
+
+            <h3>
+              {name || "Unnamed Tutor"}
+            </h3>
+
             {verified && (
-              <span className="tutor-verified" title="Verified tutor">
+
+              <span
+                className="tutor-verified"
+                title="Verified tutor"
+              >
                 <TutorIcon name="badge" />
               </span>
+
             )}
+
           </div>
 
-          {subject && <p className="tutor-subject">{subject}</p>}
+          {/* SUBJECT */}
+
+          {subject && (
+
+            <p className="tutor-subject">
+              {subject}
+            </p>
+
+          )}
+
+          {/* LOCATION */}
 
           {location && (
+
             <p className="tutor-location">
+
               <TutorIcon name="location" />
+
               {location}
+
             </p>
+
           )}
 
-          {(rating || reviewsCount || experienceYears) && (
+          {/* RATING / EXPERIENCE */}
+
+          {(rating ||
+            reviewsCount ||
+            experienceYears) && (
+
             <p className="tutor-meta">
+
               {rating && (
+
                 <span className="tutor-rating">
+
                   <TutorIcon name="star" />
+
                   {rating}
-                  {reviewsCount != null && <span>({reviewsCount} reviews)</span>}
+
+                  {reviewsCount != null && (
+
+                    <span>
+                      ({reviewsCount} reviews)
+                    </span>
+
+                  )}
+
                 </span>
+
               )}
+
               {experienceYears && (
+
                 <span className="tutor-experience">
+
                   <TutorIcon name="experience" />
+
                   {experienceYears}+ years experience
+
                 </span>
+
               )}
+
             </p>
+
           )}
 
-          {Array.isArray(tags) && tags.length > 0 && (
+          {/* TAGS */}
+
+          {Array.isArray(tags) &&
+            tags.length > 0 && (
+
             <div className="tutor-tags">
-              {tags.map((tag) => (
-                <span className="tutor-tag" key={tag}>
-                  {tag}
-                </span>
-              ))}
+
+              {tags.map(
+                (tag) => (
+
+                  <span
+                    className="tutor-tag"
+                    key={tag}
+                  >
+                    {tag}
+                  </span>
+
+                )
+              )}
+
             </div>
+
           )}
+
         </div>
+
       </div>
 
+      {/* RIGHT SIDE */}
+
       <div className="tutor-card-side">
+
+        {/* FAVORITE */}
+
         <button
           type="button"
-          className={`tutor-favorite ${isFavorite ? "is-active" : ""}`}
-          onClick={() => onToggleFavorite?.(tutor)}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-          aria-pressed={isFavorite}
+          className={`tutor-favorite ${
+            isFavorite
+              ? "is-active"
+              : ""
+          }`}
+          onClick={() =>
+            onToggleFavorite?.(tutor)
+          }
+          aria-label={
+            isFavorite
+              ? "Remove from favorites"
+              : "Add to favorites"
+          }
+          aria-pressed={
+            isFavorite
+          }
         >
           <TutorIcon name="heart" />
         </button>
 
+        {/* PRICE */}
+
         <div className="tutor-price-block">
+
           {price != null && (
-           <p className="tutor-price">
-           ৳{price}
-           <span>/{priceUnit || "hour"}</span>
-             </p> 
+
+            <p className="tutor-price">
+
+              ৳{price}
+
+              <span>
+                /{priceUnit || "hour"}
+              </span>
+
+            </p>
+
           )}
-          {modeLabel && <span className="tutor-mode-badge">{modeLabel}</span>}
+
+          {modeLabel && (
+
+            <span className="tutor-mode-badge">
+              {modeLabel}
+            </span>
+
+          )}
+
         </div>
 
+        {/* BUTTONS */}
+
         <div className="tutor-card-actions">
+
+          {/* VIEW PROFILE */}
+
           <button
             type="button"
             className="tutor-view-profile"
-            onClick={() => onViewProfile?.(tutor)}
+            onClick={() =>
+              onViewProfile?.(tutor)
+            }
           >
             View Profile
           </button>
 
+          {/* REQUEST BUTTON */}
+
           <button
             type="button"
-            className={`tutor-request-button ${isRequested ? "is-requested" : ""}`}
-            onClick={() => onRequest?.(tutor)}
-            disabled={isSending || isRequested}
-            title={isRequested ? "You already have an active request with this tutor" : undefined}
+
+            className={`tutor-request-button ${
+              isRequested
+                ? "is-requested"
+                : ""
+            } ${
+              isAccepted
+                ? "is-accepted"
+                : ""
+            }`}
+
+            onClick={() =>
+              onRequest?.(tutor)
+            }
+
+            disabled={
+              requestDisabled
+            }
+
+            title={
+              requestTitle
+            }
           >
             {requestLabel}
           </button>
+
         </div>
+
       </div>
+
     </article>
   );
 }

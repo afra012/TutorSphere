@@ -45,3 +45,18 @@
   .tutor-price-block { margin-top: 0; text-align: left; justify-items: start; }
   .tutor-card-actions { flex-wrap: wrap; }
 }
+.tutor-request-button.is-accepted {
+  background: #eaf9f1;
+  border: 1px solid #b7ebcf;
+  color: #2f9e64;
+  cursor: default;
+}
+
+.tutor-request-button.is-accepted:hover {
+  background: #eaf9f1;
+  color: #2f9e64;
+}
+
+.tutor-request-button.is-accepted:disabled {
+  opacity: 1;
+}

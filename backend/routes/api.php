@@ -12,7 +12,11 @@ use App\Http\Controllers\TutorPostController;
 use App\Http\Controllers\TutoringRequestController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\AdminController;
+
+use App\Http\Controllers\TuitionRequestController;
+
 use App\Http\Controllers\LocationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,9 +48,6 @@ Route::get('/auth/google/callback', [
 |--------------------------------------------------------------------------
 | Public Reviews
 |--------------------------------------------------------------------------
-|
-| Only approved reviews should be returned by ReviewController@index().
-|
 */
 
 Route::get('/reviews', [
@@ -124,7 +125,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Student Subjects
+    | Subjects
     |--------------------------------------------------------------------------
     */
 
@@ -236,6 +237,33 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+
+    | Tutor Requests
+    |--------------------------------------------------------------------------
+    */
+
+    // Student sends a tutor request
+    Route::post('/tuition-requests', [
+        TuitionRequestController::class,
+        'store'
+    ]);
+
+    // Student sees own request history/status
+    Route::get('/my-tuition-requests', [
+        TuitionRequestController::class,
+        'studentRequests'
+    ]);
+
+    // Teacher sees own tutor requests
+    Route::get('/teacher/tuition-requests', [
+        TuitionRequestController::class,
+        'teacherRequests'
+    ]);
+
+    // Teacher accepts or rejects a tutor request
+    Route::patch('/teacher/tuition-requests/{id}/status', [
+        TuitionRequestController::class,
+
     | Tutoring Requests (student -> tutor)
     |--------------------------------------------------------------------------
     */
@@ -252,23 +280,49 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::patch('/tutoring-requests/{id}/status', [
         TutoringRequestController::class,
+
         'updateStatus'
     ]);
 
     /*
     |--------------------------------------------------------------------------
+
+    | Tutor Request Notifications
+    |--------------------------------------------------------------------------
+    */
+
+    // Teacher sees all notifications
+    Route::get('/teacher/tuition-request-notifications', [
+        TuitionRequestController::class,
+        'notifications'
+    ]);
+
+    // Teacher marks notifications as read
+    Route::patch('/teacher/tuition-request-notifications/read', [
+        TuitionRequestController::class,
+        'markNotificationsRead'
+    ]);
+
+    // Teacher deletes one notification
+    Route::delete('/teacher/tuition-request-notifications/{id}', [
+        TuitionRequestController::class,
+        'deleteNotification'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+
     | Reviews
     |--------------------------------------------------------------------------
     */
 
-    // Student's own reviews
-    // Includes pending, approved and rejected reviews.
+    // Student sees own reviews
     Route::get('/my-reviews', [
         ReviewController::class,
         'myReviews'
     ]);
 
-    // Submit new review
+    // Submit review
     Route::post('/reviews', [
         ReviewController::class,
         'store'
@@ -321,9 +375,6 @@ Route::delete('/locations/{id}', [
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
-|
-| Only authenticated users with admin role can access these routes.
-|
 */
 
 Route::middleware([
@@ -376,14 +427,18 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | Admin Middleware Test
+    | Admin Test
     |--------------------------------------------------------------------------
     */
 
     Route::get('/admin/test', function (Request $request) {
+
         return response()->json([
-            'message' => 'Admin access successful.',
-            'user' => $request->user(),
+            'message' =>
+                'Admin access successful.',
+
+            'user' =>
+                $request->user(),
         ]);
     });
 });
