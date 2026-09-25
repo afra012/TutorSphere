@@ -159,10 +159,8 @@ export default function TutorProfile() {
   const [attempt, setAttempt] = useState(0);
   const requestKey = `${id}:${attempt}`;
   const [result, setResult] = useState({ key: null, tutor: null, error: "" });
-
-  // "idle" | "sending" | "requested"
   const [requestState, setRequestState] = useState("idle");
-  const [toast, setToast] = useState(null); // { type, message }
+  const [toast, setToast] = useState(null);
 
   const loading = result.key !== requestKey;
   const { tutor, error } = result;
@@ -215,55 +213,6 @@ export default function TutorProfile() {
       cancelled = true;
     };
   }, [id, requestKey, navigate]);
-
-  /* ---------- Did the student already request this tutor? ---------- */
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const checkExistingRequest = async () => {
-      try {
-        const response = await axios.get(
-          `${API_BASE_URL}/tutoring-requests`,
-          getAuthConfig()
-        );
-
-        if (cancelled) return;
-
-        const existing = Array.isArray(response.data?.requests)
-          ? response.data.requests
-          : Array.isArray(response.data)
-          ? response.data
-          : [];
-
-        const hasActive = existing.some(
-          (r) =>
-            String(r.teacher_id ?? r.tutor_id) === String(id) &&
-            (!r.status ||
-              !["cancelled", "rejected", "declined"].includes(
-                String(r.status).toLowerCase()
-              ))
-        );
-
-        if (hasActive) setRequestState("requested");
-      } catch (err) {
-        // Non-fatal, same as FindTutor: duplicates are still caught server-side.
-        console.error("Failed to load existing requests:", err);
-      }
-    };
-
-    checkExistingRequest();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
-
-  useEffect(() => {
-    if (!toast) return undefined;
-    const timer = setTimeout(() => setToast(null), 4000);
-    return () => clearTimeout(timer);
-  }, [toast]);
 
   /* ---------- Actions ---------- */
 
@@ -345,12 +294,6 @@ export default function TutorProfile() {
           Back to Find Tutor
         </button>
 
-        {toast && (
-          <div className={`tp-toast tp-toast-${toast.type}`} role="status">
-            {toast.message}
-          </div>
-        )}
-
         {loading && (
           <div className="tp-status">
             <p>Loading tutor profile…</p>
@@ -424,19 +367,6 @@ export default function TutorProfile() {
                   {tutor.mode && <span className="tp-mode-badge">{formatMode(tutor.mode)}</span>}
                 </div>
 
-                <button
-                  type="button"
-                  className={`tp-request ${isRequested ? "is-requested" : ""}`}
-                  onClick={handleRequest}
-                  disabled={isSending || isRequested}
-                  title={
-                    isRequested
-                      ? "You already have an active request with this tutor"
-                      : undefined
-                  }
-                >
-                  {requestLabel}
-                </button>
               </div>
             </article>
 
