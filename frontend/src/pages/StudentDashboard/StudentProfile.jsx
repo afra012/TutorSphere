@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
+import { syncProfileAddress } from "../../api/locationSync";
 
 import "./StudentProfile.css";
 
@@ -358,10 +359,10 @@ export default function StudentProfile() {
         }
       }
 
-      setSuccessMessage(
-        data.message ||
-          "Profile updated successfully!"
-      );
+      const locationSync = await syncProfileAddress(formData.address, token);
+      setSuccessMessage(locationSync.ok
+        ? `${data.message || "Profile updated successfully!"} Map pin updated.`
+        : `${data.message || "Profile updated successfully!"} ${locationSync.message}`);
     } catch (error) {
       console.error(
         "Profile update error:",

@@ -1,0 +1,256 @@
+.location-page {
+  min-height: calc(100vh - 76px);
+  margin-top: 76px;
+  padding: 40px 30px 70px;
+  background: #f5f7fb;
+  box-sizing: border-box;
+}
+
+.location-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.location-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.location-badge {
+  display: inline-block;
+  padding: 7px 13px;
+  border-radius: 20px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.location-header h1 {
+  margin: 12px 0 7px;
+  color: #172033;
+  font-size: 32px;
+}
+
+.location-header p {
+  margin: 0;
+  color: #73798a;
+  font-size: 14px;
+}
+
+.location-message {
+  padding: 13px 16px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.location-message.error {
+  background: #fff0f0;
+  color: #c62828;
+}
+
+.location-message.success {
+  background: #effaf2;
+  color: #237a3b;
+}
+
+.location-map-card {
+  overflow: hidden;
+  margin-bottom: 22px;
+  background: #ffffff;
+  border: 1px solid #e8ebf2;
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(25, 35, 55, 0.04);
+}
+
+.location-map {
+  width: 100%;
+  height: 520px;
+}
+
+.location-form-card {
+  padding: 26px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #e8ebf2;
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(25, 35, 55, 0.04);
+}
+
+.location-form-header {
+  padding-bottom: 20px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.location-form-badge {
+  color: #4f46e5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.location-form-header h2 {
+  margin: 6px 0 5px;
+  color: #172033;
+  font-size: 21px;
+}
+
+.location-form-header p {
+  margin: 0;
+  color: #858b9a;
+  font-size: 13px;
+}
+
+.location-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.location-input-group {
+  margin-bottom: 18px;
+}
+
+.location-input-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #353a49;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.location-input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #dfe2ea;
+  border-radius: 9px;
+  outline: none;
+  box-sizing: border-box;
+  color: #172033;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+.location-input-group input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+.location-save-button {
+  width: 100%;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #4f46e5;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.location-save-button:hover {
+  background: #4338ca;
+}
+
+.location-save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.location-info-card {
+  padding: 20px;
+  background: #f6f7ff;
+  border: 1px solid #e5e7ff;
+  border-radius: 14px;
+}
+
+.location-info-card h3 {
+  margin: 0 0 7px;
+  color: #353a49;
+  font-size: 15px;
+}
+
+.location-info-card p {
+  margin: 0;
+  color: #656b7b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .location-page {
+    margin-top: 76px;
+    padding: 25px 16px 50px;
+  }
+
+  .location-header h1 {
+    font-size: 27px;
+  }
+
+  .location-map {
+    height: 400px;
+  }
+
+  .location-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .location-form-card {
+    padding: 20px;
+  }
+}
+
+.location-current-button {
+  width: 100%;
+  padding: 13px 18px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #6c4cff;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.location-current-button:hover {
+  opacity: 0.9;
+}
+
+.location-current-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.location-map-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fb;
+  color: #73798a;
+  font-size: 14px;
+}
+
+.role-map-icon {
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #4f46e5;
+  box-shadow: 0 2px 8px rgba(23, 32, 51, 0.35);
+  font-size: 20px;
+}
+
+.teacher-role-icon {
+  background: #4f46e5;
+}
+
+.student-role-icon {
+  background: #0f9d78;
+}

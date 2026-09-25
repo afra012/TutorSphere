@@ -25,6 +25,13 @@ function Icon({ name }) {
       <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
     ),
 
+    location: (
+      <>
+        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+        <circle cx="12" cy="10" r="2.5" />
+      </>
+    ),
+
     profile: (
       <>
         <circle cx="12" cy="7" r="4" />
@@ -61,25 +68,26 @@ const items = [
     icon: "dashboard",
     path: "/student-dashboard",
   },
-
   {
     label: "Find Tutor",
     icon: "search",
     path: "/find-tutor",
   },
-
   {
     label: "My Post",
     icon: "post",
     path: "/my-post",
   },
-
   {
     label: "My Reviews",
     icon: "star",
     path: "/student-reviews",
   },
-
+  {
+    label: "Location",
+    icon: "location",
+    path: "/location",
+  },
   {
     label: "Profile",
     icon: "profile",
@@ -100,7 +108,9 @@ export default function DashboardSidebar() {
 
     sessionStorage.clear();
 
-    navigate("/", { replace: true });
+    navigate("/", {
+      replace: true,
+    });
   };
 
   return (
@@ -115,13 +125,10 @@ export default function DashboardSidebar() {
             type="button"
             onClick={() => navigate(item.path)}
             className={`sidebar-link ${
-              location.pathname === item.path
-                ? "is-active"
-                : ""
+              location.pathname === item.path ? "is-active" : ""
             }`}
           >
             <Icon name={item.icon} />
-
             {item.label}
           </button>
         ))}

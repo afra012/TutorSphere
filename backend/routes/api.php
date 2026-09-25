@@ -9,9 +9,14 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\TeacherProfileController;
 use App\Http\Controllers\TutorPostController;
+use App\Http\Controllers\TutoringRequestController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\AdminController;
+
 use App\Http\Controllers\TuitionRequestController;
+
+use App\Http\Controllers\LocationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -232,6 +237,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+
     | Tutor Requests
     |--------------------------------------------------------------------------
     */
@@ -257,11 +263,30 @@ Route::middleware('auth:sanctum')->group(function () {
     // Teacher accepts or rejects a tutor request
     Route::patch('/teacher/tuition-requests/{id}/status', [
         TuitionRequestController::class,
+
+    | Tutoring Requests (student -> tutor)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/tutoring-requests', [
+        TutoringRequestController::class,
+        'index'
+    ]);
+
+    Route::post('/tutoring-requests', [
+        TutoringRequestController::class,
+        'store'
+    ]);
+
+    Route::patch('/tutoring-requests/{id}/status', [
+        TutoringRequestController::class,
+
         'updateStatus'
     ]);
 
     /*
     |--------------------------------------------------------------------------
+
     | Tutor Request Notifications
     |--------------------------------------------------------------------------
     */
@@ -286,6 +311,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+
     | Reviews
     |--------------------------------------------------------------------------
     */
@@ -313,6 +339,36 @@ Route::middleware('auth:sanctum')->group(function () {
         ReviewController::class,
         'destroy'
     ]);
+
+// ---------------------------------------------------------
+// Locations
+// ---------------------------------------------------------
+
+Route::get('/locations', [
+    LocationController::class,
+    'index'
+]);
+
+Route::get('/locations/me', [
+    LocationController::class,
+    'me'
+]);
+
+Route::post('/locations', [
+    LocationController::class,
+    'store'
+]);
+
+Route::put('/locations/{id}', [
+    LocationController::class,
+    'update'
+]);
+
+Route::delete('/locations/{id}', [
+    LocationController::class,
+    'destroy'
+]);
+
 });
 
 /*
@@ -386,3 +442,4 @@ Route::middleware([
         ]);
     });
 });
+

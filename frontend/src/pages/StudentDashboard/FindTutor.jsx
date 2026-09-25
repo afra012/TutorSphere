@@ -76,6 +76,7 @@ function normalizeTutor(raw) {
 
     tags: subjects,
 
+
     location:
       raw.location,
 
@@ -86,6 +87,12 @@ function normalizeTutor(raw) {
       raw.hourly_rate != null
         ? Number(raw.hourly_rate)
         : null,
+
+
+    location: raw.location,
+    gender: raw.gender,
+    mode: raw.tutoring_mode,
+    price: raw.hourly_rate != null ? Number(raw.hourly_rate) : null,
 
     priceUnit: "hour",
 
@@ -113,7 +120,15 @@ const initialFilters = {
   location: "",
   mode: "",
   price: "",
+  gender: "",
 };
+
+const genderOptions = [
+  { value: "", label: "Any gender" },
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
+];
 
 const priceRanges = [
   {
@@ -201,6 +216,7 @@ function FieldIcon({
   );
 }
 
+
 /*
 |--------------------------------------------------------------------------
 | PRICE RANGE
@@ -227,6 +243,9 @@ function matchesPriceRange(
     range
       .split("-")
       .map(Number);
+
+  if (range === "3000+") return price >= 3000;
+
 
   return (
     price >= min &&
@@ -845,11 +864,20 @@ export default function FindTutor() {
       );
     };
 
+
   /*
   |--------------------------------------------------------------------------
   | VIEW PROFILE
   |--------------------------------------------------------------------------
   */
+
+      const matchesGender =
+        !appliedFilters.gender ||
+        tutor.gender?.toLowerCase() === appliedFilters.gender.toLowerCase();
+
+      return matchesSubject && matchesLocation && matchesMode && matchesPrice && matchesGender;
+    });
+  }, [tutors, appliedFilters]);
 
   const handleViewProfile =
     (tutor) => {
@@ -1286,12 +1314,35 @@ export default function FindTutor() {
 
           </label>
 
+
           {/* SEARCH BUTTON */}
 
           <button
             type="submit"
             className="tutor-search-button"
           >
+
+
+          <label className="tutor-search-field">
+            <span className="ft-label">Gender</span>
+            <span className="ft-input-wrap">
+              <FieldIcon>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="5" />
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+              </FieldIcon>
+              <select name="gender" value={filters.gender} onChange={updateFilter}>
+                {genderOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </span>
+          </label>
+
+          <button type="submit" className="tutor-search-button">
 
             <SearchIcon className="ft-search-icon" />
 
@@ -1384,6 +1435,7 @@ export default function FindTutor() {
 
         )}
 
+
         {/* ERROR */}
 
         {!loading &&
@@ -1403,6 +1455,16 @@ export default function FindTutor() {
                 }
               >
                 Try Again
+
+        {!loading && !error && sortedTutors.length === 0 && (
+          <div className="tutor-empty-state">
+            <SearchIcon className="tutor-empty-icon" />
+            <h2>No tutors found.</h2>
+            <p>Try changing your search criteria.</p>
+            {(appliedFilters.subject || appliedFilters.location || appliedFilters.mode || appliedFilters.price || appliedFilters.gender) && (
+              <button type="button" className="tutor-retry-button" onClick={handleReset}>
+                Clear Search
+
               </button>
 
             </div>

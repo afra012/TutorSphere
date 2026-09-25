@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { syncProfileAddress } from "../../../api/locationSync";
 import "./TeacherProfile.css";
 
 const API_URL = "http://127.0.0.1:8000/api";
@@ -661,6 +662,7 @@ export default function TeacherProfile() {
       console.log("SAVE RESPONSE:", response.data);
 
       const savedProfile = response.data?.profile;
+      const locationSync = await syncProfileAddress(formData.location, token);
 
       if (savedProfile?.profile_image) {
         setProfileImage(
@@ -697,6 +699,10 @@ export default function TeacherProfile() {
 
       setShowSuccess(true);
       setShowError(false);
+      if (!locationSync.ok) {
+        setErrorMessage(`Profile saved. ${locationSync.message}`);
+        setShowError(true);
+      }
 
       window.scrollTo({
         top: 0,
@@ -1056,6 +1062,10 @@ export default function TeacherProfile() {
                   >
                     <option value="">
                       Select gender
+                    </option>
+
+                    <option value="Male">
+                      Male
                     </option>
 
                     <option value="Female">
