@@ -34,6 +34,7 @@
   font-family: Arial, sans-serif;
 
   color: #201b31;
+  text-align: left;
 }
 
 .teacher-request-container {
@@ -48,6 +49,7 @@
 
 .teacher-page-header {
   margin-bottom: 28px;
+  text-align: center;
 }
 
 .teacher-page-label {
@@ -86,7 +88,6 @@
 
 .teacher-request-content {
   width: 100%;
-  min-height: 390px;
 
   border: 1px solid #e6dcf7;
 
@@ -562,7 +563,6 @@
     flex-direction: column;
   }
 
-
   .request-actions {
     justify-content: stretch;
   }
@@ -575,74 +575,3 @@
     right: 35px;
   }
 }
-
-.teacher-request-student {
-  display: block;
-  margin: 0 0 10px;
-  color: #6336c8;
-  font-size: 13px;
-}
-
-/* ---------- Direct tutoring requests: status + actions ---------- */
-
-.teacher-request-error {
-  max-width: 1050px;
-  margin: 0 auto 16px;
-  padding: 12px 16px;
-  border: 1px solid #f3c1c1;
-  border-radius: 10px;
-  background: #fff1f1;
-  color: #b42318;
-  font-size: 14px;
-}
-
-.teacher-request-contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-}
-
-.teacher-request-status.is-pending {
-  color: #b7791f;
-}
-
-.teacher-request-status.is-accepted {
-  color: #1a7f46;
-}
-
-.teacher-request-status.is-rejected,
-.teacher-request-status.is-cancelled {
-  color: #b42318;
-}
-
-.teacher-request-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.teacher-request-actions button {
-  padding: 9px 18px;
-  border: 0;
-  border-radius: 9px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.teacher-request-actions button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.teacher-request-accept {
-  background: #5722d5;
-  color: #fff;
-}
-
-.teacher-request-reject {
-  background: #fff;
-  color: #b42318;
-  border: 1px solid #f3c1c1 !important;
-}
-
