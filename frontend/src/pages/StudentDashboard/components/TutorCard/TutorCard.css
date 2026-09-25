@@ -1,4 +1,4 @@
-.tutor-card { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 22px; background: #fff; border: 1px solid #eee9f5; border-radius: 14px; box-shadow: 0 4px 14px rgba(57, 26, 118, .05); transition: box-shadow .2s ease, transform .2s ease; }
+.tutor-card { text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 22px; background: #fff; border: 1px solid #eee9f5; border-radius: 14px; box-shadow: 0 4px 14px rgba(57, 26, 118, .05); transition: box-shadow .2s ease, transform .2s ease; }
 .tutor-card:hover { box-shadow: 0 8px 22px rgba(57, 26, 118, .1); transform: translateY(-1px); }
 .tutor-card-main { display: flex; align-items: flex-start; gap: 16px; min-width: 0; flex: 1; }
 .tutor-avatar { width: 64px; height: 64px; flex: 0 0 64px; display: grid; place-items: center; border-radius: 50%; background: #f1e9ff; color: #7332e6; overflow: hidden; }

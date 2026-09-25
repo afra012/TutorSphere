@@ -103,7 +103,7 @@ function matchesPriceRange(price, range) {
   if (!range) return true;
   if (price == null) return false;
 
-  if (range === "30+") return price >= 30;
+  if (range === "3000+") return price >= 3000;
 
   const [min, max] = range.split("-").map(Number);
   return price >= min && price <= max;

@@ -28,6 +28,7 @@ import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import StudentReviews from "./pages/StudentDashboard/components/StudentReviews/StudentReviews";
 import StudentPosts from "./pages/StudentDashboard/StudentPosts";
 import FindTutor from "./pages/StudentDashboard/FindTutor";
+import TutorProfile from "./pages/StudentDashboard/TutorProfile";
 
 /* =========================================================
    TEACHER
@@ -346,6 +347,16 @@ function App() {
             <>
               <Navbar dashboardMode={true} role="student" />
               <FindTutor />
+            </>
+          }
+        />
+
+        <Route
+          path="/tutor-profile/:id"
+          element={
+            <>
+              <Navbar dashboardMode={true} role="student" />
+              <TutorProfile />
             </>
           }
         />

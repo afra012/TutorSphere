@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -57,8 +58,8 @@ class FindTutorController extends Controller
                 'teacherProfile.subjects:id,subject_name',
                 'teacherProfile.languages:id,language_name',
             ])
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews')
+            ->withAvg(['reviews' => fn ($q) => $q->where('status', 'approved')], 'rating')
+            ->withCount(['reviews' => fn ($q) => $q->where('status', 'approved')])
             ->select('id', 'name');
 
 
@@ -223,9 +224,9 @@ class FindTutorController extends Controller
                 'teacherProfile.subjects:id,subject_name',
                 'teacherProfile.languages:id,language_name',
             ])
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews')
-            ->select('id', 'name')
+            ->withAvg(['reviews' => fn ($q) => $q->where('status', 'approved')], 'rating')
+            ->withCount(['reviews' => fn ($q) => $q->where('status', 'approved')])
+            ->select('id', 'name', 'created_at')
             ->find($id);
 
         if (!$teacher) {
@@ -236,8 +237,50 @@ class FindTutorController extends Controller
 
         return response()->json([
             'message' => 'Tutor profile retrieved successfully.',
-            'tutor' => $this->formatTutorCard($teacher, $request),
+            'tutor' => array_merge(
+                $this->formatTutorCard($teacher, $request),
+                $this->formatTutorDetails($teacher)
+            ),
         ], 200);
+    }
+
+
+    // =========================================================
+    // EXTRA FIELDS FOR THE FULL TUTOR PROFILE PAGE
+    // =========================================================
+    //
+    // Only public-safe fields are added here. phone, email and
+    // date_of_birth are intentionally NOT exposed.
+    // =========================================================
+
+    private function formatTutorDetails(User $teacher): array
+    {
+        $profile = $teacher->teacherProfile;
+
+        // Only approved reviews are public (same rule as
+        // ReviewController@index and the rating average above).
+        $reviews = Review::with('student:id,name')
+            ->where('teacher_id', $teacher->id)
+            ->where('status', 'approved')
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(fn ($review) => [
+                'id' => $review->id,
+                'student_name' => $review->student?->name ?? 'Student',
+                'rating' => $review->rating,
+                'review_text' => $review->review_text,
+                'created_at' => $review->created_at?->toIso8601String(),
+            ])
+            ->values();
+
+        return [
+            'institution' => $profile->institution,
+            'certification' => $profile->certification,
+            'time_zone' => $profile->time_zone,
+            'member_since' => $teacher->created_at?->toIso8601String(),
+            'reviews' => $reviews,
+        ];
     }
 
 
