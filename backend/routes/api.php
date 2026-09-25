@@ -263,8 +263,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Teacher accepts or rejects a tutor request
     Route::patch('/teacher/tuition-requests/{id}/status', [
         TuitionRequestController::class,
-
-    | Tutoring Requests (student -> tutor)
+            'updateStatus'
+]);
+    /*
+    |----------------------------------------------------------------- 
+    Tutoring Requests (student -> tutor)
     |--------------------------------------------------------------------------
     */
 
