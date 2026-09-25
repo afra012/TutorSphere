@@ -122,6 +122,7 @@ export default function TeacherProfile() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [locationNotice, setLocationNotice] = useState("");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -588,6 +589,7 @@ export default function TeacherProfile() {
     setSaving(true);
     setShowSuccess(false);
     setShowError(false);
+    setLocationNotice("");
 
     try {
       let tutoringMode = formData.tutoringMode;
@@ -699,10 +701,11 @@ export default function TeacherProfile() {
 
       setShowSuccess(true);
       setShowError(false);
-      if (!locationSync.ok) {
-        setErrorMessage(`Profile saved. ${locationSync.message}`);
-        setShowError(true);
-      }
+      setLocationNotice(locationSync.ok
+        ? (locationSync.approximate
+          ? "Map pin set to the matching area; exact house point was unavailable."
+          : "Map pin updated.")
+        : `Map pin was not updated. ${locationSync.message}`);
 
       window.scrollTo({
         top: 0,
@@ -887,6 +890,7 @@ export default function TeacherProfile() {
               <span>
                 Your teacher profile information has been saved.
               </span>
+              {locationNotice && <span>{locationNotice}</span>}
             </div>
 
             <button
