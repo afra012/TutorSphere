@@ -62,10 +62,27 @@ function TeacherDashboard() {
            REQUESTS
         ========================================= */
 
-        // Student tutor posts are not direct teacher requests.
-        // Direct tutor requests will be connected later.
-        setRequestCount(0);
+        try {
+          const requestResponse = await axios.get(
+            "http://127.0.0.1:8000/api/teacher/tuition-requests",
+            config
+          );
 
+          const responseData = requestResponse.data;
+
+          const requests = Array.isArray(responseData)
+            ? responseData
+            : Array.isArray(responseData?.requests)
+            ? responseData.requests
+            : Array.isArray(responseData?.data)
+            ? responseData.data
+            : [];
+
+          setRequestCount(requests.length);
+        } catch (error) {
+          console.error("Request fetch error:", error);
+          setRequestCount(0);
+        }
       } catch (error) {
         console.error("Dashboard error:", error);
       } finally {
@@ -78,7 +95,6 @@ function TeacherDashboard() {
 
   return (
     <div className="teacher-dashboard-layout">
-
       {/* =========================================
           SIDEBAR
       ========================================= */}
@@ -90,15 +106,12 @@ function TeacherDashboard() {
       ========================================= */}
 
       <main className="teacher-dashboard-main">
-
         <div className="teacher-dashboard-container">
-
           {/* =========================================
               HEADER
           ========================================= */}
 
           <section className="teacher-dashboard-header">
-
             <p className="teacher-dashboard-label">
               Teacher Dashboard
             </p>
@@ -114,7 +127,6 @@ function TeacherDashboard() {
             <p className="teacher-dashboard-subtitle">
               Manage your requests and reviews from here.
             </p>
-
           </section>
 
           {/* =========================================
@@ -122,11 +134,9 @@ function TeacherDashboard() {
           ========================================= */}
 
           <section className="teacher-dashboard-cards">
-
             {/* REQUEST CARD */}
 
             <div className="teacher-dashboard-card">
-
               <div className="teacher-card-icon request-icon">
                 <svg
                   viewBox="0 0 24 24"
@@ -142,7 +152,6 @@ function TeacherDashboard() {
               </div>
 
               <div className="teacher-card-content">
-
                 <span>Requests</span>
 
                 <strong>
@@ -152,7 +161,6 @@ function TeacherDashboard() {
                 <p>
                   Requests received from students
                 </p>
-
               </div>
 
               <button
@@ -161,13 +169,11 @@ function TeacherDashboard() {
               >
                 View All →
               </button>
-
             </div>
 
             {/* REVIEW CARD */}
 
             <div className="teacher-dashboard-card">
-
               <div className="teacher-card-icon review-icon">
                 <svg
                   viewBox="0 0 24 24"
@@ -182,7 +188,6 @@ function TeacherDashboard() {
               </div>
 
               <div className="teacher-card-content">
-
                 <span>Reviews</span>
 
                 <strong>
@@ -192,7 +197,6 @@ function TeacherDashboard() {
                 <p>
                   Reviews received from students
                 </p>
-
               </div>
 
               <button
@@ -201,15 +205,10 @@ function TeacherDashboard() {
               >
                 View All →
               </button>
-
             </div>
-
           </section>
-
         </div>
-
       </main>
-
     </div>
   );
 }
