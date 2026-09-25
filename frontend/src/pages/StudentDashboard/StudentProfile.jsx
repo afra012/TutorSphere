@@ -361,7 +361,7 @@ export default function StudentProfile() {
 
       const locationSync = await syncProfileAddress(formData.address, token);
       setSuccessMessage(locationSync.ok
-        ? `${data.message || "Profile updated successfully!"} Map pin updated.`
+        ? `${data.message || "Profile updated successfully!"} ${locationSync.approximate ? "Map pin set to the matching area; exact house point was unavailable." : "Map pin updated."}`
         : `${data.message || "Profile updated successfully!"} ${locationSync.message}`);
     } catch (error) {
       console.error(
