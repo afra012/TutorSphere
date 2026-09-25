@@ -4,6 +4,7 @@ import axios from "axios";
 
 import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
 import TutorCard from "./components/TutorCard/TutorCard";
+
 import "./FindTutor.css";
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
@@ -27,7 +28,6 @@ const getAuthConfig = () => {
   return {
     headers: {
       Accept: "application/json",
-
       ...(token
         ? {
             Authorization: `Bearer ${token}`,
@@ -41,8 +41,6 @@ const getAuthConfig = () => {
 |--------------------------------------------------------------------------
 | NORMALIZE TUTOR
 |--------------------------------------------------------------------------
-|
-| IMPORTANT:
 |
 | id               = users.id
 | teacherProfileId = teacher_profiles.id
@@ -60,50 +58,36 @@ function normalizeTutor(raw) {
   return {
     id: raw.teacher_id,
 
-    // VERY IMPORTANT
-    teacherProfileId:
-      raw.teacher_profile_id,
+    teacherProfileId: raw.teacher_profile_id,
 
     name: raw.name,
 
-    avatarUrl:
-      raw.profile_picture,
+    avatarUrl: raw.profile_picture,
 
-    subject:
-      subjects[0] || "",
+    subject: subjects[0] || "",
 
     subjects,
 
     tags: subjects,
 
+    location: raw.location,
 
-    location:
-      raw.location,
+    gender: raw.gender,
 
-    mode:
-      raw.tutoring_mode,
+    mode: raw.tutoring_mode,
 
     price:
       raw.hourly_rate != null
         ? Number(raw.hourly_rate)
         : null,
 
-
-    location: raw.location,
-    gender: raw.gender,
-    mode: raw.tutoring_mode,
-    price: raw.hourly_rate != null ? Number(raw.hourly_rate) : null,
-
     priceUnit: "hour",
 
-    rating:
-      raw.rating,
+    rating: raw.rating,
 
-    reviewsCount:
-      raw.review_count,
+    reviewsCount: raw.review_count,
 
-    experienceYears:
-      raw.teaching_experience,
+    experienceYears: raw.teaching_experience,
 
     verified: false,
   };
@@ -124,10 +108,22 @@ const initialFilters = {
 };
 
 const genderOptions = [
-  { value: "", label: "Any gender" },
-  { value: "Male", label: "Male" },
-  { value: "Female", label: "Female" },
-  { value: "Other", label: "Other" },
+  {
+    value: "",
+    label: "Any gender",
+  },
+  {
+    value: "Male",
+    label: "Male",
+  },
+  {
+    value: "Female",
+    label: "Female",
+  },
+  {
+    value: "Other",
+    label: "Other",
+  },
 ];
 
 const priceRanges = [
@@ -189,12 +185,7 @@ function SearchIcon(props) {
       strokeLinejoin="round"
       {...props}
     >
-      <circle
-        cx="11"
-        cy="11"
-        r="7"
-      />
-
+      <circle cx="11" cy="11" r="7" />
       <path d="m20 20-4-4" />
     </svg>
   );
@@ -206,9 +197,7 @@ function SearchIcon(props) {
 |--------------------------------------------------------------------------
 */
 
-function FieldIcon({
-  children,
-}) {
+function FieldIcon({ children }) {
   return (
     <span className="ft-field-icon">
       {children}
@@ -216,17 +205,13 @@ function FieldIcon({
   );
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | PRICE RANGE
 |--------------------------------------------------------------------------
 */
 
-function matchesPriceRange(
-  price,
-  range
-) {
+function matchesPriceRange(price, range) {
   if (!range) {
     return true;
   }
@@ -239,18 +224,9 @@ function matchesPriceRange(
     return price >= 3000;
   }
 
-  const [min, max] =
-    range
-      .split("-")
-      .map(Number);
+  const [min, max] = range.split("-").map(Number);
 
-  if (range === "3000+") return price >= 3000;
-
-
-  return (
-    price >= min &&
-    price <= max
-  );
+  return price >= min && price <= max;
 }
 
 /*
@@ -260,43 +236,23 @@ function matchesPriceRange(
 */
 
 export default function FindTutor() {
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  const [tutors, setTutors] =
-    useState([]);
+  const [tutors, setTutors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [loading, setLoading] =
-    useState(true);
+  const [allSubjects, setAllSubjects] = useState([]);
 
-  const [error, setError] =
-    useState("");
+  const [filters, setFilters] = useState(initialFilters);
 
-  const [
-    allSubjects,
-    setAllSubjects,
-  ] = useState([]);
-
-  const [
-    filters,
-    setFilters,
-  ] =
-    useState(initialFilters);
-
-  const [
-    appliedFilters,
-    setAppliedFilters,
-  ] =
+  const [appliedFilters, setAppliedFilters] =
     useState(initialFilters);
 
   const [sortBy, setSortBy] =
     useState("recommended");
 
-  const [
-    favorites,
-    setFavorites,
-  ] =
-    useState([]);
+  const [favorites, setFavorites] = useState([]);
 
   /*
   |--------------------------------------------------------------------------
@@ -313,11 +269,7 @@ export default function FindTutor() {
   const [
     requestStatusById,
     setRequestStatusById,
-  ] =
-    useState({});
-
-  const [toast, setToast] =
-    useState(null);
+  ] = useState({});
 
   /*
   |--------------------------------------------------------------------------
@@ -325,10 +277,9 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const showToast = (
-    type,
-    message
-  ) => {
+  const [toast, setToast] = useState(null);
+
+  const showToast = (type, message) => {
     setToast({
       type,
       message,
@@ -340,166 +291,129 @@ export default function FindTutor() {
       return undefined;
     }
 
-    const timer =
-      setTimeout(
-        () => {
-          setToast(null);
-        },
-        4000
-      );
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 4000);
 
-    return () =>
-      clearTimeout(timer);
-
+    return () => clearTimeout(timer);
   }, [toast]);
 
   /*
   |--------------------------------------------------------------------------
   | GET STUDENT'S OWN REQUEST STATUS
   |--------------------------------------------------------------------------
-  |
-  | Backend:
-  |
-  | pending  -> Requested
-  | accepted -> Accepted
-  | rejected -> Request
-  |
   */
 
-  const fetchMyRequests =
-    async () => {
+  const fetchMyRequests = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/my-tuition-requests`,
+        getAuthConfig()
+      );
 
-      try {
+      const requests = Array.isArray(
+        response.data?.requests
+      )
+        ? response.data.requests
+        : [];
 
-        const response =
-          await axios.get(
-            `${API_BASE_URL}/my-tuition-requests`,
-            getAuthConfig()
-          );
+      /*
+      |--------------------------------------------------------------------------
+      | Backend returns newest requests first.
+      |
+      | Same teacher may have:
+      | old rejected
+      | new pending
+      |
+      | So only latest request for each teacher
+      | should control the button.
+      |--------------------------------------------------------------------------
+      */
 
-        const requests =
-          Array.isArray(
-            response.data?.requests
-          )
-            ? response.data.requests
-            : [];
+      const latestStatusByTeacher = {};
+
+      requests.forEach((request) => {
+        const teacherProfileId = Number(
+          request.teacher_profile_id
+        );
+
+        if (!teacherProfileId) {
+          return;
+        }
 
         /*
-        ----------------------------------------------------------
-        Backend returns newest requests first.
-
-        Same teacher may have:
-
-        old rejected
-        new pending
-
-        So only latest request for each teacher
-        should control the button.
-        ----------------------------------------------------------
+        Already processed this teacher.
+        Since newest is first, ignore older history.
         */
 
-        const latestStatusByTeacher =
-          {};
+        if (
+          latestStatusByTeacher[
+            teacherProfileId
+          ] !== undefined
+        ) {
+          return;
+        }
 
-        requests.forEach(
-          (request) => {
+        const status = String(
+          request.status || ""
+        ).toLowerCase();
 
-            const teacherProfileId =
-              Number(
-                request.teacher_profile_id
-              );
+        /*
+        pending
+        */
 
-            if (!teacherProfileId) {
-              return;
-            }
+        if (status === "pending") {
+          latestStatusByTeacher[
+            teacherProfileId
+          ] = "requested";
 
-            /*
-            Already processed this teacher.
-            Since newest is first, ignore older history.
-            */
+          return;
+        }
 
-            if (
-              latestStatusByTeacher[
-                teacherProfileId
-              ] !== undefined
-            ) {
-              return;
-            }
+        /*
+        accepted
+        */
 
-            const status =
-              String(
-                request.status || ""
-              ).toLowerCase();
+        if (status === "accepted") {
+          latestStatusByTeacher[
+            teacherProfileId
+          ] = "accepted";
 
-            /*
-            pending
-            */
+          return;
+        }
 
-            if (
-              status === "pending"
-            ) {
+        /*
+        rejected
+        Student can request again.
+        */
 
-              latestStatusByTeacher[
-                teacherProfileId
-              ] = "requested";
+        if (status === "rejected") {
+          latestStatusByTeacher[
+            teacherProfileId
+          ] = "idle";
 
-              return;
-            }
+          return;
+        }
 
-            /*
-            accepted
-            */
+        /*
+        Anything else
+        */
 
-            if (
-              status === "accepted"
-            ) {
+        latestStatusByTeacher[
+          teacherProfileId
+        ] = "idle";
+      });
 
-              latestStatusByTeacher[
-                teacherProfileId
-              ] = "accepted";
-
-              return;
-            }
-
-            /*
-            rejected
-
-            Student can request again.
-            */
-
-            if (
-              status === "rejected"
-            ) {
-
-              latestStatusByTeacher[
-                teacherProfileId
-              ] = "idle";
-
-              return;
-            }
-
-            /*
-            Anything else
-            */
-
-            latestStatusByTeacher[
-              teacherProfileId
-            ] = "idle";
-          }
-        );
-
-        setRequestStatusById(
-          latestStatusByTeacher
-        );
-
-      } catch (err) {
-
-        console.error(
-          "Failed to load request status:",
-          err
-        );
-      }
-    };
+      setRequestStatusById(
+        latestStatusByTeacher
+      );
+    } catch (err) {
+      console.error(
+        "Failed to load request status:",
+        err
+      );
+    }
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -507,43 +421,36 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const fetchSubjects =
-    async () => {
+  const fetchSubjects = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/subjects`,
+        getAuthConfig()
+      );
 
-      try {
+      const subjectList = Array.isArray(
+        response.data?.subjects
+      )
+        ? response.data.subjects
+        : [];
 
-        const response =
-          await axios.get(
-            `${API_BASE_URL}/subjects`,
-            getAuthConfig()
-          );
-
-        const subjectList =
-          Array.isArray(
-            response.data?.subjects
+      setAllSubjects(
+        subjectList
+          .map(
+            (subject) =>
+              subject.subject_name
           )
-            ? response.data.subjects
-            : [];
+          .filter(Boolean)
+      );
+    } catch (err) {
+      console.error(
+        "Failed to load subjects:",
+        err
+      );
 
-        setAllSubjects(
-          subjectList
-            .map(
-              (subject) =>
-                subject.subject_name
-            )
-            .filter(Boolean)
-        );
-
-      } catch (err) {
-
-        console.error(
-          "Failed to load subjects:",
-          err
-        );
-
-        setAllSubjects([]);
-      }
-    };
+      setAllSubjects([]);
+    }
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -551,52 +458,40 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const fetchTutors =
-    async () => {
+  const fetchTutors = async () => {
+    setLoading(true);
+    setError("");
 
-      setLoading(true);
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/find-tutor`,
+        getAuthConfig()
+      );
 
-      setError("");
+      const rawTutors = Array.isArray(
+        response.data?.tutors
+      )
+        ? response.data.tutors
+        : [];
 
-      try {
+      setTutors(
+        rawTutors.map(normalizeTutor)
+      );
+    } catch (err) {
+      console.error(
+        "Failed to load tutors:",
+        err
+      );
 
-        const response =
-          await axios.get(
-            `${API_BASE_URL}/find-tutor`,
-            getAuthConfig()
-          );
+      setTutors([]);
 
-        const rawTutors =
-          Array.isArray(
-            response.data?.tutors
-          )
-            ? response.data.tutors
-            : [];
-
-        setTutors(
-          rawTutors.map(
-            normalizeTutor
-          )
-        );
-
-      } catch (err) {
-
-        console.error(
-          "Failed to load tutors:",
-          err
-        );
-
-        setTutors([]);
-
-        setError(
-          "Unable to load tutors right now. Please try again."
-        );
-
-      } finally {
-
-        setLoading(false);
-      }
-    };
+      setError(
+        "Unable to load tutors right now. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -605,35 +500,22 @@ export default function FindTutor() {
   */
 
   useEffect(() => {
-
     fetchTutors();
-
     fetchSubjects();
-
     fetchMyRequests();
-
   }, []);
 
   /*
   |--------------------------------------------------------------------------
-  | REFRESH REQUEST STATUS WHEN STUDENT COMES BACK TO TAB
+  | REFRESH REQUEST STATUS WHEN STUDENT
+  | COMES BACK TO TAB
   |--------------------------------------------------------------------------
-  |
-  | Example:
-  |
-  | Student sends request
-  | Teacher accepts from another browser/tab
-  | Student comes back
-  | Status automatically becomes Accepted
-  |
   */
 
   useEffect(() => {
-
-    const handleWindowFocus =
-      () => {
-        fetchMyRequests();
-      };
+    const handleWindowFocus = () => {
+      fetchMyRequests();
+    };
 
     window.addEventListener(
       "focus",
@@ -646,7 +528,6 @@ export default function FindTutor() {
         handleWindowFocus
       );
     };
-
   }, []);
 
   /*
@@ -655,8 +536,7 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const subjectOptions =
-    allSubjects;
+  const subjectOptions = allSubjects;
 
   /*
   |--------------------------------------------------------------------------
@@ -664,22 +544,17 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const updateFilter =
-    (event) => {
+  const updateFilter = (event) => {
+    const {
+      name,
+      value,
+    } = event.target;
 
-      const {
-        name,
-        value,
-      } =
-        event.target;
-
-      setFilters(
-        (current) => ({
-          ...current,
-          [name]: value,
-        })
-      );
-    };
+    setFilters((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -687,15 +562,11 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const handleSearch =
-    (event) => {
+  const handleSearch = (event) => {
+    event.preventDefault();
 
-      event.preventDefault();
-
-      setAppliedFilters(
-        filters
-      );
-    };
+    setAppliedFilters(filters);
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -703,17 +574,10 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const handleReset =
-    () => {
-
-      setFilters(
-        initialFilters
-      );
-
-      setAppliedFilters(
-        initialFilters
-      );
-    };
+  const handleReset = () => {
+    setFilters(initialFilters);
+    setAppliedFilters(initialFilters);
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -721,65 +585,50 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const filteredTutors =
-    useMemo(() => {
+  const filteredTutors = useMemo(() => {
+    return tutors.filter((tutor) => {
+      const matchesSubject =
+        !appliedFilters.subject ||
+        (tutor.subjects || []).some(
+          (subject) =>
+            subject?.toLowerCase() ===
+            appliedFilters.subject.toLowerCase()
+        );
 
-      return tutors.filter(
-        (tutor) => {
-
-          const matchesSubject =
-            !appliedFilters.subject ||
-            (
-              tutor.subjects || []
-            ).some(
-              (subject) =>
-                subject
-                  ?.toLowerCase() ===
-                appliedFilters
-                  .subject
-                  .toLowerCase()
-            );
-
-          const matchesLocation =
-            !appliedFilters.location ||
-            tutor.location
-              ?.toLowerCase()
-              .includes(
-                appliedFilters
-                  .location
-                  .toLowerCase()
-              );
-
-          const matchesMode =
-            !appliedFilters.mode ||
-            tutor.mode
-              ?.toLowerCase() ===
-              appliedFilters
-                .mode
-                .toLowerCase() ||
-            tutor.mode
-              ?.toLowerCase() ===
-              "both";
-
-          const matchesPrice =
-            matchesPriceRange(
-              tutor.price,
-              appliedFilters.price
-            );
-
-          return (
-            matchesSubject &&
-            matchesLocation &&
-            matchesMode &&
-            matchesPrice
+      const matchesLocation =
+        !appliedFilters.location ||
+        tutor.location
+          ?.toLowerCase()
+          .includes(
+            appliedFilters.location.toLowerCase()
           );
-        }
-      );
 
-    }, [
-      tutors,
-      appliedFilters,
-    ]);
+      const matchesMode =
+        !appliedFilters.mode ||
+        tutor.mode?.toLowerCase() ===
+          appliedFilters.mode.toLowerCase() ||
+        tutor.mode?.toLowerCase() === "both";
+
+      const matchesPrice =
+        matchesPriceRange(
+          tutor.price,
+          appliedFilters.price
+        );
+
+      const matchesGender =
+        !appliedFilters.gender ||
+        tutor.gender?.toLowerCase() ===
+          appliedFilters.gender.toLowerCase();
+
+      return (
+        matchesSubject &&
+        matchesLocation &&
+        matchesMode &&
+        matchesPrice &&
+        matchesGender
+      );
+    });
+  }, [tutors, appliedFilters]);
 
   /*
   |--------------------------------------------------------------------------
@@ -787,57 +636,31 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const sortedTutors =
-    useMemo(() => {
+  const sortedTutors = useMemo(() => {
+    const list = [...filteredTutors];
 
-      const list = [
-        ...filteredTutors,
-      ];
+    if (sortBy === "price-asc") {
+      list.sort(
+        (a, b) =>
+          (a.price ?? Infinity) -
+          (b.price ?? Infinity)
+      );
+    } else if (sortBy === "price-desc") {
+      list.sort(
+        (a, b) =>
+          (b.price ?? -Infinity) -
+          (a.price ?? -Infinity)
+      );
+    } else if (sortBy === "rating-desc") {
+      list.sort(
+        (a, b) =>
+          (b.rating ?? 0) -
+          (a.rating ?? 0)
+      );
+    }
 
-      if (
-        sortBy ===
-        "price-asc"
-      ) {
-
-        list.sort(
-          (a, b) =>
-            (a.price ??
-              Infinity) -
-            (b.price ??
-              Infinity)
-        );
-
-      } else if (
-        sortBy ===
-        "price-desc"
-      ) {
-
-        list.sort(
-          (a, b) =>
-            (b.price ??
-              -Infinity) -
-            (a.price ??
-              -Infinity)
-        );
-
-      } else if (
-        sortBy ===
-        "rating-desc"
-      ) {
-
-        list.sort(
-          (a, b) =>
-            (b.rating ?? 0) -
-            (a.rating ?? 0)
-        );
-      }
-
-      return list;
-
-    }, [
-      filteredTutors,
-      sortBy,
-    ]);
+    return list;
+  }, [filteredTutors, sortBy]);
 
   /*
   |--------------------------------------------------------------------------
@@ -845,25 +668,18 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const toggleFavorite =
-    (tutor) => {
-
-      setFavorites(
-        (current) =>
-          current.includes(
-            tutor.id
+  const toggleFavorite = (tutor) => {
+    setFavorites((current) =>
+      current.includes(tutor.id)
+        ? current.filter(
+            (id) => id !== tutor.id
           )
-            ? current.filter(
-                (id) =>
-                  id !== tutor.id
-              )
-            : [
-                ...current,
-                tutor.id,
-              ]
-      );
-    };
-
+        : [
+            ...current,
+            tutor.id,
+          ]
+    );
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -871,21 +687,11 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-      const matchesGender =
-        !appliedFilters.gender ||
-        tutor.gender?.toLowerCase() === appliedFilters.gender.toLowerCase();
-
-      return matchesSubject && matchesLocation && matchesMode && matchesPrice && matchesGender;
-    });
-  }, [tutors, appliedFilters]);
-
-  const handleViewProfile =
-    (tutor) => {
-
-      navigate(
-        `/tutor-profile/${tutor.id}`
-      );
-    };
+  const handleViewProfile = (tutor) => {
+    navigate(
+      `/tutor-profile/${tutor.id}`
+    );
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -893,166 +699,137 @@ export default function FindTutor() {
   |--------------------------------------------------------------------------
   */
 
-  const handleRequest =
-    async (tutor) => {
+  const handleRequest = async (tutor) => {
+    if (!tutor) {
+      return;
+    }
 
-      if (!tutor) {
-        return;
-      }
+    /*
+    Need teacher_profiles.id
+    */
 
+    if (!tutor.teacherProfileId) {
+      showToast(
+        "error",
+        "Teacher profile is not available."
+      );
+
+      return;
+    }
+
+    const currentStatus =
+      requestStatusById[
+        tutor.teacherProfileId
+      ] || "idle";
+
+    /*
+    |--------------------------------------------------------------------------
+    | Do not allow another request if:
+    |
+    | sending
+    | pending/requested
+    | accepted
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+      currentStatus === "sending" ||
+      currentStatus === "requested" ||
+      currentStatus === "accepted"
+    ) {
+      return;
+    }
+
+    /*
+    Sending state
+    */
+
+    setRequestStatusById(
+      (current) => ({
+        ...current,
+        [tutor.teacherProfileId]:
+          "sending",
+      })
+    );
+
+    try {
       /*
-      Need teacher_profiles.id
+      |--------------------------------------------------------------------------
+      | CORRECT ENDPOINT
+      |--------------------------------------------------------------------------
       */
 
-      if (
-        !tutor.teacherProfileId
-      ) {
-
-        showToast(
-          "error",
-          "Teacher profile is not available."
-        );
-
-        return;
-      }
-
-      const currentStatus =
-        requestStatusById[
-          tutor.teacherProfileId
-        ] || "idle";
+      await axios.post(
+        `${API_BASE_URL}/tuition-requests`,
+        {
+          teacher_profile_id:
+            tutor.teacherProfileId,
+        },
+        getAuthConfig()
+      );
 
       /*
-      ----------------------------------------------------------
-      Do not allow another request if:
-
-      sending
-      pending/requested
-      accepted
-      ----------------------------------------------------------
-      */
-
-      if (
-        currentStatus ===
-          "sending" ||
-        currentStatus ===
-          "requested" ||
-        currentStatus ===
-          "accepted"
-      ) {
-
-        return;
-      }
-
-      /*
-      Sending state
+      Request created as pending.
       */
 
       setRequestStatusById(
         (current) => ({
           ...current,
-
           [tutor.teacherProfileId]:
-            "sending",
+            "requested",
         })
       );
 
-      try {
+      showToast(
+        "success",
+        `Request sent to ${
+          tutor.name || "the tutor"
+        }.`
+      );
+    } catch (err) {
+      const statusCode =
+        err.response?.status;
 
-        /*
-        ----------------------------------------------------------
-        NEW CORRECT ENDPOINT
-        ----------------------------------------------------------
-        */
+      const serverMessage =
+        err.response?.data?.message;
 
-        await axios.post(
-          `${API_BASE_URL}/tuition-requests`,
+      /*
+      |--------------------------------------------------------------------------
+      | Backend says active request already exists.
+      | Reload actual status.
+      |--------------------------------------------------------------------------
+      */
 
-          {
-            teacher_profile_id:
-              tutor.teacherProfileId,
-          },
+      if (statusCode === 422) {
+        await fetchMyRequests();
 
-          getAuthConfig()
+        showToast(
+          "info",
+          serverMessage ||
+            "You already have an active request with this tutor."
         );
-
-        /*
-        Request created as pending.
-        */
-
+      } else {
         setRequestStatusById(
           (current) => ({
             ...current,
-
             [tutor.teacherProfileId]:
-              "requested",
+              "idle",
           })
         );
 
         showToast(
-          "success",
-          `Request sent to ${
-            tutor.name ||
-            "the tutor"
-          }.`
-        );
-
-      } catch (err) {
-
-        const statusCode =
-          err.response?.status;
-
-        const serverMessage =
-          err.response?.data
-            ?.message;
-
-        /*
-        ----------------------------------------------------------
-        Backend says active request already exists.
-
-        Reload actual status.
-
-        Example:
-        accepted → Accepted
-        pending  → Requested
-        ----------------------------------------------------------
-        */
-
-        if (
-          statusCode === 422
-        ) {
-
-          await fetchMyRequests();
-
-          showToast(
-            "info",
-            serverMessage ||
-              "You already have an active request with this tutor."
-          );
-
-        } else {
-
-          setRequestStatusById(
-            (current) => ({
-              ...current,
-
-              [tutor.teacherProfileId]:
-                "idle",
-            })
-          );
-
-          showToast(
-            "error",
-            serverMessage ||
-              "Could not send the request. Please try again."
-          );
-        }
-
-        console.error(
-          "Tutor request error:",
-          err
+          "error",
+          serverMessage ||
+            "Could not send the request. Please try again."
         );
       }
-    };
+
+      console.error(
+        "Tutor request error:",
+        err
+      );
+    }
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -1062,7 +839,6 @@ export default function FindTutor() {
 
   return (
     <main className="find-tutor-page">
-
       <DashboardSidebar />
 
       <section className="find-tutor-content">
@@ -1070,7 +846,6 @@ export default function FindTutor() {
         {/* PAGE TITLE */}
 
         <div className="find-tutor-heading">
-
           <h1>
             Find the{" "}
             <span>
@@ -1079,34 +854,27 @@ export default function FindTutor() {
           </h1>
 
           <p>
-            Search and connect
-            with the best tutors
-            for your learning needs.
+            Search and connect with the best
+            tutors for your learning needs.
           </p>
-
         </div>
 
         {/* SEARCH BAR */}
 
         <form
           className="tutor-search-bar"
-          onSubmit={
-            handleSearch
-          }
+          onSubmit={handleSearch}
         >
 
           {/* SUBJECT */}
 
           <label className="tutor-search-field">
-
             <span className="ft-label">
               Subject
             </span>
 
             <span className="ft-input-wrap">
-
               <FieldIcon>
-
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -1116,61 +884,42 @@ export default function FindTutor() {
                   strokeLinejoin="round"
                 >
                   <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-
                   <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
                 </svg>
-
               </FieldIcon>
 
               <select
                 name="subject"
-                value={
-                  filters.subject
-                }
-                onChange={
-                  updateFilter
-                }
+                value={filters.subject}
+                onChange={updateFilter}
               >
-
                 <option value="">
                   Select subject
                 </option>
 
                 {subjectOptions.map(
                   (subject) => (
-
                     <option
-                      key={
-                        subject
-                      }
-                      value={
-                        subject
-                      }
+                      key={subject}
+                      value={subject}
                     >
                       {subject}
                     </option>
-
                   )
                 )}
-
               </select>
-
             </span>
-
           </label>
 
           {/* LOCATION */}
 
           <label className="tutor-search-field">
-
             <span className="ft-label">
               Location
             </span>
 
             <span className="ft-input-wrap">
-
               <FieldIcon>
-
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -1181,37 +930,27 @@ export default function FindTutor() {
                 >
                   <path d="M12 21s7-5.1 7-12a7 7 0 1 0-14 0c0 6.9 7 12 7 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                 </svg>
-
               </FieldIcon>
 
               <input
                 name="location"
-                value={
-                  filters.location
-                }
-                onChange={
-                  updateFilter
-                }
+                value={filters.location}
+                onChange={updateFilter}
                 placeholder="Enter city or area"
                 type="text"
               />
-
             </span>
-
           </label>
 
           {/* MODE */}
 
           <label className="tutor-search-field">
-
             <span className="ft-label">
               Mode of Tutoring
             </span>
 
             <span className="ft-input-wrap">
-
               <FieldIcon>
-
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -1230,19 +969,13 @@ export default function FindTutor() {
 
                   <path d="M8 21h8M12 17v4" />
                 </svg>
-
               </FieldIcon>
 
               <select
                 name="mode"
-                value={
-                  filters.mode
-                }
-                onChange={
-                  updateFilter
-                }
+                value={filters.mode}
+                onChange={updateFilter}
               >
-
                 <option value="">
                   Any mode
                 </option>
@@ -1258,62 +991,88 @@ export default function FindTutor() {
                 <option value="both">
                   Both
                 </option>
-
               </select>
-
             </span>
-
           </label>
 
           {/* PRICE */}
 
           <label className="tutor-search-field">
-
             <span className="ft-label">
               Price
             </span>
 
             <span className="ft-input-wrap">
-
               <FieldIcon>
                 <span className="ft-price-symbol">
-                  $
+                  ৳
                 </span>
               </FieldIcon>
 
               <select
                 name="price"
-                value={
-                  filters.price
-                }
-                onChange={
-                  updateFilter
-                }
+                value={filters.price}
+                onChange={updateFilter}
               >
-
                 {priceRanges.map(
                   (range) => (
-
                     <option
-                      key={
-                        range.value
-                      }
-                      value={
-                        range.value
-                      }
+                      key={range.value}
+                      value={range.value}
                     >
                       {range.label}
                     </option>
-
                   )
                 )}
-
               </select>
-
             </span>
-
           </label>
 
+          {/* GENDER */}
+
+          <label className="tutor-search-field">
+            <span className="ft-label">
+              Gender
+            </span>
+
+            <span className="ft-input-wrap">
+              <FieldIcon>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="5"
+                  />
+
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+              </FieldIcon>
+
+              <select
+                name="gender"
+                value={filters.gender}
+                onChange={updateFilter}
+              >
+                {genderOptions.map(
+                  (option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  )
+                )}
+              </select>
+            </span>
+          </label>
 
           {/* SEARCH BUTTON */}
 
@@ -1321,43 +1080,15 @@ export default function FindTutor() {
             type="submit"
             className="tutor-search-button"
           >
-
-
-          <label className="tutor-search-field">
-            <span className="ft-label">Gender</span>
-            <span className="ft-input-wrap">
-              <FieldIcon>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="5" />
-                  <path d="M20 21a8 8 0 0 0-16 0" />
-                </svg>
-              </FieldIcon>
-              <select name="gender" value={filters.gender} onChange={updateFilter}>
-                {genderOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </span>
-          </label>
-
-          <button type="submit" className="tutor-search-button">
-
             <SearchIcon className="ft-search-icon" />
-
             Search Tutors
-
           </button>
-
         </form>
 
         {/* RESULTS HEADER */}
 
         <div className="tutor-results-header">
-
           <p className="tutor-results-count">
-
             {loading
               ? "Searching tutors…"
               : `${sortedTutors.length} Tutor${
@@ -1365,121 +1096,76 @@ export default function FindTutor() {
                     ? ""
                     : "s"
                 } found`}
-
           </p>
 
           <label className="tutor-sort">
-
             Sort by
 
             <select
-              value={
-                sortBy
-              }
-              onChange={(
-                event
-              ) =>
+              value={sortBy}
+              onChange={(event) =>
                 setSortBy(
                   event.target.value
                 )
               }
             >
-
               {sortOptions.map(
                 (option) => (
-
                   <option
-                    key={
-                      option.value
-                    }
-                    value={
-                      option.value
-                    }
+                    key={option.value}
+                    value={option.value}
                   >
                     {option.label}
                   </option>
-
                 )
               )}
-
             </select>
-
           </label>
-
         </div>
 
         {/* TOAST */}
 
         {toast && (
-
           <div
             className={`tutor-toast tutor-toast-${toast.type}`}
             role="status"
           >
             {toast.message}
           </div>
-
         )}
 
         {/* LOADING */}
 
         {loading && (
-
           <div className="tutor-results-status">
-
             <p>
               Loading tutors…
             </p>
-
           </div>
-
         )}
-
 
         {/* ERROR */}
 
-        {!loading &&
-          error && (
+        {!loading && error && (
+          <div className="tutor-results-status">
+            <p>{error}</p>
 
-            <div className="tutor-results-status">
-
-              <p>
-                {error}
-              </p>
-
-              <button
-                type="button"
-                className="tutor-retry-button"
-                onClick={
-                  fetchTutors
-                }
-              >
-                Try Again
-
-        {!loading && !error && sortedTutors.length === 0 && (
-          <div className="tutor-empty-state">
-            <SearchIcon className="tutor-empty-icon" />
-            <h2>No tutors found.</h2>
-            <p>Try changing your search criteria.</p>
-            {(appliedFilters.subject || appliedFilters.location || appliedFilters.mode || appliedFilters.price || appliedFilters.gender) && (
-              <button type="button" className="tutor-retry-button" onClick={handleReset}>
-                Clear Search
-
-              </button>
-
-            </div>
-
-          )}
+            <button
+              type="button"
+              className="tutor-retry-button"
+              onClick={fetchTutors}
+            >
+              Try Again
+            </button>
+          </div>
+        )}
 
         {/* NO RESULTS */}
 
         {!loading &&
           !error &&
-          sortedTutors.length ===
-            0 && (
-
+          sortedTutors.length === 0 && (
             <div className="tutor-empty-state">
-
               <SearchIcon className="tutor-empty-icon" />
 
               <h2>
@@ -1487,48 +1173,40 @@ export default function FindTutor() {
               </h2>
 
               <p>
-                Try changing your
-                search criteria.
+                Try changing your search criteria.
               </p>
 
-              {(appliedFilters.subject ||
+              {(
+                appliedFilters.subject ||
                 appliedFilters.location ||
                 appliedFilters.mode ||
-                appliedFilters.price) && (
-
+                appliedFilters.price ||
+                appliedFilters.gender
+              ) && (
                 <button
                   type="button"
                   className="tutor-retry-button"
-                  onClick={
-                    handleReset
-                  }
+                  onClick={handleReset}
                 >
                   Clear Search
                 </button>
-
               )}
-
             </div>
-
           )}
 
         {/* TUTOR CARDS */}
 
         {!loading &&
           !error &&
-          sortedTutors.length >
-            0 && (
-
+          sortedTutors.length > 0 && (
             <div className="tutor-results-list">
-
               {sortedTutors.map(
                 (tutor) => {
-
                   /*
-                  IMPORTANT:
-
-                  Status lookup uses
-                  teacher_profiles.id
+                  |--------------------------------------------------------------------------
+                  | IMPORTANT:
+                  | Status lookup uses teacher_profiles.id
+                  |--------------------------------------------------------------------------
                   */
 
                   const requestState =
@@ -1537,49 +1215,32 @@ export default function FindTutor() {
                     ] || "idle";
 
                   return (
-
                     <TutorCard
-                      key={
+                      key={tutor.id}
+                      tutor={tutor}
+                      isFavorite={favorites.includes(
                         tutor.id
-                      }
-
-                      tutor={
-                        tutor
-                      }
-
-                      isFavorite={
-                        favorites.includes(
-                          tutor.id
-                        )
-                      }
-
+                      )}
                       onToggleFavorite={
                         toggleFavorite
                       }
-
                       onViewProfile={
                         handleViewProfile
                       }
-
                       onRequest={
                         handleRequest
                       }
-
                       requestState={
                         requestState
                       }
                     />
-
                   );
                 }
               )}
-
             </div>
-
           )}
 
       </section>
-
     </main>
   );
 }
