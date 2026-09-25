@@ -5,6 +5,8 @@ A database-driven web platform that directly connects students with qualified tu
 TutorSphere provides a two-way platform where students can search for tutors, post their tutoring requirements, and hire suitable tutors. At the same time, tutors can showcase their qualifications and tutoring services, browse student requirements, and respond to suitable opportunities.
 
 ---
+# Diagram and Video
+<img width="7597" height="4211" alt="diagram" src="https://github.com/user-attachments/assets/f07e8390-1d5c-4c50-aa43-c5ab743dbcc1" />
 
 # 📌 Project Overview
 
