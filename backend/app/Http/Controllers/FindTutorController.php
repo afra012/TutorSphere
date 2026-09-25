@@ -274,15 +274,9 @@ class FindTutorController extends Controller
 
         return response()->json([
             'message' => 'Tutor profile retrieved successfully.',
-
-            'tutor' => $this->formatTutorCard(
-                $teacher,
-                $request
-
             'tutor' => array_merge(
                 $this->formatTutorCard($teacher, $request),
                 $this->formatTutorDetails($teacher)
-
             ),
         ], 200);
     }
@@ -293,19 +287,6 @@ class FindTutorController extends Controller
     |--------------------------------------------------------------------------
     */
 
-
-    private function formatTutorCard(
-        User $teacher,
-        Request $request
-    ): array {
-
-    // =========================================================
-    // EXTRA FIELDS FOR THE FULL TUTOR PROFILE PAGE
-    // =========================================================
-    //
-    // Only public-safe fields are added here. phone, email and
-    // date_of_birth are intentionally NOT exposed.
-    // =========================================================
 
     private function formatTutorDetails(User $teacher): array
     {
@@ -365,56 +346,11 @@ class FindTutorController extends Controller
                 : null;
 
         return [
-            /*
-            users.id
-            Used for View Profile
-            */
+            // users.id: used by the tutor profile and request APIs.
             'teacher_id' => $teacher->id,
-
-            /*
-            teacher_profiles.id
-            Used for Tutor Request
-            */
+            // teacher_profiles.id: retained for existing consumers.
             'teacher_profile_id' => $profile->id,
-
             'name' => $teacher->name,
-
-            'profile_picture' =>
-                $profilePictureUrl,
-
-            'location' =>
-                $profile->location,
-
-            'subjects' =>
-                $profile
-                    ->subjects
-                    ->pluck('subject_name')
-                    ->values(),
-
-            'qualification' =>
-                $profile->qualification,
-
-            'teaching_experience' =>
-                $profile->teaching_experience,
-
-            'tutoring_mode' =>
-                $profile->tutoring_mode,
-
-            'hourly_rate' =>
-                $profile->hourly_rate,
-
-            'availability' =>
-                $profile->availability,
-
-            'bio' =>
-                $profile->bio,
-
-            'languages' =>
-                $profile
-                    ->languages
-                    ->pluck('language_name')
-                    ->values(),
-
             'profile_picture' => $profilePictureUrl,
             'location' => $profile->location,
             'gender' => $profile->gender,
@@ -426,11 +362,8 @@ class FindTutorController extends Controller
             'availability' => $profile->availability,
             'bio' => $profile->bio,
             'languages' => $profile->languages->pluck('language_name')->values(),
-
             'rating' => $rating,
-
-            'review_count' =>
-                $teacher->reviews_count,
+            'review_count' => $teacher->reviews_count,
         ];
     }
 }
