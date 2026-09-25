@@ -9,6 +9,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\TeacherProfileController;
 use App\Http\Controllers\TutorPostController;
+use App\Http\Controllers\TutoringRequestController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\AdminController;
 
@@ -230,6 +231,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/find-tutor/{id}', [
         FindTutorController::class,
         'show'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tutoring Requests (student -> tutor)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/tutoring-requests', [
+        TutoringRequestController::class,
+        'index'
+    ]);
+
+    Route::post('/tutoring-requests', [
+        TutoringRequestController::class,
+        'store'
+    ]);
+
+    Route::patch('/tutoring-requests/{id}/status', [
+        TutoringRequestController::class,
+        'updateStatus'
     ]);
 
     /*

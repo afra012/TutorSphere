@@ -1,14 +1,57 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import api from "../../api/axios";
 import TeacherSidebar from "./components/TeacherSidebar";
 import "./TeacherRequests.css";
+
+const STATUS_LABELS = {
+  pending: "Pending",
+  accepted: "Accepted",
+  rejected: "Rejected",
+  cancelled: "Cancelled",
+};
+
+const formatDate = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? ""
+    : date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+};
 
 export default function TeacherRequests() {
   const navigate = useNavigate();
 
-  const [requests] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [busyId, setBusyId] = useState(null);
+
+  const loadRequests = useCallback(async () => {
+    setError("");
+
+    try {
+      const response = await api.get("/tutoring-requests");
+      setRequests(
+        Array.isArray(response.data?.requests) ? response.data.requests : []
+      );
+    } catch (err) {
+      if (err.response?.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
+      console.error("Failed to load requests:", err);
+      setError("Unable to load requests right now. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -33,10 +76,36 @@ export default function TeacherRequests() {
       return;
     }
 
-    // Direct tutor requests will be connected here later.
-    // Student tutor posts must NOT appear as teacher requests.
-    setLoading(false);
-  }, [navigate]);
+    loadRequests();
+  }, [navigate, loadRequests]);
+
+  const updateStatus = async (request, status) => {
+    if (busyId) return;
+
+    setBusyId(request.id);
+    setError("");
+
+    try {
+      const response = await api.patch(
+        `/tutoring-requests/${request.id}/status`,
+        { status }
+      );
+
+      const updated = response.data?.request;
+
+      setRequests((current) =>
+        current.map((r) => (r.id === request.id ? { ...r, ...updated } : r))
+      );
+    } catch (err) {
+      console.error("Failed to update request:", err);
+      setError(
+        err.response?.data?.message ||
+          "Could not update this request. Please try again."
+      );
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   return (
     <div className="teacher-requests-layout">
@@ -47,11 +116,13 @@ export default function TeacherRequests() {
           <div>
             <p className="teacher-page-label">Student requests</p>
             <h1>Requests</h1>
-            <p>Students looking for a teacher like you</p>
+            <p>Students who have asked to learn with you</p>
           </div>
         </header>
 
         <section className="teacher-request-content">
+          {error && <p className="teacher-request-error">{error}</p>}
+
           {loading ? (
             <div className="teacher-empty-state">
               <h2>Loading requests...</h2>
@@ -66,56 +137,86 @@ export default function TeacherRequests() {
             </div>
           ) : (
             <div className="teacher-request-list">
-              {requests.map((request) => (
-                <article
-                  className="teacher-request-card"
-                  key={request.id}
-                >
-                  <div>
-                    <h2>
-                      {request.subject_name || "Student Request"}
-                    </h2>
+              {requests.map((request) => {
+                const status = String(request.status || "pending").toLowerCase();
+                const isPending = status === "pending";
+                const isBusy = busyId === request.id;
 
-                    <strong className="teacher-request-student">
-                      Requested by {request.student_name || "Student"}
-                    </strong>
+                return (
+                  <article className="teacher-request-card" key={request.id}>
+                    <div>
+                      <h2>{request.student_name || "Student"}</h2>
 
-                    <p>
-                      {request.description ||
-                        "No description available."}
-                    </p>
-                  </div>
-
-                  <div className="teacher-request-meta">
-                    <span>
-                      Status:{" "}
-                      <strong>
-                        {request.status || "Pending"}
+                      <strong className="teacher-request-student">
+                        Sent a tutoring request
+                        {request.created_at
+                          ? ` on ${formatDate(request.created_at)}`
+                          : ""}
                       </strong>
-                    </span>
 
-                    <span>
-                      Location: {request.location || "Not specified"}
-                    </span>
+                      <p>{request.message || "No message included."}</p>
 
-                    <span>
-                      Budget: BDT{" "}
-                      {request.salary_min ??
-                        request.salary_amount ??
-                        "0"}{" "}
-                      -{" "}
-                      {request.salary_max ??
-                        request.salary_amount ??
-                        "0"}
-                    </span>
+                      {status === "accepted" &&
+                        (request.student_email || request.student_phone) && (
+                          <p className="teacher-request-contact">
+                            {request.student_email && (
+                              <span>Email: {request.student_email}</span>
+                            )}
+                            {request.student_phone && (
+                              <span>Phone: {request.student_phone}</span>
+                            )}
+                          </p>
+                        )}
+                    </div>
 
-                    <span>
-                      Schedule:{" "}
-                      {request.salary_period || "Flexible"}
-                    </span>
-                  </div>
-                </article>
-              ))}
+                    <div className="teacher-request-meta">
+                      <span>
+                        Status:{" "}
+                        <strong
+                          className={`teacher-request-status is-${status}`}
+                        >
+                          {STATUS_LABELS[status] || request.status}
+                        </strong>
+                      </span>
+
+                      <span>
+                        Location: {request.location || "Not specified"}
+                      </span>
+
+                      {(request.education_level || request.class_grade) && (
+                        <span>
+                          Level:{" "}
+                          {[request.education_level, request.class_grade]
+                            .filter(Boolean)
+                            .join(" • ")}
+                        </span>
+                      )}
+
+                      {isPending && (
+                        <div className="teacher-request-actions">
+                          <button
+                            type="button"
+                            className="teacher-request-accept"
+                            disabled={isBusy}
+                            onClick={() => updateStatus(request, "accepted")}
+                          >
+                            {isBusy ? "Saving..." : "Accept"}
+                          </button>
+
+                          <button
+                            type="button"
+                            className="teacher-request-reject"
+                            disabled={isBusy}
+                            onClick={() => updateStatus(request, "rejected")}
+                          >
+                            Decline
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           )}
         </section>
