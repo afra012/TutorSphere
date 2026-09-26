@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
+use App\Models\SubscriptionPurchase;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -106,6 +107,34 @@ class AdminController extends Controller
         ]);
     }
 
+    public function subscriptionHistory(Request $request)
+    {
+        $error = $this->checkAdmin($request);
+
+        if ($error) {
+            return $error;
+        }
+
+        $purchases = SubscriptionPurchase::query()
+            ->with('user:id,name,email,role')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'purchases' => $purchases,
+            'summary' => [
+                'total' => $purchases->count(),
+                'paid' => $purchases->where('status', 'paid')->count(),
+                'revenue' => $purchases
+                    ->where('status', 'paid')
+                    ->sum(fn ($purchase) => (float) $purchase->amount),
+                'simulated' => $purchases->where('status', 'simulated')->count(),
+                'simulated_value' => $purchases
+                    ->where('status', 'simulated')
+                    ->sum(fn ($purchase) => (float) $purchase->amount),
+            ],
+        ]);
+    }
     public function addAdmin(Request $request)
     {
         $error = $this->checkAdmin($request);
