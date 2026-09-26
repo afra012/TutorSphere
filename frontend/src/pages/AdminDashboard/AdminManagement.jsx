@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminManagement.css";
+import AdminSidebar from "./AdminSidebar";
 
 function AdminManagement() {
   const navigate = useNavigate();
@@ -98,18 +99,10 @@ function AdminManagement() {
   };
 
   return (
-    <main className="admin-management-page">
+    <>
+      <AdminSidebar />
+      <main className="admin-management-page">
       <div className="admin-management-container">
-
-        <button
-          type="button"
-          className="admin-management-back"
-          onClick={() =>
-            navigate("/admin-dashboard")
-          }
-        >
-          ← Back to Dashboard
-        </button>
 
         <div className="admin-management-header">
           <span className="admin-management-badge">
@@ -212,7 +205,8 @@ function AdminManagement() {
         </div>
 
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
