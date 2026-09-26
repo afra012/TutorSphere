@@ -108,3 +108,16 @@ body {
 #root {
   width: 100%;
 }
+/* Keep default copy and form controls consistent across the app. */
+html,
+body,
+#root {
+  font-family: var(--sans);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
