@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TuitionRequestController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TeacherPostRequestController;
+use App\Http\Controllers\TeacherPostRequestNotificationController;
 
 
 /*
@@ -316,6 +317,31 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/teacher/post-requests', [
         TeacherPostRequestController::class,
         'teacherRequests'
+    ]);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Notifications for Teacher Post Requests
+    |--------------------------------------------------------------------------
+    */
+
+    // Student sees teacher request notifications
+    Route::get('/student/teacher-post-request-notifications', [
+        TeacherPostRequestNotificationController::class,
+        'index'
+    ]);
+
+    // Student marks one notification as read
+    Route::patch('/student/teacher-post-request-notifications/{id}/read', [
+        TeacherPostRequestNotificationController::class,
+        'markAsRead'
+    ]);
+
+    // Student accepts or rejects teacher request
+    Route::patch('/student/teacher-post-request-notifications/{id}/respond', [
+        TeacherPostRequestNotificationController::class,
+        'respond'
     ]);
 
 

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class TeacherPostRequestController extends Controller
 {
-    // Teacher sends request for a student post
     public function store(Request $request)
     {
         $user = $request->user();
@@ -32,7 +31,6 @@ class TeacherPostRequestController extends Controller
             ]
         ]);
 
-        // Find the selected student post
         $post = DB::selectOne(
             "
             SELECT id, student_id
@@ -49,7 +47,6 @@ class TeacherPostRequestController extends Controller
             ], 404);
         }
 
-        // Prevent duplicate active request
         $existingRequest = DB::selectOne(
             "
             SELECT id, status
@@ -97,6 +94,26 @@ class TeacherPostRequestController extends Controller
 
             $requestId = DB::getPdo()->lastInsertId();
 
+            DB::insert(
+                "
+                INSERT INTO teacher_post_request_notifications
+                (
+                    teacher_post_request_id,
+                    student_id,
+                    message,
+                    is_read,
+                    created_at,
+                    updated_at
+                )
+                VALUES (?, ?, ?, 0, NOW(), NOW())
+                ",
+                [
+                    $requestId,
+                    $post->student_id,
+                    'A teacher sent a request for your tutor post.'
+                ]
+            );
+
             DB::commit();
 
             return response()->json([
@@ -119,7 +136,6 @@ class TeacherPostRequestController extends Controller
         }
     }
 
-    // Teacher sees requests already sent
     public function teacherRequests(Request $request)
     {
         $user = $request->user();
