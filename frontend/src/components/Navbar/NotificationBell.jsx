@@ -13,6 +13,7 @@ function NotificationBell({ role }) {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationLoading, setNotificationLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState(null);
 
   /*
   |--------------------------------------------------------------------------
@@ -291,18 +292,14 @@ function NotificationBell({ role }) {
         );
       }
 
-      alert(
-        status === "accepted"
-          ? "Request accepted successfully."
-          : "Request rejected successfully."
-      );
+      setResponseMessage(null);
     } catch (error) {
       console.error(
         "Request response error:",
         error
       );
 
-      alert(error.message);
+      setResponseMessage({ notificationId, message: error.message || "Could not update request." });
     }
   };
 
@@ -571,11 +568,14 @@ function NotificationBell({ role }) {
 
                           {notification.request_status !==
                             "pending" && (
-                            <div className="request-status-text">
-                              Status:{" "}
-                              <strong>
-                                {notification.request_status}
-                              </strong>
+                            <div className="request-response-message request-response-success" role="status">
+                              Request {notification.request_status} successfully.
+                            </div>
+                          )}
+
+                          {responseMessage?.notificationId === notificationId && (
+                            <div className={`request-response-message ${responseMessage.message?.toLowerCase().includes("successfully") ? "request-response-success" : "request-response-error"}`} role="status">
+                              {responseMessage.message}
                             </div>
                           )}
 
