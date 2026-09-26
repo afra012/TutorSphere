@@ -6,7 +6,7 @@ TutorSphere provides a two-way platform where students can search for tutors, po
 
 ---
 # Diagram and Video
-<img width="7597" height="4211" alt="diagram" src="https://github.com/user-attachments/assets/f07e8390-1d5c-4c50-aa43-c5ab743dbcc1" />
+<img width="8149" height="3926" alt="diagram (1)" src="https://github.com/user-attachments/assets/0899c482-64c4-4f02-9d40-4f49e3464991" />
 
 # 📌 Project Overview
 
