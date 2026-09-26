@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { syncProfileAddress } from "../../../api/locationSync";
 import "./TeacherProfile.css";
+import TeacherSidebar from "../components/TeacherSidebar";
 
 const API_URL = "http://127.0.0.1:8000/api";
 const BACKEND_URL = "http://127.0.0.1:8000";
@@ -53,63 +54,8 @@ const getImageUrl = (path) => {
   return `${BACKEND_URL}/${path}`;
 };
 
-function Icon({ name }) {
-  const icons = {
-    dashboard: (
-      <path d="M3 12 12 4l9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8Z" />
-    ),
-
-    requests: (
-      <>
-        <rect x="4" y="3" width="16" height="18" rx="2" />
-        <path d="M8 8h8M8 12h8M8 16h5" />
-      </>
-    ),
-
-    reviews: (
-      <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
-    ),
-
-    profile: (
-      <>
-        <circle cx="12" cy="7" r="4" />
-        <path d="M4 21c.8-4.2 3.5-6 8-6s7.2 1.8 8 6" />
-      </>
-    ),
-
-    posts: (
-      <>
-        <rect x="4" y="4" width="16" height="16" rx="2" />
-        <path d="M8 8h8M8 12h6M8 16h4" />
-      </>
-    ),
-
-    logout: (
-      <>
-        <path d="M10 17l5-5-5-5M15 12H3" />
-        <path d="M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5" />
-      </>
-    ),
-  };
-
-  return (
-    <svg
-      className="teacher-sidebar-icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {icons[name]}
-    </svg>
-  );
-}
-
 export default function TeacherProfile() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [profileImage, setProfileImage] = useState(null);
   const [subjects, setSubjects] = useState([]);
@@ -147,33 +93,6 @@ export default function TeacherProfile() {
     both: false,
   });
 
-  const sidebarItems = [
-    {
-      label: "Dashboard",
-      icon: "dashboard",
-      path: "/teacher-dashboard",
-    },
-    {
-      label: "Requests",
-      icon: "requests",
-      path: "/teacher-requests",
-    },
-    {
-      label: "Reviews",
-      icon: "reviews",
-      path: "/teacher-reviews",
-    },
-    {
-      label: "Profile",
-      icon: "profile",
-      path: "/teacher-profile",
-    },
-    {
-      label: "View Post",
-      icon: "posts",
-      path: "/teacher-posts",
-    },
-  ];
 
   /* =========================
      Load Subjects & Languages
@@ -750,24 +669,6 @@ export default function TeacherProfile() {
     }
   };
 
-  /* =========================
-     Logout
-  ========================= */
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("role");
-
-    sessionStorage.clear();
-
-    navigate("/", {
-      replace: true,
-    });
-  };
 
   /* =========================
      Loading
@@ -776,38 +677,7 @@ export default function TeacherProfile() {
   if (loading) {
     return (
       <main className="teacher-profile-page">
-        <aside className="teacher-profile-sidebar">
-          <nav className="teacher-sidebar-nav">
-            {sidebarItems.map((item) => (
-              <button
-                key={item.label}
-                type="button"
-                className={`teacher-sidebar-link ${
-                  location.pathname === item.path
-                    ? "is-active"
-                    : ""
-                }`}
-                onClick={() =>
-                  navigate(item.path)
-                }
-              >
-                <Icon name={item.icon} />
-                <span>{item.label}</span>
-              </button>
-            ))}
-
-            <div className="teacher-sidebar-divider" />
-
-            <button
-              type="button"
-              className="teacher-sidebar-link teacher-logout"
-              onClick={handleLogout}
-            >
-              <Icon name="logout" />
-              <span>Logout</span>
-            </button>
-          </nav>
-        </aside>
+        <TeacherSidebar />
 
         <section className="teacher-profile-content">
           <div className="teacher-profile-heading">
@@ -828,40 +698,7 @@ export default function TeacherProfile() {
 
       {/* Sidebar */}
 
-      <aside className="teacher-profile-sidebar">
-        <nav className="teacher-sidebar-nav">
-
-          {sidebarItems.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              className={`teacher-sidebar-link ${
-                location.pathname === item.path
-                  ? "is-active"
-                  : ""
-              }`}
-              onClick={() =>
-                navigate(item.path)
-              }
-            >
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </button>
-          ))}
-
-          <div className="teacher-sidebar-divider" />
-
-          <button
-            type="button"
-            className="teacher-sidebar-link teacher-logout"
-            onClick={handleLogout}
-          >
-            <Icon name="logout" />
-            <span>Logout</span>
-          </button>
-
-        </nav>
-      </aside>
+      <TeacherSidebar />
 
       {/* Content */}
 
