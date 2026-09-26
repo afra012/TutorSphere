@@ -50,6 +50,7 @@ import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import AdminProfile from "./pages/AdminDashboard/AdminProfile";
 import AdminReviews from "./pages/AdminDashboard/AdminReviews";
 import AdminManagement from "./pages/AdminDashboard/AdminManagement";
+import AdminSubscriptions from "./pages/AdminDashboard/AdminSubscriptions";
 
 // =========================================================
 // LOCATION
@@ -531,6 +532,18 @@ function App() {
           }
         />
 
+        <Route
+          path="/admin-subscriptions"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+                role="admin"
+              />
+              <AdminSubscriptions />
+            </>
+          }
+        />
         {/* =================================================
             ADMIN PROFILE
         ================================================= */}
