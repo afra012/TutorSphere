@@ -465,3 +465,25 @@
     padding: 25px 16px 35px;
   }
 }
+/* Admin dashboard content beside the shared sidebar. */
+.admin-dashboard {
+  display: flex;
+  align-items: flex-start;
+}
+
+.admin-dashboard .admin-container {
+  width: calc(100% - 230px);
+  max-width: none;
+  margin-left: 230px;
+}
+
+@media (max-width: 800px) {
+  .admin-dashboard {
+    display: block;
+  }
+
+  .admin-dashboard .admin-container {
+    width: 100%;
+    margin-left: 0;
+  }
+}
