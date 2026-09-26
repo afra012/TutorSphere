@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Models\SubscriptionPurchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -105,8 +106,8 @@ class SubscriptionController extends Controller
 
             if ($existing) {
                 $existing->update([
-                    'status' => 'cancelled',
-                    'cancelled_at' => now(),
+                    'status' => 'replaced',
+                    'cancelled_at' => null,
                 ]);
             }
 
@@ -123,6 +124,22 @@ class SubscriptionController extends Controller
                 'status' => 'active',
                 'start_date' => now(),
                 'end_date' => now()->addDays($plan->duration_days),
+            ]);
+
+            // This project currently has a demo checkout, not a verified payment gateway.
+            // Keep the purchase visible to admins without recording simulated revenue.
+            SubscriptionPurchase::create([
+                'user_id' => $user->id,
+                'purchaser_name' => $user->name,
+                'purchaser_email' => $user->email,
+                'purchaser_role' => $user->role,
+                'plan_name' => $plan->name,
+                'amount' => $plan->price,
+                'currency' => 'BDT',
+                'status' => 'simulated',
+                'payment_method' => 'Demo card (no charge)',
+                'starts_at' => $subscription->start_date,
+                'ends_at' => $subscription->end_date,
             ]);
 
             DB::commit();
@@ -197,3 +214,4 @@ class SubscriptionController extends Controller
         }
     }
 }
+
