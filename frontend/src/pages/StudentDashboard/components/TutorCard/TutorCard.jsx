@@ -31,10 +31,6 @@ function TutorIcon({ name }) {
       </>
     ),
 
-    heart: (
-      <path d="M12 20.5s-7.5-4.6-9.8-9.1C.6 8 2 4.5 5.4 3.7c2-.5 3.9.3 5.1 1.9a5 5 0 0 1 1.5-1.9c1.7-1.2 4-.9 5.6.4 2.4 2 2.3 5.4.5 8.4-2.3 3.9-6.1 6-6.1 8Z" />
-    ),
-
     person: (
       <>
         <circle
@@ -103,8 +99,6 @@ function formatMode(mode) {
 
 export default function TutorCard({
   tutor,
-  isFavorite,
-  onToggleFavorite,
   onViewProfile,
   onRequest,
 
@@ -125,6 +119,8 @@ export default function TutorCard({
 
   const {
     name,
+    subscriptionPlan,
+    subscriptionStatus,
     verified,
     avatarUrl,
     subject,
@@ -231,6 +227,14 @@ export default function TutorCard({
             <h3>
               {name || "Unnamed Tutor"}
             </h3>
+
+            {subscriptionPlan && (
+              <span className="tutor-subscription-icon" title={subscriptionPlan + " plan - " + (subscriptionStatus || "subscribed")} aria-label={subscriptionPlan + " plan, " + (subscriptionStatus || "subscribed")}>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M3 6l4 4 3-7 3 7 4-4-2 12H5L3 6Z" />
+                </svg>
+              </span>
+            )}
 
             {verified && (
 
@@ -344,30 +348,6 @@ export default function TutorCard({
       {/* RIGHT SIDE */}
 
       <div className="tutor-card-side">
-
-        {/* FAVORITE */}
-
-        <button
-          type="button"
-          className={`tutor-favorite ${
-            isFavorite
-              ? "is-active"
-              : ""
-          }`}
-          onClick={() =>
-            onToggleFavorite?.(tutor)
-          }
-          aria-label={
-            isFavorite
-              ? "Remove from favorites"
-              : "Add to favorites"
-          }
-          aria-pressed={
-            isFavorite
-          }
-        >
-          <TutorIcon name="heart" />
-        </button>
 
         {/* PRICE */}
 
