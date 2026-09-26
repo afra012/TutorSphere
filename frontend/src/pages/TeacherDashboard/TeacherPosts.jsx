@@ -20,6 +20,7 @@ export default function TeacherPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [requestMessage, setRequestMessage] = useState("");
 
   // Keeps request status for each student post
   // Example:
@@ -121,6 +122,7 @@ export default function TeacherPosts() {
   */
 
   const closeModal = () => {
+    setRequestMessage("");
     setSelectedPost(null);
   };
 
@@ -192,9 +194,7 @@ export default function TeacherPosts() {
         }));
       }
 
-      window.alert(
-        response.data?.message || "Request sent successfully."
-      );
+      setRequestMessage(response.data?.message || "Request sent successfully.");
     } catch (error) {
       const status = error.response?.status;
       const message = error.response?.data?.message;
@@ -214,9 +214,7 @@ export default function TeacherPosts() {
           [postId]: "requested",
         }));
 
-        window.alert(
-          message || "You already requested this student post."
-        );
+        setRequestMessage(message || "You already requested this student post.");
 
         return;
       }
@@ -229,9 +227,7 @@ export default function TeacherPosts() {
         [postId]: "idle",
       }));
 
-      window.alert(
-        message || "Request could not be sent. Please try again."
-      );
+      setRequestMessage(message || "Request could not be sent. Please try again.");
     }
   };
 
@@ -420,9 +416,10 @@ export default function TeacherPosts() {
                     <button
                       type="button"
                       className="view-post-btn"
-                      onClick={() =>
-                        setSelectedPost(post)
-                      }
+                      onClick={() => {
+                        setRequestMessage("");
+                        setSelectedPost(post);
+                      }}
                     >
                       View Post
                       <span>→</span>
@@ -474,6 +471,11 @@ export default function TeacherPosts() {
               </button>
             </div>
 
+            {requestMessage && (
+              <div role="status" style={{ margin: "16px 24px 0", padding: "12px 16px", borderRadius: "8px", background: "#ecfdf3", color: "#166534", border: "1px solid #bbf7d0" }}>
+                {requestMessage}
+              </div>
+            )}
             <div className="post-modal-body">
               <div className="modal-status-row">
                 <span className="modal-active-badge">
