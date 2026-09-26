@@ -339,11 +339,10 @@ export default function TeacherPosts() {
 
                       <div>
                         <small>Student</small>
-
-                        <strong>
-                          {post.student_name ||
-                            "Not available"}
-                        </strong>
+                        <div className="student-post-name-row">
+                          <strong>{post.student_name || "Not available"}</strong>
+                          {post.subscription_plan && <span className="student-subscription-icon" title={post.subscription_plan + " plan"} aria-label={post.subscription_plan + " subscription plan"}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6l4 4 3-7 3 7 4-4-2 12H5L3 6Z" /></svg></span>}
+                        </div>
                       </div>
                     </div>
 
@@ -508,11 +507,10 @@ export default function TeacherPosts() {
 
                     <div>
                       <small>Student</small>
-
-                      <strong>
-                        {selectedPost.student_name ||
-                          "Not available"}
-                      </strong>
+                      <div className="student-post-name-row">
+                        <strong>{selectedPost.student_name || "Not available"}</strong>
+                        {selectedPost.subscription_plan && <span className="student-subscription-icon" title={selectedPost.subscription_plan + " plan"} aria-label={selectedPost.subscription_plan + " subscription plan"}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6l4 4 3-7 3 7 4-4-2 12H5L3 6Z" /></svg></span>}
+                      </div>
                     </div>
                   </div>
 
