@@ -240,7 +240,29 @@ function AdminDashboard() {
                 <span>→</span>
               </button>
             </div>
+            <div className="admin-card">
+              <div className="admin-card-top">
+                <div className="admin-card-icon subscription-icon">BDT</div>
+                <span className="admin-card-label">BILLING</span>
+              </div>
 
+              <div className="admin-card-content">
+                <h2>Subscription History</h2>
+                <p>
+                  View subscribers, purchased plans, payment status,
+                  transaction references, and subscription dates.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="admin-card-button"
+                onClick={() => navigate("/admin-subscriptions")}
+              >
+                View Purchases
+                <span>?</span>
+              </button>
+            </div>
           </div>
 
           <div className="admin-account-bar">
