@@ -433,11 +433,6 @@ Route::middleware('auth:sanctum')->group(function () {
         SubscriptionController::class,
         'subscribe'
     ]);
-
-    Route::post('/subscriptions/cancel', [
-        SubscriptionController::class,
-        'cancel'
-    ]);
 });
 
 /*
@@ -467,6 +462,11 @@ Route::middleware([
     | Admin Reviews
     |--------------------------------------------------------------------------
     */
+
+    Route::get('/admin/subscription-purchases', [
+        AdminController::class,
+        'subscriptionHistory'
+    ]);
 
     Route::get('/admin/reviews', [
         AdminController::class,
