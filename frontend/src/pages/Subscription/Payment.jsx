@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../api/axios";
 import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
@@ -168,7 +168,11 @@ export default function Payment() {
 
             {/* ================= PAYMENT FORM ================= */}
             <section className="payment-form-card">
-              <h2>Payment details</h2>
+              <h2>Demo payment details</h2>
+
+              <div className="payment-demo-notice" role="note">
+                Demo mode: this does not charge a real card. Use test details only.
+              </div>
 
               {error && <div className="payment-alert">{error}</div>}
 
@@ -241,3 +245,4 @@ export default function Payment() {
     </main>
   );
 }
+
