@@ -32,6 +32,13 @@ function Icon({ name }) {
       </>
     ),
 
+    chat: (
+      <>
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
+        <path d="M8 10h.01M12 10h.01M16 10h.01" />
+      </>
+    ),
+
     profile: (
       <>
         <circle cx="12" cy="7" r="4" />
@@ -87,6 +94,11 @@ const items = [
     label: "Location",
     icon: "location",
     path: "/location",
+  },
+  {
+    label: "Chat",
+    icon: "chat",
+    path: "/chat",
   },
   {
     label: "Profile",
