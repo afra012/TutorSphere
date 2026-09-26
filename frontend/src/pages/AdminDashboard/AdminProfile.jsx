@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./AdminProfile.css";
-import Navbar from "../../components/Navbar/Navbar";
+import AdminSidebar from "./AdminSidebar";
 
 function AdminProfile() {
-  const navigate = useNavigate();
 
   let currentUser = null;
 
@@ -28,22 +26,12 @@ function AdminProfile() {
 
   return (
     <>
-      <Navbar dashboardMode={true} />
 
+      <AdminSidebar />
       <main className="admin-profile-page">
         <div className="admin-profile-container">
 
           <div className="admin-profile-header">
-
-            <button
-              type="button"
-              className="admin-profile-back"
-              onClick={() =>
-                navigate("/admin-dashboard")
-              }
-            >
-              ← Back to Dashboard
-            </button>
 
             <span className="admin-profile-badge">
               🛡 Administrator
