@@ -487,3 +487,9 @@
     margin-left: 0;
   }
 }
+.subscription-icon {
+  background: #e8f8ef;
+  color: #16834b;
+  font-size: 12px;
+  font-weight: 800;
+}
