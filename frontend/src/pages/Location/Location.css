@@ -254,3 +254,25 @@
 .student-role-icon {
   background: #0f9d78;
 }
+
+.location-page-with-sidebar {
+  margin-left: 230px;
+}
+
+@media (max-width: 820px) {
+  .location-page-with-sidebar {
+    margin-left: 0;
+  }
+}
+
+
+.location-page-teacher {
+  margin-left: 220px;
+}
+
+@media (max-width: 820px) {
+  .location-page-teacher {
+    margin-left: 0;
+  }
+}
+
