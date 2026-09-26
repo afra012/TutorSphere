@@ -41,6 +41,13 @@ function Icon({ name }) {
       </>
     ),
 
+    chat: (
+      <>
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
+        <path d="M8 10h.01M12 10h.01M16 10h.01" />
+      </>
+    ),
+
     logout: (
       <>
         <path d="M10 17l5-5-5-5M15 12H3" />
@@ -70,6 +77,7 @@ const items = [
   ["Reviews", "reviews", "/teacher-reviews"],
   ["View Post", "post", "/teacher-posts"],
   ["Location", "location", "/location"],
+  ["Chat", "chat", "/chat"],
   ["Profile", "profile", "/teacher-profile"],
 ];
 
