@@ -57,6 +57,7 @@ const STATUS_LABELS = {
   active: "Active",
   expired: "Expired",
   cancelled: "Cancelled",
+  replaced: "Replaced by a new plan",
 };
 
 function formatDate(dateStr) {
@@ -76,7 +77,6 @@ export default function Subscription() {
   const [plans, setPlans] = useState([]);
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(location.state?.paymentSuccess || "");
 
@@ -116,25 +116,6 @@ export default function Subscription() {
     navigate("/subscription/payment", { state: { plan } });
   };
 
-  const handleCancel = async () => {
-    setCancelling(true);
-    setError("");
-    setSuccess("");
-
-    try {
-      const res = await api.post("/subscriptions/cancel");
-
-      setSubscription(res.data?.subscription || null);
-      setSuccess(res.data?.message || "Subscription cancelled.");
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Could not cancel right now. Please try again."
-      );
-    } finally {
-      setCancelling(false);
-    }
-  };
 
   const isCurrentPlan = (planId) =>
     subscription?.status === "active" && subscription?.plan?.id === planId;
@@ -207,17 +188,6 @@ export default function Subscription() {
                   </span>
                 </div>
               </div>
-
-              {subscription.status === "active" && (
-                <button
-                  type="button"
-                  className="subscription-cancel-btn"
-                  onClick={handleCancel}
-                  disabled={cancelling}
-                >
-                  {cancelling ? "Cancelling…" : "Cancel subscription"}
-                </button>
-              )}
             </>
           ) : (
             <p className="subscription-empty">
@@ -276,3 +246,4 @@ export default function Subscription() {
     </main>
   );
 }
+
