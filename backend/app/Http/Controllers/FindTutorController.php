@@ -49,6 +49,9 @@ class FindTutorController extends Controller
             ->with([
                 'teacherProfile.subjects:id,subject_name',
                 'teacherProfile.languages:id,language_name',
+                'subscriptions' => fn ($query) => $query
+                    ->with('plan')
+                    ->latest('start_date'),
             ])
             ->withAvg(
                 ['reviews' => fn ($q) => $q->where('status', 'approved')],
@@ -259,6 +262,9 @@ class FindTutorController extends Controller
             ->with([
                 'teacherProfile.subjects:id,subject_name',
                 'teacherProfile.languages:id,language_name',
+                'subscriptions' => fn ($query) => $query
+                    ->with('plan')
+                    ->latest('start_date'),
             ])
             ->withAvg(
                 ['reviews' => fn ($q) => $q->where('status', 'approved')],
@@ -363,6 +369,8 @@ class FindTutorController extends Controller
             'teacher_profile_id' => $profile->id,
 
             'name' => $teacher->name,
+            'subscription_plan' => $teacher->subscriptions->first()?->plan?->name,
+            'subscription_status' => $teacher->subscriptions->first()?->status,
             'profile_picture' => $profilePictureUrl,
             'location' => $profile->location,
             'gender' => $profile->gender,
