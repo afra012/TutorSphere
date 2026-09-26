@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    PAGE
 ========================================================= */
 
@@ -249,3 +249,15 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+.payment-demo-notice {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid #f0d48a;
+  border-radius: 9px;
+  background: #fff8e6;
+  color: #785500;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
