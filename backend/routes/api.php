@@ -16,7 +16,7 @@ use App\Http\Controllers\TuitionRequestController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TeacherPostRequestController;
 use App\Http\Controllers\TeacherPostRequestNotificationController;
-
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +44,6 @@ Route::get('/auth/google/callback', [
     'callback'
 ]);
 
-
 /*
 |--------------------------------------------------------------------------
 | Public Reviews
@@ -55,7 +54,6 @@ Route::get('/reviews', [
     ReviewController::class,
     'index'
 ]);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +74,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'logout'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Current User
@@ -88,7 +85,6 @@ Route::middleware('auth:sanctum')->group(function () {
             $request->user()
         );
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -105,7 +101,6 @@ Route::middleware('auth:sanctum')->group(function () {
             )->get()
         ]);
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -128,7 +123,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'update'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Subjects
@@ -139,7 +133,6 @@ Route::middleware('auth:sanctum')->group(function () {
         TeacherProfileController::class,
         'subjects'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -157,7 +150,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'update'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Teacher Subjects
@@ -168,7 +160,6 @@ Route::middleware('auth:sanctum')->group(function () {
         TeacherProfileController::class,
         'subjects'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -181,7 +172,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'languages'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Teacher Profile Image
@@ -192,7 +182,6 @@ Route::middleware('auth:sanctum')->group(function () {
         TeacherProfileController::class,
         'uploadImage'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -230,7 +219,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'destroy'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Find Tutor
@@ -246,7 +234,6 @@ Route::middleware('auth:sanctum')->group(function () {
         FindTutorController::class,
         'show'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -278,7 +265,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'updateStatus'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Tutoring Requests (student -> tutor)
@@ -300,7 +286,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'updateStatus'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Teacher Requests for Student Posts
@@ -318,7 +303,6 @@ Route::middleware('auth:sanctum')->group(function () {
         TeacherPostRequestController::class,
         'teacherRequests'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -344,7 +328,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'respond'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Tutor Request Notifications
@@ -368,7 +351,6 @@ Route::middleware('auth:sanctum')->group(function () {
         TuitionRequestController::class,
         'deleteNotification'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -400,7 +382,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'destroy'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Locations
@@ -431,8 +412,33 @@ Route::middleware('auth:sanctum')->group(function () {
         LocationController::class,
         'destroy'
     ]);
-});
 
+    /*
+    |--------------------------------------------------------------------------
+    | Subscriptions
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/subscription-plans', [
+        SubscriptionController::class,
+        'plans'
+    ]);
+
+    Route::get('/subscriptions/current', [
+        SubscriptionController::class,
+        'current'
+    ]);
+
+    Route::post('/subscriptions/subscribe', [
+        SubscriptionController::class,
+        'subscribe'
+    ]);
+
+    Route::post('/subscriptions/cancel', [
+        SubscriptionController::class,
+        'cancel'
+    ]);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -456,7 +462,6 @@ Route::middleware([
         'dashboard'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Admin Reviews
@@ -478,7 +483,6 @@ Route::middleware([
         'rejectReview'
     ]);
 
-
     /*
     |--------------------------------------------------------------------------
     | Admin Management
@@ -489,7 +493,6 @@ Route::middleware([
         AdminController::class,
         'addAdmin'
     ]);
-
 
     /*
     |--------------------------------------------------------------------------

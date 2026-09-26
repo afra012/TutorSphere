@@ -54,6 +54,13 @@ function Icon({ name }) {
         <path d="M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5" />
       </>
     ),
+
+    subscription: (
+      <>
+        <path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8Z" />
+        <path d="M5 21h14" />
+      </>
+    ),
   };
 
   return (
@@ -77,7 +84,9 @@ const items = [
   ["Reviews", "reviews", "/teacher-reviews"],
   ["View Post", "post", "/teacher-posts"],
   ["Location", "location", "/location"],
+
   ["Chat", "chat", "/chat"],
+  ["Subscription", "subscription", "/subscription"],
   ["Profile", "profile", "/teacher-profile"],
 ];
 

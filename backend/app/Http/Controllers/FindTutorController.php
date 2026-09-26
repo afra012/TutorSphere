@@ -8,34 +8,27 @@ use Illuminate\Http\Request;
 
 class FindTutorController extends Controller
 {
-
     /*
     |--------------------------------------------------------------------------
     | LIST / SEARCH TUTORS
     |--------------------------------------------------------------------------
+    |
+    | GET /api/find-tutor
+    |
+    | Optional query params:
+    |   subject      - subject name (partial match)
+    |   subject_id   - exact subject id
+    |   location     - location (partial match)
+    |   mode         - online | in-person | both
+    |   min_price    - minimum hourly rate
+    |   max_price    - maximum hourly rate
+    |   gender       - Male | Female | Other
+    |   per_page     - results per page (default 12, max 50)
+    |
+    | Only returns users with role = teacher who have a saved
+    | teacher profile.
+    |
     */
-
-    // =========================================================
-    // LIST / SEARCH TUTORS
-    // =========================================================
-    //
-    // GET /api/find-tutor
-    //
-    // Optional query params:
-    //   subject      - subject name (partial match)
-    //   subject_id   - exact subject id
-    //   location     - location (partial match)
-    //   mode         - online | in-person | both
-    //   min_price    - minimum hourly rate
-    //   max_price    - maximum hourly rate
-    //   gender       - Male | Female | Other
-    //   per_page     - results per page (default 12, max 50)
-    //
-    // Only returns users with role = teacher who have a saved
-    // teacher profile. No mock/hardcoded data - everything is
-    // pulled from users / teacher_profiles and related tables.
-    // =========================================================
-
 
     public function index(Request $request)
     {
@@ -57,8 +50,13 @@ class FindTutorController extends Controller
                 'teacherProfile.subjects:id,subject_name',
                 'teacherProfile.languages:id,language_name',
             ])
-            ->withAvg(['reviews' => fn ($q) => $q->where('status', 'approved')], 'rating')
-            ->withCount(['reviews' => fn ($q) => $q->where('status', 'approved')])
+            ->withAvg(
+                ['reviews' => fn ($q) => $q->where('status', 'approved')],
+                'rating'
+            )
+            ->withCount(
+                ['reviews' => fn ($q) => $q->where('status', 'approved')]
+            )
             ->select('id', 'name');
 
         /*
@@ -171,32 +169,31 @@ class FindTutorController extends Controller
             );
         }
 
-
         /*
         |--------------------------------------------------------------------------
-        | PAGINATION
+        | GENDER FILTER
         |--------------------------------------------------------------------------
         */
 
-
-        // ---------------------------------------------------------
-        // FILTER: GENDER
-        // ---------------------------------------------------------
-
         if (!empty($validated['gender'])) {
-
             $gender = $validated['gender'];
 
-            $query->whereHas('teacherProfile', function ($q) use ($gender) {
-                $q->whereRaw('LOWER(gender) = ?', [strtolower($gender)]);
-            });
+            $query->whereHas(
+                'teacherProfile',
+                function ($q) use ($gender) {
+                    $q->whereRaw(
+                        'LOWER(gender) = ?',
+                        [strtolower($gender)]
+                    );
+                }
+            );
         }
 
-
-        // ---------------------------------------------------------
-        // PAGINATE
-        // ---------------------------------------------------------
-
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINATE
+        |--------------------------------------------------------------------------
+        */
 
         $perPage = $validated['per_page'] ?? 12;
 
@@ -226,11 +223,10 @@ class FindTutorController extends Controller
         $tutors = $teachers
             ->getCollection()
             ->map(
-                fn ($teacher) =>
-                    $this->formatTutorCard(
-                        $teacher,
-                        $request
-                    )
+                fn ($teacher) => $this->formatTutorCard(
+                    $teacher,
+                    $request
+                )
             )
             ->values();
 
@@ -250,6 +246,9 @@ class FindTutorController extends Controller
     |--------------------------------------------------------------------------
     | SHOW SINGLE TUTOR
     |--------------------------------------------------------------------------
+    |
+    | GET /api/find-tutor/{id}
+    |
     */
 
     public function show(Request $request, $id)
@@ -261,8 +260,13 @@ class FindTutorController extends Controller
                 'teacherProfile.subjects:id,subject_name',
                 'teacherProfile.languages:id,language_name',
             ])
-            ->withAvg(['reviews' => fn ($q) => $q->where('status', 'approved')], 'rating')
-            ->withCount(['reviews' => fn ($q) => $q->where('status', 'approved')])
+            ->withAvg(
+                ['reviews' => fn ($q) => $q->where('status', 'approved')],
+                'rating'
+            )
+            ->withCount(
+                ['reviews' => fn ($q) => $q->where('status', 'approved')]
+            )
             ->select('id', 'name', 'created_at')
             ->find($id);
 
@@ -283,17 +287,21 @@ class FindTutorController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | FORMAT TUTOR CARD
+    | FORMAT TUTOR DETAILS
     |--------------------------------------------------------------------------
+    |
+    | Extra fields for the full tutor profile page.
+    |
+    | Only public-safe fields are added here.
+    | phone, email and date_of_birth are intentionally NOT exposed.
+    |
     */
-
 
     private function formatTutorDetails(User $teacher): array
     {
         $profile = $teacher->teacherProfile;
 
-        // Only approved reviews are public (same rule as
-        // ReviewController@index and the rating average above).
+        // Only approved reviews are public.
         $reviews = Review::with('student:id,name')
             ->where('teacher_id', $teacher->id)
             ->where('status', 'approved')
@@ -318,14 +326,16 @@ class FindTutorController extends Controller
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FORMAT A TEACHER INTO A TUTOR CARD SHAPE
+    |--------------------------------------------------------------------------
+    */
 
-    // =========================================================
-    // FORMAT A TEACHER INTO A TUTOR PROFILE CARD SHAPE
-    // =========================================================
-
-    private function formatTutorCard(User $teacher, Request $request): array
-    {
-
+    private function formatTutorCard(
+        User $teacher,
+        Request $request
+    ): array {
         $profile = $teacher->teacherProfile;
 
         $profilePictureUrl = null;
@@ -348,20 +358,26 @@ class FindTutorController extends Controller
         return [
             // users.id: used by the tutor profile and request APIs.
             'teacher_id' => $teacher->id,
+
             // teacher_profiles.id: retained for existing consumers.
             'teacher_profile_id' => $profile->id,
+
             'name' => $teacher->name,
             'profile_picture' => $profilePictureUrl,
             'location' => $profile->location,
             'gender' => $profile->gender,
-            'subjects' => $profile->subjects->pluck('subject_name')->values(),
+            'subjects' => $profile->subjects
+                ->pluck('subject_name')
+                ->values(),
             'qualification' => $profile->qualification,
             'teaching_experience' => $profile->teaching_experience,
             'tutoring_mode' => $profile->tutoring_mode,
             'hourly_rate' => $profile->hourly_rate,
             'availability' => $profile->availability,
             'bio' => $profile->bio,
-            'languages' => $profile->languages->pluck('language_name')->values(),
+            'languages' => $profile->languages
+                ->pluck('language_name')
+                ->values(),
             'rating' => $rating,
             'review_count' => $teacher->reviews_count,
         ];

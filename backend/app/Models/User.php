@@ -136,4 +136,15 @@ class User extends Authenticatable
             'teacher_id'
         );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subscriptions Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }
