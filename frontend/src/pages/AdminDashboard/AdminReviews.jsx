@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminReviews.css";
-import Navbar from "../../components/Navbar/Navbar";
+import AdminSidebar from "./AdminSidebar";
 
 function AdminReviews() {
   const navigate = useNavigate();
@@ -103,20 +103,10 @@ function AdminReviews() {
 
   return (
     <>
-      <Navbar dashboardMode={true} />
 
+      <AdminSidebar />
       <main className="admin-reviews-page">
         <div className="admin-reviews-container">
-
-          <button
-            type="button"
-            className="admin-reviews-back"
-            onClick={() =>
-              navigate("/admin-dashboard")
-            }
-          >
-            ← Back to Dashboard
-          </button>
 
           <div className="admin-reviews-header">
             <span className="admin-reviews-badge">
