@@ -5,6 +5,7 @@ const items = [
   ["Dashboard", "/admin-dashboard"],
   ["Review Management", "/admin-reviews"],
   ["Admin Management", "/admin-management"],
+  ["Subscription History", "/admin-subscriptions"],
   ["My Profile", "/admin-profile"],
 ];
 
