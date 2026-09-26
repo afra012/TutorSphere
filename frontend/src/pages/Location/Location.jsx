@@ -10,6 +10,8 @@ import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 import "./Location.css";
+import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
+import TeacherSidebar from "../TeacherDashboard/components/TeacherSidebar";
 
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -44,6 +46,14 @@ L.Icon.Default.mergeOptions({
 
 function Location() {
   const [locations, setLocations] = useState([]);
+  const [role, setRole] = useState(() => {
+    const savedRole = localStorage.getItem("role");
+    if (savedRole) return savedRole.toLowerCase();
+    try {
+      const user = JSON.parse(localStorage.getItem("currentUser") || localStorage.getItem("user") || "{}");
+      return String(user.role || "").toLowerCase();
+    } catch { return ""; }
+  });
   const [myLocation, setMyLocation] = useState(null);
 
   const [latitude, setLatitude] = useState("");
@@ -144,16 +154,17 @@ function Location() {
         },
       });
       const userData = userResponse.ok ? await userResponse.json() : {};
-      let role = String(userData.role || localStorage.getItem("role") || "").toLowerCase();
-      if (!role) {
+      let userRole = String(userData.role || localStorage.getItem("role") || "").toLowerCase();
+      if (!userRole) {
         try {
           const storedUser = JSON.parse(localStorage.getItem("currentUser") || localStorage.getItem("user") || "{}");
-          role = String(storedUser.role || "").toLowerCase();
+          userRole = String(storedUser.role || "").toLowerCase();
         } catch { /* Ignore invalid cached user data. */ }
       }
-      const profileEndpoint = role === "teacher"
+      setRole(userRole);
+      const profileEndpoint = userRole === "teacher"
         ? `${API_URL}/teacher-profile`
-        : role === "student"
+        : userRole === "student"
         ? `${API_URL}/student/profile`
         : null;
 
@@ -165,7 +176,7 @@ function Location() {
           },
         });
         const profileData = profileResponse.ok ? await profileResponse.json() : {};
-        const profileAddress = role === "teacher"
+        const profileAddress = userRole === "teacher"
           ? (profileData.profile?.location || profileData.location)
           : (profileData.profile?.address || profileData.address);
 
@@ -348,7 +359,9 @@ function Location() {
   };
 
   return (
-    <main className="location-page">
+    <>
+      {role === "teacher" ? <TeacherSidebar /> : role === "student" ? <DashboardSidebar /> : null}
+      <main className={`location-page ${role ? `location-page-with-sidebar location-page-${role}` : ""}`}>
       <div className="location-container">
 
         {/* Header */}
@@ -586,7 +599,8 @@ function Location() {
         </div>
 
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
