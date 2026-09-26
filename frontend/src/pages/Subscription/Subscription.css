@@ -334,3 +334,9 @@
     padding: 30px 16px 50px;
   }
 }
+
+.status-replaced {
+  background: #eeeaff;
+  color: #5b39c6;
+}
+
