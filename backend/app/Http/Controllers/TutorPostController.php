@@ -26,11 +26,23 @@ class TutorPostController extends Controller
             ->join('users as u', 'u.id', '=', 'p.student_id')
             ->join('subjects as s', 's.id', '=', 'p.subject_id')
             ->leftJoin('student_profiles as sp', 'sp.user_id', '=', 'p.student_id')
+            ->leftJoin('subscriptions as active_sub', function ($join) {
+                $join->on('active_sub.user_id', '=', 'p.student_id')
+                    ->where('active_sub.status', 'active')
+                    ->where('active_sub.end_date', '>', now());
+            })
+            ->leftJoin(
+                'subscription_plans as active_plan',
+                'active_plan.id',
+                '=',
+                'active_sub.subscription_plan_id'
+            )
             ->whereIn('p.status', ['active', 'accepted'])
             ->orderByDesc('p.created_at')
             ->select([
                 'p.*', 'u.name as student_name', 'u.email as student_email',
                 's.subject_name', 'sp.phone as profile_phone', 'sp.address as student_address',
+                'active_plan.name as subscription_plan',
             ])
             ->get();
 
