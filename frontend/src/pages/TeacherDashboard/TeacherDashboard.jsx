@@ -11,6 +11,7 @@ function TeacherDashboard() {
   const [requestCount, setRequestCount] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [subscription, setSubscription] = useState(null);
 
   const token = localStorage.getItem("authToken");
 
@@ -33,6 +34,16 @@ function TeacherDashboard() {
       };
 
       try {
+        try {
+          const subscriptionResponse = await axios.get(
+            "http://127.0.0.1:8000/api/subscriptions/current",
+            config
+          );
+          setSubscription(subscriptionResponse.data?.subscription || null);
+        } catch {
+          setSubscription(null);
+        }
+
         /* =========================================
            REVIEWS
         ========================================= */
@@ -116,13 +127,16 @@ function TeacherDashboard() {
               Teacher Dashboard
             </p>
 
-            <h1>
-              Welcome back
-              {currentUser?.name
-                ? `, ${currentUser.name.split(" ")[0]}`
-                : ""}
-              !
-            </h1>
+            <div className="teacher-dashboard-welcome-row">
+              <h1>
+                Welcome back
+                {currentUser?.name ? `, ${currentUser.name.split(" ")[0]}` : ""}!
+              </h1>
+              <button type="button" className="dashboard-subscription-badge" onClick={() => navigate("/subscription")}>
+                <span className={subscription?.status === "active" ? "subscription-indicator is-active" : "subscription-indicator"} />
+                {subscription?.status === "active" ? `${subscription.plan?.name || "Active"} plan` : "No active subscription"}
+              </button>
+            </div>
 
             <p className="teacher-dashboard-subtitle">
               Manage your requests and reviews from here.
