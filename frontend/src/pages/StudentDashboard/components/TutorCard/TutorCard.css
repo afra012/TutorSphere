@@ -20,11 +20,6 @@
 .tutor-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .tutor-tag { padding: 5px 12px; border-radius: 20px; background: #f4eeff; color: #6a2fd6; font-size: 11.5px; font-weight: 600; }
 .tutor-card-side { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex: 0 0 auto; position: relative; min-width: 140px; }
-.tutor-favorite { position: absolute; top: -6px; right: 0; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #b7afc4; cursor: pointer; transition: color .2s ease, transform .15s ease; }
-.tutor-favorite:hover { transform: scale(1.08); }
-.tutor-favorite svg { width: 19px; height: 19px; }
-.tutor-favorite.is-active { color: #e5426a; }
-.tutor-favorite.is-active svg { fill: #e5426a; }
 .tutor-price-block { margin-top: 22px; text-align: right; display: grid; gap: 8px; justify-items: end; }
 .tutor-price { margin: 0; color: #6a2fd6; font-size: 20px; font-weight: 800; }
 .tutor-price span { color: #928a9d; font-size: 12px; font-weight: 500; }
@@ -41,7 +36,6 @@
 @media (max-width: 720px) {
   .tutor-card { flex-direction: column; align-items: stretch; }
   .tutor-card-side { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; min-width: 0; }
-  .tutor-favorite { position: static; }
   .tutor-price-block { margin-top: 0; text-align: left; justify-items: start; }
   .tutor-card-actions { flex-wrap: wrap; }
 }
@@ -60,3 +54,22 @@
 .tutor-request-button.is-accepted:disabled {
   opacity: 1;
 }
+.tutor-subscription-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #e6a500;
+  cursor: default;
+}
+
+.tutor-subscription-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: #f2b51d;
+  stroke: #c58a00;
+  stroke-width: 1.2;
+}
+.tutor-name-row { flex-wrap: wrap; }
