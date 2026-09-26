@@ -49,6 +49,8 @@ function normalizeTutor(raw) {
     id: raw.teacher_id,
     teacherProfileId: raw.teacher_profile_id,
     name: raw.name,
+    subscriptionPlan: raw.subscription_plan || null,
+    subscriptionStatus: raw.subscription_status || null,
     avatarUrl: raw.profile_picture,
     subject: subjects[0] || "",
     subjects,
@@ -156,7 +158,6 @@ export default function FindTutor() {
   const [filters, setFilters] = useState(initialFilters);
   const [appliedFilters, setAppliedFilters] = useState(initialFilters);
   const [sortBy, setSortBy] = useState("recommended");
-  const [favorites, setFavorites] = useState([]);
 
   /*
   |--------------------------------------------------------------------------
@@ -466,18 +467,6 @@ export default function FindTutor() {
     return list;
   }, [filteredTutors, sortBy]);
 
-  /*
-  |--------------------------------------------------------------------------
-  | FAVORITE
-  |--------------------------------------------------------------------------
-  */
-  const toggleFavorite = (tutor) => {
-    setFavorites((current) =>
-      current.includes(tutor.id)
-        ? current.filter((id) => id !== tutor.id)
-        : [...current, tutor.id]
-    );
-  };
 
   /*
   |--------------------------------------------------------------------------
@@ -907,12 +896,6 @@ export default function FindTutor() {
                   <TutorCard
                     key={tutor.id}
                     tutor={tutor}
-                    isFavorite={favorites.includes(
-                      tutor.id
-                    )}
-                    onToggleFavorite={
-                      toggleFavorite
-                    }
                     onViewProfile={
                       handleViewProfile
                     }
