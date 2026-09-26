@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
-import Navbar from "../../components/Navbar/Navbar";
+import AdminSidebar from "./AdminSidebar";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -66,40 +66,12 @@ function AdminDashboard() {
     fetchDashboard();
   }, [navigate]);
 
-  const handleLogout = async () => {
-    const token = localStorage.getItem("authToken");
-
-    try {
-      if (token) {
-        await fetch(
-          "http://127.0.0.1:8000/api/logout",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-            },
-          }
-        );
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("role");
-    localStorage.removeItem("pendingAdminEmail");
-
-    navigate("/");
-  };
 
   return (
     <>
-      <Navbar dashboardMode={true} />
+<div className="admin-dashboard">
+                <AdminSidebar />
 
-      <div className="admin-dashboard">
         <div className="admin-container">
 
           <div className="admin-header">
@@ -118,15 +90,6 @@ function AdminDashboard() {
                 </strong>
               </p>
             </div>
-
-            <button
-              type="button"
-              className="admin-logout"
-              onClick={handleLogout}
-            >
-              <span>↪</span>
-              Logout
-            </button>
           </div>
 
           <div className="admin-stats">
