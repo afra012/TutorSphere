@@ -9,13 +9,11 @@ import {
 // =========================================================
 // NAVBAR
 // =========================================================
-
 import Navbar from "./components/Navbar/Navbar";
 
 // =========================================================
 // PUBLIC
 // =========================================================
-
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import Help from "./pages/Help/Help";
@@ -23,14 +21,12 @@ import Help from "./pages/Help/Help";
 // =========================================================
 // AUTH
 // =========================================================
-
 import Login from "./pages/Auth/Login/login";
 import Register from "./pages/Auth/Register/register";
 
 // =========================================================
 // STUDENT
 // =========================================================
-
 import StudentDashboard from "./pages/StudentDashboard/StudentDashboard";
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import StudentReviews from "./pages/StudentDashboard/components/StudentReviews/StudentReviews";
@@ -41,7 +37,6 @@ import TutorProfile from "./pages/StudentDashboard/TutorProfile";
 // =========================================================
 // TEACHER
 // =========================================================
-
 import TeacherDashboard from "./pages/TeacherDashboard/TeacherDashboard";
 import TeacherProfile from "./pages/TeacherDashboard/TeacherProfile/TeacherProfile";
 import TeacherRequests from "./pages/TeacherDashboard/TeacherRequests";
@@ -51,7 +46,6 @@ import TeacherPosts from "./pages/TeacherDashboard/TeacherPosts";
 // =========================================================
 // ADMIN
 // =========================================================
-
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import AdminProfile from "./pages/AdminDashboard/AdminProfile";
 import AdminReviews from "./pages/AdminDashboard/AdminReviews";
@@ -60,26 +54,28 @@ import AdminManagement from "./pages/AdminDashboard/AdminManagement";
 // =========================================================
 // LOCATION
 // =========================================================
-
 import Location from "./pages/Location/Location";
 
 // =========================================================
 // CHAT
 // =========================================================
-
 import Chat from "./pages/Chat/Chat";
+
+// =========================================================
+// SUBSCRIPTION
+// =========================================================
+import Subscription from "./pages/Subscription/Subscription";
+import Payment from "./pages/Subscription/Payment";
 
 // =========================================================
 // HOME PAGE
 // =========================================================
-
 function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
       const params = new URLSearchParams(window.location.search);
-
       const googleToken = params.get("google_token");
       const googleEmail = params.get("google_email");
       const googleError = params.get("google_error");
@@ -90,7 +86,6 @@ function HomePage() {
       // =====================================================
       // GOOGLE ERROR
       // =====================================================
-
       if (googleError) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("currentUser");
@@ -111,7 +106,6 @@ function HomePage() {
       // =====================================================
       // NO GOOGLE TOKEN
       // =====================================================
-
       if (!googleToken) {
         return;
       }
@@ -119,7 +113,6 @@ function HomePage() {
       // =====================================================
       // GOOGLE EMAIL MATCH
       // =====================================================
-
       if (
         !googleEmail ||
         !pendingAdminEmail ||
@@ -145,7 +138,6 @@ function HomePage() {
       // =====================================================
       // VERIFY USER
       // =====================================================
-
       try {
         const response = await fetch(
           "http://127.0.0.1:8000/api/user",
@@ -167,7 +159,6 @@ function HomePage() {
         // ===================================================
         // ONLY ADMIN
         // ===================================================
-
         if (user?.role?.toLowerCase() !== "admin") {
           throw new Error("Admin access required.");
         }
@@ -175,23 +166,18 @@ function HomePage() {
         // ===================================================
         // SAVE LOGIN
         // ===================================================
-
         localStorage.setItem("authToken", googleToken);
-
         localStorage.setItem(
           "currentUser",
           JSON.stringify(user)
         );
-
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", "admin");
-
         localStorage.removeItem("pendingAdminEmail");
 
         // ===================================================
         // REMOVE QUERY STRING
         // ===================================================
-
         window.history.replaceState(
           {},
           document.title,
@@ -201,7 +187,6 @@ function HomePage() {
         // ===================================================
         // ADMIN DASHBOARD
         // ===================================================
-
         navigate("/admin-dashboard");
       } catch (error) {
         console.error("Google login error:", error);
@@ -236,7 +221,6 @@ function HomePage() {
 // =========================================================
 // LOGIN PAGE
 // =========================================================
-
 function HomeWithLogin() {
   const navigate = useNavigate();
 
@@ -269,7 +253,6 @@ function HomeWithLogin() {
 // =========================================================
 // REGISTER
 // =========================================================
-
 function HomeWithRegister() {
   const navigate = useNavigate();
 
@@ -289,7 +272,6 @@ function HomeWithRegister() {
 // =========================================================
 // APP
 // =========================================================
-
 function App() {
   return (
     <BrowserRouter>
@@ -578,6 +560,34 @@ function App() {
                 dashboardMode={true}
               />
               <Location />
+            </>
+          }
+        />
+
+        {/* =================================================
+            SUBSCRIPTION
+        ================================================= */}
+
+        <Route
+          path="/subscription"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+              />
+              <Subscription />
+            </>
+          }
+        />
+
+        <Route
+          path="/subscription/payment"
+          element={
+            <>
+              <Navbar
+                dashboardMode={true}
+              />
+              <Payment />
             </>
           }
         />

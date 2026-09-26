@@ -1,0 +1,251 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
+.payment-page,
+.payment-page * {
+  box-sizing: border-box;
+}
+
+.payment-page {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 76px;
+  background: #f5f7fb;
+}
+
+.payment-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 30px 70px;
+}
+
+@media (min-width: 821px) {
+  .payment-content.offset-student {
+    margin-left: 230px;
+  }
+
+  .payment-content.offset-teacher {
+    margin-left: 220px;
+  }
+}
+
+@media (max-width: 820px) {
+  .payment-content {
+    margin-left: 0;
+  }
+}
+
+.payment-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   BACK LINK
+========================================================= */
+
+.payment-back-link {
+  background: none;
+  border: none;
+  color: #7b4fe0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.payment-back-link:hover {
+  text-decoration: underline;
+}
+
+.payment-missing-plan {
+  text-align: center;
+  padding: 80px 0;
+  color: #5b5876;
+}
+
+.payment-back-btn {
+  margin-top: 14px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #7b4fe0;
+  color: #ffffff;
+}
+
+.payment-back-btn:hover {
+  background: #6a3fd0;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .payment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   SUMMARY CARD
+========================================================= */
+
+.payment-summary-card,
+.payment-form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 26px 26px;
+  box-shadow: 0 2px 14px rgba(23, 17, 50, 0.06);
+}
+
+.payment-summary-card h2,
+.payment-form-card h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  color: #171132;
+}
+
+.payment-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #5b5876;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0eef7;
+}
+
+.payment-summary-row strong {
+  color: #171132;
+  text-transform: capitalize;
+}
+
+.payment-summary-features {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.payment-summary-features li {
+  font-size: 13.5px;
+  color: #5b5876;
+  padding-left: 18px;
+  position: relative;
+}
+
+.payment-summary-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #1e7a3c;
+  font-weight: 700;
+}
+
+.payment-summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 2px solid #eee5ff;
+  font-size: 15px;
+  color: #171132;
+}
+
+.payment-summary-total strong {
+  font-size: 24px;
+  color: #7b4fe0;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.payment-alert {
+  background: #fdecec;
+  color: #b3261e;
+  border: 1px solid #f6c6c4;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+
+.payment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  color: #5b5876;
+  font-weight: 600;
+}
+
+.payment-field input {
+  border: 1px solid #d8d5e6;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #171132;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.payment-field input:focus {
+  border-color: #8b6ff2;
+}
+
+.payment-field input:disabled {
+  background: #f5f3fa;
+  cursor: not-allowed;
+}
+
+.payment-field-row {
+  display: flex;
+  gap: 14px;
+}
+
+.payment-field-row .payment-field {
+  flex: 1;
+}
+
+.payment-pay-btn {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #7b4fe0;
+  color: #ffffff;
+  margin-top: 4px;
+  transition: background 0.15s ease;
+}
+
+.payment-pay-btn:hover:not(:disabled) {
+  background: #6a3fd0;
+}
+
+.payment-pay-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
