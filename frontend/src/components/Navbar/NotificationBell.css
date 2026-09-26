@@ -321,3 +321,17 @@
     width: 300px;
   }
 }
+.request-response-message {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.request-response-success {
+  color: #15803d;
+}
+
+.request-response-error {
+  color: #b91c1c;
+}
+
