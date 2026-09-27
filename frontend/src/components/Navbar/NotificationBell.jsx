@@ -12,6 +12,8 @@ function NotificationBell({ role }) {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [chatNotifications, setChatNotifications] = useState([]);
+  const [chatUnreadCount, setChatUnreadCount] = useState(0);
   const [notificationLoading, setNotificationLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState(null);
 
@@ -84,6 +86,29 @@ function NotificationBell({ role }) {
     }
   };
 
+  const fetchChatNotifications = async () => {
+    if (normalizedRole !== "teacher" && normalizedRole !== "student") return;
+
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${API_URL}/chat/notifications`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to load chat notifications.");
+
+      setChatNotifications(Array.isArray(data.notifications) ? data.notifications : []);
+      setChatUnreadCount(Number(data.unread_count || 0));
+    } catch (error) {
+      console.error("Chat notification fetch error:", error);
+    }
+  };
+
   /*
   |--------------------------------------------------------------------------
   | LOAD
@@ -92,6 +117,10 @@ function NotificationBell({ role }) {
 
   useEffect(() => {
     fetchNotifications();
+    fetchChatNotifications();
+
+    const refreshTimer = window.setInterval(fetchChatNotifications, 5000);
+    return () => window.clearInterval(refreshTimer);
   }, [normalizedRole]);
 
   /*
@@ -368,11 +397,38 @@ function NotificationBell({ role }) {
 
     if (willOpen) {
       await fetchNotifications();
+      await fetchChatNotifications();
 
       if (normalizedRole === "teacher") {
         await markTeacherNotificationsRead();
       }
     }
+  };
+
+  const openChatNotification = async (notification) => {
+    setNotificationOpen(false);
+
+    if (notification.type === "accepted_request") {
+      const token = localStorage.getItem("authToken");
+      try {
+        await fetch(`${API_URL}/chat/accepted-requests/${notification.notification_id}/read`, {
+          method: "PATCH",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } catch (error) {
+        console.error("Could not mark accepted request notification as read:", error);
+      }
+
+      setChatNotifications((current) => current.filter((item) =>
+        !(item.type === "accepted_request" && item.notification_id === notification.notification_id)
+      ));
+      setChatUnreadCount((count) => Math.max(0, count - 1));
+    }
+
+    navigate(`/chat?userId=${notification.sender_id}`);
   };
 
   /*
@@ -420,9 +476,9 @@ function NotificationBell({ role }) {
           <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4" />
         </svg>
 
-        {unreadCount > 0 && (
+        {unreadCount + chatUnreadCount > 0 && (
           <span className="notification-count">
-            {unreadCount > 9 ? "9+" : unreadCount}
+            {unreadCount + chatUnreadCount > 9 ? "9+" : unreadCount + chatUnreadCount}
           </span>
         )}
       </button>
@@ -441,13 +497,43 @@ function NotificationBell({ role }) {
                 Loading...
               </div>
 
-            ) : notifications.length === 0 ? (
+            ) : notifications.length === 0 && chatNotifications.length === 0 ? (
               <div className="notification-empty">
                 No notifications yet.
               </div>
 
             ) : (
-              notifications.map((notification) => {
+              <>
+              {chatNotifications.map((notification) => (
+                <div
+                  key={`chat-${notification.type}-${notification.sender_id}`}
+                  className="notification-item notification-unread"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => openChatNotification(notification)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      openChatNotification(notification);
+                    }
+                  }}
+                >
+                  <div className="notification-item-icon">✉</div>
+                  <div className="notification-item-text">
+                    <strong>
+                      {notification.type === "accepted_request"
+                        ? "Request accepted by "
+                        : "New message from "}
+                      {notification.sender_name}
+                    </strong>
+                    <p>{notification.message}</p>
+                    <div className="notification-item-bottom">
+                      <small>{notification.unread_count} unread · {formatDate(notification.created_at)}</small>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {notifications.map((notification) => {
                 const notificationId =
                   notification.notification_id ||
                   notification.id;
@@ -610,7 +696,8 @@ function NotificationBell({ role }) {
 
                   </div>
                 );
-              })
+              })}
+              </>
             )}
 
           </div>
