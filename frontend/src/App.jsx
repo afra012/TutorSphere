@@ -265,6 +265,7 @@ function HomeWithRegister() {
       <Register
         onClose={() => navigate("/")}
         onLogin={() => navigate("/login")}
+        onRegisterSuccess={() => navigate("/login")}
       />
     </>
   );
