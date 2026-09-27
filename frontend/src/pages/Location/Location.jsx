@@ -453,11 +453,24 @@ function Location() {
                         <br />
 
                         <span>
-                          {location.role ===
-                          "teacher"
-                            ? "👨‍🏫 Teacher"
-                            : "🎓 Student"}
+                          {location.role === "teacher" ? "👨‍🏫 Teacher" : "🎓 Student"}
                         </span>
+
+                        {location.role === "teacher" && (
+                          <>
+                            {location.subjects && <><br /><span><strong>Subjects:</strong> {location.subjects}</span></>}
+                            {location.qualification && <><br /><span><strong>Qualification:</strong> {location.qualification}</span></>}
+                            {location.teaching_experience && <><br /><span><strong>Experience:</strong> {location.teaching_experience}</span></>}
+                          </>
+                        )}
+
+                        {location.role === "student" && (
+                          <>
+                            {location.education_level && <><br /><span><strong>Education:</strong> {location.education_level}</span></>}
+                            {location.class_grade && <><br /><span><strong>Class/Grade:</strong> {location.class_grade}</span></>}
+                            {location.institution && <><br /><span><strong>Institution:</strong> {location.institution}</span></>}
+                          </>
+                        )}
 
                         <br />
 
