@@ -17,6 +17,8 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TeacherPostRequestController;
 use App\Http\Controllers\TeacherPostRequestNotificationController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\AcceptedChatUserController;
+use App\Http\Controllers\ChatMessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +87,31 @@ Route::middleware('auth:sanctum')->group(function () {
             $request->user()
         );
     });
+
+    Route::get('/chat/users', [
+        AcceptedChatUserController::class,
+        'index'
+    ]);
+
+    Route::get('/chat/messages/{userId}', [
+        ChatMessageController::class,
+        'index'
+    ]);
+
+    Route::post('/chat/messages/{userId}', [
+        ChatMessageController::class,
+        'store'
+    ]);
+
+    Route::get('/chat/notifications', [
+        ChatMessageController::class,
+        'notifications'
+    ]);
+
+    Route::patch('/chat/accepted-requests/{notificationId}/read', [
+        ChatMessageController::class,
+        'markAcceptedRequestRead'
+    ]);
 
     /*
     |--------------------------------------------------------------------------
