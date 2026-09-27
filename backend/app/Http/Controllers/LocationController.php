@@ -76,6 +76,10 @@ class LocationController extends Controller
 
         $locations = DB::table('locations')
             ->join('users', 'users.id', '=', 'locations.user_id')
+            ->leftJoin('teacher_profiles', 'teacher_profiles.user_id', '=', 'users.id')
+            ->leftJoin('student_profiles', 'student_profiles.user_id', '=', 'users.id')
+            ->leftJoin('teacher_profile_subject', 'teacher_profile_subject.teacher_profile_id', '=', 'teacher_profiles.id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'teacher_profile_subject.subject_id')
             ->whereIn('users.role', ['student', 'teacher'])
             ->select(
                 'locations.id',
@@ -84,7 +88,27 @@ class LocationController extends Controller
                 'users.role',
                 'locations.latitude',
                 'locations.longitude',
-                'locations.address'
+                'locations.address',
+                'teacher_profiles.qualification',
+                'teacher_profiles.teaching_experience',
+                'student_profiles.education_level',
+                'student_profiles.institution',
+                'student_profiles.class_grade',
+                DB::raw("GROUP_CONCAT(DISTINCT subjects.subject_name ORDER BY subjects.subject_name SEPARATOR ', ') AS subjects")
+            )
+            ->groupBy(
+                'locations.id',
+                'locations.user_id',
+                'users.name',
+                'users.role',
+                'locations.latitude',
+                'locations.longitude',
+                'locations.address',
+                'teacher_profiles.qualification',
+                'teacher_profiles.teaching_experience',
+                'student_profiles.education_level',
+                'student_profiles.institution',
+                'student_profiles.class_grade'
             )
             ->orderBy('users.name')
             ->get();
