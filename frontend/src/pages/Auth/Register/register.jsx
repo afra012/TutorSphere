@@ -83,33 +83,6 @@ function Register({
         }
       );
 
-      const user = response.data.user;
-      const token = response.data.token;
-
-      // Save Sanctum token
-      localStorage.setItem(
-        "authToken",
-        token
-      );
-
-      // Save user
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify(user)
-      );
-
-      // Save login state
-      localStorage.setItem(
-        "isLoggedIn",
-        "true"
-      );
-
-      // Save role
-      localStorage.setItem(
-        "role",
-        backendRole
-      );
-
       // Clear form
       setFormData({
         name: "",
@@ -120,7 +93,9 @@ function Register({
       setAgree(false);
 
       if (onRegisterSuccess) {
-        onRegisterSuccess(backendRole);
+        onRegisterSuccess();
+      } else if (onLogin) {
+        onLogin();
       }
     } catch (error) {
       console.error(
