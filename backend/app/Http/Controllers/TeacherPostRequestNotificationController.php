@@ -205,14 +205,10 @@ class TeacherPostRequestNotificationController extends Controller
                 "
                 UPDATE teacher_post_request_notifications
                 SET is_read = 1,
-                    teacher_is_read = ?,
                     updated_at = NOW()
                 WHERE id = ?
                 ",
-                [
-                    $validated['status'] === 'accepted' ? 0 : 1,
-                    $notification->notification_id
-                ]
+                [$notification->notification_id]
             );
 
             DB::commit();
