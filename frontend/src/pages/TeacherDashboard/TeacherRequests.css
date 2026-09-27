@@ -14,7 +14,8 @@
   min-width: 0;
   min-height: calc(100vh - 76px);
 
-  margin-left: 220px;
+  /* The sidebar is a flex sibling and already takes up its own width. */
+  margin-left: 0;
 
   padding: 38px 55px 32px;
 
@@ -424,7 +425,8 @@
    STATUS
 ========================= */
 
-.request-status {
+.request-status,
+.teacher-request-status {
   padding: 7px 13px;
 
   border-radius: 20px;
@@ -466,7 +468,8 @@
    BUTTONS
 ========================= */
 
-.request-actions {
+.request-actions,
+.teacher-request-actions {
   margin-top: 20px;
 
   display: flex;
@@ -476,7 +479,8 @@
   gap: 11px;
 }
 
-.request-actions button {
+.request-actions button,
+.teacher-request-actions button {
   min-width: 90px;
 
   padding: 10px 18px;
@@ -491,7 +495,8 @@
   transition: 0.2s ease;
 }
 
-.reject-btn {
+.reject-btn,
+.teacher-request-reject {
   border:
     1px solid #7a42ec;
 
@@ -500,11 +505,13 @@
   color: #6b32dd;
 }
 
-.reject-btn:hover {
+.reject-btn:hover,
+.teacher-request-reject:hover {
   background: #f6f1ff;
 }
 
-.accept-btn {
+.accept-btn,
+.teacher-request-accept {
   border:
     1px solid #6730d9;
 
@@ -522,7 +529,8 @@
       rgba(100, 44, 215, 0.18);
 }
 
-.accept-btn:hover {
+.accept-btn:hover,
+.teacher-request-accept:hover {
   transform: translateY(-1px);
 }
 
@@ -563,11 +571,13 @@
     flex-direction: column;
   }
 
-  .request-actions {
+  .request-actions,
+  .teacher-request-actions {
     justify-content: stretch;
   }
 
-  .request-actions button {
+  .request-actions button,
+  .teacher-request-actions button {
     flex: 1;
   }
 
