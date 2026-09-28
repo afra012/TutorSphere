@@ -51,61 +51,72 @@
 
 .help-contact-card {
   width: 100%;
-  max-width: 780px;
+  max-width: 880px;
+  min-height: 180px;
   box-sizing: border-box;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
+  gap: 40px;
 
   margin-top: 40px;
-  padding: 32px 40px;
+  padding: 32px 50px;
 
   background: linear-gradient(135deg, #7b3fe4, #5a1fd0);
-  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
 
-  box-shadow: 0 14px 30px rgba(100, 37, 232, 0.25);
+  box-shadow: 0 18px 36px rgba(82, 34, 170, 0.2);
 }
 
 .help-contact-text h2 {
   margin: 0 0 6px;
 
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.45px;
   color: #ffffff;
+  text-align: center;
 }
 
 .help-contact-text p {
   margin: 0;
-  max-width: 420px;
+  max-width: 470px;
 
-  font-size: 14px;
-  line-height: 155%;
-  color: #e9ddfb;
+  font-size: 15px;
+  line-height: 165%;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
 }
 
 .help-contact-button {
   flex-shrink: 0;
 
-  padding: 14px 28px;
+  padding: 17px 31px;
 
   background: #ffffff;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
 
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: #6425e8;
   text-decoration: none;
   white-space: nowrap;
 
-  transition: 0.25s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .help-contact-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  background: #f8f5ff;
+  box-shadow: 0 10px 22px rgba(34, 12, 79, 0.2);
+}
+
+.help-contact-button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
 }
 
 /* =========================
@@ -137,8 +148,10 @@
 
   .help-contact-card {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 26px 24px;
+    align-items: center;
+    gap: 22px;
+    min-height: 0;
+    padding: 30px 24px;
   }
 
   .help-contact-button {

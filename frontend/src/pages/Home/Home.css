@@ -12,3 +12,12 @@ section {
     overflow-x: hidden;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+#about,
+#help {
+  scroll-margin-top: 155px;
+}

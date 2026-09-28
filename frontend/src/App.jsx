@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 // =========================================================
@@ -15,8 +16,6 @@ import Navbar from "./components/Navbar/Navbar";
 // PUBLIC
 // =========================================================
 import Home from "./pages/Home/Home";
-import About from "./pages/About/About";
-import Help from "./pages/Help/Help";
 
 // =========================================================
 // AUTH
@@ -73,6 +72,16 @@ import Payment from "./pages/Subscription/Payment";
 // =========================================================
 function HomePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const sectionId = location.hash.slice(1);
+    if (!sectionId) return;
+
+    requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    });
+  }, [location.hash]);
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
@@ -288,25 +297,8 @@ function App() {
           element={<HomePage />}
         />
 
-        <Route
-          path="/about"
-          element={
-            <>
-              <Navbar />
-              <About />
-            </>
-          }
-        />
-
-        <Route
-          path="/help"
-          element={
-            <>
-              <Navbar />
-              <Help />
-            </>
-          }
-        />
+        <Route path="/about" element={<HomePage />} />
+        <Route path="/help" element={<HomePage />} />
 
         {/* =================================================
             AUTH

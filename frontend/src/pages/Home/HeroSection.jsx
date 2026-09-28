@@ -4,6 +4,7 @@ import heroBg from "../../assets/hero-bg.jpeg";
 function HeroSection() {
   return (
     <section
+      id="home"
       className="hero-section"
       style={{ backgroundImage: `url(${heroBg})` }}
     >

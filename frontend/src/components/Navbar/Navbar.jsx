@@ -273,7 +273,7 @@ function Navbar({
                 <div className="navbar-links">
 
                   <Link
-                    to="/"
+                    to="/#home"
                     className="nav-link"
                     onClick={() =>
                       setMenuOpen(false)
@@ -283,7 +283,7 @@ function Navbar({
                   </Link>
 
                   <Link
-                    to="/about"
+                    to="/#about"
                     className="nav-link"
                     onClick={() =>
                       setMenuOpen(false)
@@ -293,7 +293,7 @@ function Navbar({
                   </Link>
 
                   <Link
-                    to="/help"
+                    to="/#help"
                     className="nav-link"
                     onClick={() =>
                       setMenuOpen(false)
