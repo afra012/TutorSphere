@@ -244,10 +244,7 @@ export default function TeacherRequests() {
                             : ""}
                         </strong>
 
-                        <p>
-                          {request.message ||
-                            "No message included."}
-                        </p>
+                        {request.message && <p>{request.message}</p>}
 
                         {status === "accepted" &&
                           (request.student_email ||
@@ -287,11 +284,9 @@ export default function TeacherRequests() {
                           {formatDate(request.created_at)}
                         </span>
 
-                        <span>
-                          Location:{" "}
-                          {request.location ||
-                            "Not specified"}
-                        </span>
+                        {request.location && (
+                          <span>Location: {request.location}</span>
+                        )}
 
                         {(request.education_level ||
                           request.class_grade) && (
