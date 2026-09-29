@@ -14,8 +14,8 @@
   min-width: 0;
   min-height: calc(100vh - 76px);
 
-  /* The sidebar is a flex sibling and already takes up its own width. */
-  margin-left: 0;
+  /* The sidebar is fixed, so reserve its width in the page flow. */
+  margin-left: 220px;
 
   padding: 38px 55px 32px;
 
